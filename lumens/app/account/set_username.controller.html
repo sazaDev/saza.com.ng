@@ -1,0 +1,92 @@
+<div>
+ <div class="page-title">                    
+        <h2><span class="fa fa-map-marker"></span> Set Stellar Address</h2>
+
+</div>
+	<div class="row" ng-controller="setUsernameController" ng-init="init()">
+    <div class="col-md-8 col-md-offset-2">
+      <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+      <li ng-repeat="x in statusMsg.content">
+      {{x}}
+      </li>
+
+     </div>
+      <form class="form-horizontal" name="usernameForm" method="POST" ng-submit="setUsername()">
+        <div class="panel panel-colorful">
+          <div class="panel-heading">
+            <h3 ng-if="currentUser.username" class="panel-title"><strong>Current Stellar Address:</strong> {{currentUser.username}}</h3>
+            <ul class="panel-controls">
+              <!-- <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li> -->
+            </ul>
+          </div>
+          <div class="panel-body">
+            <p class="text-info">This action will modify your Stellar account in the following ways:</p>
+            <ul>
+              <li>Create a federation record matching your Stellar Address to your Account ID</li>
+              <li>Set your home domain to {{siteURL}}</li>
+              <li>Set your inflation destination to {{siteURL}}'s Stellar address</li>
+
+            </ul>
+          </div>
+          <div class="panel-body">                                                                        
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Username</label>
+              <div class="col-md-6 col-xs-12">                                            
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                  <input type="text" class="form-control" name="username" ng-model="userData.username" placeholder="Username" required ng-pattern="userRegex"/><span class="input-group-addon"><span>*{{siteURL}}</span></span>
+                </div>  
+                <span class="text-danger" ng-show="usernameForm.username.$dirty && usernameForm.username.$invalid">
+                  <small ng-show="usernameForm.username.$error.required">Username is required. </small>
+                  <small ng-show="usernameForm.username.$invalid">Minimum 2 Characters.
+                    The following characters are not allowed: <,*>.</small>
+                </span>                                          
+                <span class="help-block">Enter username for your Stellar Address</span>
+                <p ng-if="userData.username">Your Stellar Address will be: <span class="text-danger">{{userData.username}}*{{siteURL}}</span></p>
+              </div>
+            </div>
+
+
+
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-success pull-right" ng-disabled="usernameForm.$error.required || usernameForm.$invalid">Set Stellar Address</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+
+
+  </div>
+
+</div>
+<script type="text/javascript">
+
+/* MESSAGE BOX */
+$("[class^=mb-control-]").on("click",function(){
+  var box = $($(this).data("box"));
+  if(box.length > 0){
+    box.toggleClass("open");
+
+    var sound = box.data("sound");
+
+    if(sound === 'alert')
+      playAudio('alert');
+
+    if(sound === 'fail')
+      playAudio('fail');
+
+  }        
+  return false;
+});
+$(".mb-control-close").on("click",function(){
+ $(this).parents(".message-box").removeClass("open");
+ return false;
+});    
+/* END MESSAGE BOX */
+
+</script>	

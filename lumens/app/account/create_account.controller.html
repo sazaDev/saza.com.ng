@@ -1,0 +1,140 @@
+<div>
+<div class="page-title">                    
+  <h2><span class="fa fa-rocket"></span> Getting Started</h2>
+</div>
+	<div class="row" ng-controller="createAccountController" ng-init="init()">
+    <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+      <li ng-repeat="x in statusMsg.content">
+      {{x}}
+      </li>
+
+    </div>
+		<div class="col-md-6">
+
+			<div class="panel panel-colorful">
+				<div class="panel-body">
+					<h2>Create a New Account</h2>
+					<br>
+          <h3>Just getting started?</h3>
+					<!-- <br> -->
+					<h4>Dont worry we have you covered.</h4>
+          
+          <!-- <br> -->
+					<h4>Create your new account in just one click!</h4>
+					<p class="text-info"><i class="fa fa-info-circle"></i> For your account to be fully active, it needs to be funded. <a href="https://www.stellar.org/lumens/" target="_blank">Click here</a> for more details on funding options.</p>                           
+				</div>
+				<div class="panel-footer"> 
+					<button class="btn btn-success pull-right" ng-click="createAccount()">Create Account</button>
+				</div>
+			</div>
+
+		</div>		
+		<div class="col-md-6">
+
+			<div class="panel panel-colorful">
+				<div class="panel-body">
+					<h2>Link Account</h2>
+					<p>Already have a stellar account? Link it to this wallet to start managing your lumens</p>
+					<div class="form-group">
+						<label>Account ID</label>
+						<input type="text" class="form-control" name="account_id" ng-model="linkData.account_id" placeholder="Enter Account ID" required>
+					</div>
+					<div class="form-group">
+						<label>Seed</label>
+						<input type="text" class="form-control" name="seed" ng-model="linkData.seed" placeholder="Enter seed" required>
+					</div>                                
+					
+				</div>
+				<div class="panel-footer"> 
+					<button class="btn btn-success pull-right" ng-click="linkAccount()">Link Account</button>
+				</div>
+			</div>
+
+		</div>		
+
+	
+
+
+    <!-- MESSAGE BOX-->
+    <a href="#" class="mb-control-success" ng-hide="true" data-box="#mb-success"><span class="fa fa-sign-out"></span></a>
+    <div class="message-box row message-box-success animated fadeIn" data-sound="alert" id="mb-success">
+      <div class="mb-container">
+        <div class="mb-middle">
+          <div class="mb-title"></span> <i class="fa fa-smile-o"></i>  Account <strong>Created</strong> </div>
+          <div class="mb-content">
+            <p>Congratulations, your stellar account has been created</p>                    
+            <p>You are required to fund your account before, it is fully activated. </p>
+            <p>Learn how to fund your account <a href="https://www.stellar.org/lumens/" target="_blank">here</a></p>
+  					<h1>Keep your account details safe</h1>
+  					  <h3>Account ID: {{userAcct}}</h3>
+              <h3>Seed: {{userSeed}}</h3>
+
+
+          </div>
+          <div class="mb-footer">
+            <div class="pull-right">
+              <a ui-sref="dashboard" class="btn btn-info btn-lg">Accounts Overview</a>
+              <button class="btn btn-default btn-lg mb-control-close">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END MESSAGE BOX-->
+
+    <!-- MESSAGE BOX-->
+    <a href="#" class="mb-control-link-success" ng-hide="true" data-box="#mb-link-success"><span class="fa fa-sign-out"></span></a>
+    <div class="message-box row message-box-success animated fadeIn" data-sound="alert" id="mb-link-success">
+      <div class="mb-container">
+        <div class="mb-middle">
+          <div class="mb-title"></span> <i class="fa fa-smile-o"></i>  Account <strong>Linked</strong> </div>
+          <div class="mb-content">
+            <p>Congratulations, your stellar account linked</p>                    
+            
+            <p>Learn how to fund your account <a href="#">here</a></p>
+  					<h1>Keep your account details safe</h1>
+  						<h3>Account ID: {{userAcct}}</h3>
+  						<h3>Seed: {{userSeed}}</h3>
+
+          </div>
+          <div class="mb-footer">
+            <div class="pull-right">
+              <a ui-sref="dashboard" class="btn btn-info btn-lg">Accounts Overview</a>
+              <button class="btn btn-default btn-lg mb-control-close">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END MESSAGE BOX-->
+
+
+  </div>
+</div>
+  <script type="text/javascript">
+
+      /* MESSAGE BOX */
+    $("[class^=mb-control-]").on("click",function(){
+        var box = $($(this).data("box"));
+        if(box.length > 0){
+            box.toggleClass("open");
+            
+            var sound = box.data("sound");
+            
+            if(sound === 'alert')
+                playAudio('alert');
+            
+            if(sound === 'fail')
+                playAudio('fail');
+            
+        }        
+        return false;
+    });
+    $(".mb-control-close").on("click",function(){
+       $(this).parents(".message-box").removeClass("open");
+       return false;
+    });    
+    /* END MESSAGE BOX */
+
+  </script>	

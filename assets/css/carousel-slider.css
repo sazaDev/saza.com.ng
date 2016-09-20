@@ -1,0 +1,29 @@
+/*You can add your won color also */
+.tp-caption .small-title {
+  color: #fff;
+  font-size: 30px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+.tp-caption .small-title span {
+  font-size: 32px;
+  font-weight: 700;
+}
+.tp-caption .big-title {
+  font-size: 53px;
+  color: #fff;
+  line-height: 60px;
+  margin: 0px;
+  padding: 0px;
+  letter-spacing: 0px;
+}
+.tp-caption .btn-large {
+  color: #fff;
+  font-size: 22px;
+  padding: 18px 40px;
+  z-index: 11;
+}
+.tp-caption .btn-large:hover {
+  color: #fff;
+}

@@ -1,0 +1,213 @@
+<ul class="x-navigation" ng-controller="sideBarController" ng-init="init()">
+	<li class="xn-logo">
+		<a ui-sref="dashboard">Lumens Wall</a>
+		<a href="#" class="x-navigation-control"></a>
+	</li>                                                                      
+	<li class="xn-title">Navigation</li>
+	<li>
+		<a ui-sref="dashboard">
+			<span class="fa fa-desktop"></span> 
+			<span class="xn-text">Account Overview</span>
+		</a>
+	</li>                                        
+	<li>
+		<a ui-sref="sendpayment">
+			<span class="fa fa-money"></span> 
+			<span class="xn-text">Make a Payment</span>
+		</a>
+	</li>                                        
+	<li>
+		<a ui-sref="recvpayment">
+			<span class="fa fa-money"></span> 
+			<span class="xn-text">Receive Payment</span>
+		</a>
+	</li>                                        
+	<li>
+		<a ui-sref="transactions">
+			<span class="fa fa-list"></span> 
+			<span class="xn-text">Transactions</span>
+		</a>
+	</li>
+    <li>
+        <a ui-sref="anchors">
+            <span class="fa fa-building-o"></span> 
+            <span class="xn-text">Anchors</span>
+        </a>
+    </li>                                            
+	<li class="xn-openable">
+		<a href="#">
+			<span class="fa fa-wrench"></span> 
+			<span class="xn-text">Account Operations</span>
+		</a>
+        <ul>
+            <li>
+              <a ui-sref="setusername">
+                <span class="xn-test">Set Stellar Address</span>
+              </a>
+            </li>
+            <li>
+              <a ui-sref="setinflation">
+                <span class="xn-test">Set Inflation Account</span>
+              </a>
+            </li>            
+            <li>
+              <a ui-sref="mergeaccount">
+                <span class="xn-test">Merge Accounts</span>
+              </a>
+            </li>            
+        </ul>
+	</li>     
+	<li>
+		<a ui-sref="settings">
+			<span class="fa fa-cogs"></span> 
+			<span class="xn-text">Settings</span>
+		</a>
+	</li>                                        	                                   			
+</ul>
+
+<!-- this page specific inline scripts -->
+<script>
+    var html_click_avail = true;
+    
+    $("html").on("click", function(){
+        if(html_click_avail)
+          $(".x-navigation-horizontal li,.x-navigation-minimized li").removeClass('active');
+    });
+    $(".x-navigation-horizontal .panel").on("click",function(e){
+        e.stopPropagation();
+    });
+ $(".x-navigation-control").click(function(){
+        $(this).parents(".x-navigation").toggleClass("x-navigation-open");
+        
+        onresize();
+        
+        return false;
+    });
+
+    $(".x-navigation  li > a").click(function(){
+        
+        var li = $(this).parent('li');        
+        var ul = li.parent("ul");
+        
+        ul.find(" > li").not(li).removeClass("active");    
+        
+    });
+    
+    $(".x-navigation li").click(function(event){
+        event.stopPropagation();
+        
+        var li = $(this);
+                
+            if(li.children("ul").length > 0 || li.children(".panel").length > 0 || $(this).hasClass("xn-profile") > 0){
+                if(li.hasClass("active")){
+                    li.removeClass("active");
+                    li.find("li.active").removeClass("active");
+                }else
+                    li.addClass("active");
+                    
+                onresize();
+                
+                if($(this).hasClass("xn-profile") > 0)
+                    return true;
+                else
+                    return false;
+            }                                     
+    });        
+
+/* X-NAVIGATION CONTROL FUNCTIONS */
+function x_navigation_onresize(){    
+    
+    var inner_port = window.innerWidth || $(document).width();
+    
+    if(inner_port < 1025){               
+        $(".page-sidebar .x-navigation").removeClass("x-navigation-minimized");
+        $(".page-container").removeClass("page-container-wide");
+        $(".page-sidebar .x-navigation li.active").removeClass("active");
+        
+                
+        $(".x-navigation-horizontal").each(function(){            
+            if(!$(this).hasClass("x-navigation-panel")){                
+                $(".x-navigation-horizontal").addClass("x-navigation-h-holder").removeClass("x-navigation-horizontal");
+            }
+        });
+        
+        
+    }else{        
+        if($(".page-navigation-toggled").length > 0){
+            x_navigation_minimize("close");
+        }       
+        
+        $(".x-navigation-h-holder").addClass("x-navigation-horizontal").removeClass("x-navigation-h-holder");                
+    }
+    
+}
+
+function x_navigation_minimize(action){
+    
+    if(action == 'open'){
+        $(".page-container").removeClass("page-container-wide");
+        $(".page-sidebar .x-navigation").removeClass("x-navigation-minimized");
+        $(".x-navigation-minimize").find(".fa").removeClass("fa-indent").addClass("fa-dedent");
+        // $(".page-sidebar.scroll").mCustomScrollbar("update");
+    }
+    
+    if(action == 'close'){
+        $(".page-container").addClass("page-container-wide");
+        $(".page-sidebar .x-navigation").addClass("x-navigation-minimized");
+        $(".x-navigation-minimize").find(".fa").removeClass("fa-dedent").addClass("fa-indent");
+        // $(".page-sidebar.scroll").mCustomScrollbar("disable",true);
+    }
+    
+    $(".x-navigation li.active").removeClass("active");
+    
+}
+
+function x_navigation(){
+    
+    $(".x-navigation-control").click(function(){
+        $(this).parents(".x-navigation").toggleClass("x-navigation-open");
+        
+        onresize();
+        
+        return false;
+    });
+
+    if($(".page-navigation-toggled").length > 0){
+        x_navigation_minimize("close");
+    }    
+    
+    $(".x-navigation-minimize").click(function(){
+                
+        if($(".page-sidebar .x-navigation").hasClass("x-navigation-minimized")){
+            $(".page-container").removeClass("page-navigation-toggled");
+            x_navigation_minimize("open");
+        }else{            
+            $(".page-container").addClass("page-navigation-toggled");
+            x_navigation_minimize("close");            
+        }
+        
+        onresize();
+        
+        return false;        
+    });
+       
+
+    
+    /* XN-SEARCH */
+    $(".xn-search").on("click",function(){
+        $(this).find("input").focus();
+    })
+    /* END XN-SEARCH */
+    
+}
+/* EOF X-NAVIGATION CONTROL FUNCTIONS */
+/* PAGE ON RESIZE WITH TIMEOUT */
+function onresize(timeout){    
+    timeout = timeout ? timeout : 200;
+
+    setTimeout(function(){
+        page_content_onresize();
+    },timeout);
+}
+/* EOF PAGE ON RESIZE WITH TIMEOUT */
+</script>

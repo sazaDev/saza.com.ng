@@ -1,0 +1,87 @@
+<div>
+  <div class="page-title">                    
+    <h2><span class="fa fa-map-marker"></span> Set Inflation Address</h2>
+  </div>
+	<div class="row" ng-controller="setInflationController" ng-init="init()">
+    <div class="col-md-8 col-md-offset-2">
+      <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+        <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+        <li ng-repeat="x in statusMsg.content">
+        {{x}}
+        </li>
+      </div>
+     
+      <form class="form-horizontal" name="inflationForm" method="POST" ng-submit="setInflation()">
+        <div class="panel panel-colorful">
+          <div class="panel-heading">
+            <!-- <h3 ng-if="currentUser.username" class="panel-title"><strong>Current Inflation Address:</strong> {{currentUser.username}}</h3> -->
+            <ul class="panel-controls">
+              <!-- <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li> -->
+            </ul>
+          </div>
+          <div class="panel-body">
+            <p class="text-info">This action will modify your Stellar account in the following ways:</p>
+            <ul>
+              <li>Set an inflation address for the calcualtion of inflation</li>
+              <li>Remove your Stellar address from our federation server</li>
+              <li>Unset the home domain value of your account</li>
+              
+
+            </ul>
+          </div>
+          <div class="panel-body">                                                                        
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Inflation Address</label>
+              <div class="col-md-6 col-xs-12">                                            
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                  <input type="text" class="form-control" name="inflationDest" ng-model="userData.inflationDest" placeholder="Inflation Destination" required/>
+                </div>                                            
+                <span class="help-block">Enter inflation destination for your Stellar Account</span>
+                <p ng-if="userData.username">Your Stellar Address will be: <span class="text-danger">{{userData.username}}*{{siteURL}}</span></p>
+              </div>
+            </div>
+
+
+
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-success pull-right" ng-disabled="inflationForm.$error.required || inflationForm.$error.$invalid">Set Inflation Address</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+/* MESSAGE BOX */
+$("[class^=mb-control-]").on("click",function(){
+  var box = $($(this).data("box"));
+  if(box.length > 0){
+    box.toggleClass("open");
+
+    var sound = box.data("sound");
+
+    if(sound === 'alert')
+      playAudio('alert');
+
+    if(sound === 'fail')
+      playAudio('fail');
+
+  }        
+  return false;
+});
+$(".mb-control-close").on("click",function(){
+ $(this).parents(".message-box").removeClass("open");
+ return false;
+});    
+/* END MESSAGE BOX */
+
+</script>	

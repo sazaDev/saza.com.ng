@@ -1,0 +1,39 @@
+<!-- Contact block starts -->
+<div ng-Controller="contactController" ng-init="init()">
+<div class="panel panel-colorful">
+
+  <form method="post" name="contactForm" ng-submit="sendMessage()">
+  <div class="panel-body">
+    <h2>Contact</h2>
+    <p>Feel free to contact us for any issues you might have with our products.</p>
+      <div ng-show="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+      
+      <ul>
+      <li ng-repeat="x in statusMsg.content">
+      {{x}}
+      </li>
+      </ul>
+     </div>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" class="form-control" placeholder="youremail@domain.com" name="email" ng-model="contactData.email"  required>
+        <span style="color:red" ng-show="contactForm.email.$dirty && contactForm.email.$invalid">                  
+              <small ng-show="contactForm.email.$error.email">Invalid email address.</small>
+        </span>
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <input type="text" class="form-control" placeholder="Message subject" name="subject" ng-model="contactData.subject" required>
+      </div>                                
+      <div class="form-group">
+        <label>Message</label>
+        <textarea class="form-control" placeholder="Your message" rows="3" name="message" ng-model="contactData.message" required></textarea>
+      </div>                                
+    </div>
+    <div class="panel-footer"> 
+      <button class="btn btn-success pull-right" ng-disabled="contactForm.$error.required || contactForm.$error.$invalid">Send</button>
+    </div>
+  </form>
+</div>
+</div>
+<!-- Contact block ends -->

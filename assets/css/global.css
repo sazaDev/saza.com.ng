@@ -1,0 +1,334 @@
+@import url(http://fonts.googleapis.com/css?family=Raleway:400,600,700);
+/*You can add your won color also */
+body {
+  font-family: 'Raleway', sans-serif;
+  font-size: 13px;
+  line-height: 21px;
+  font-weight: 400;
+  color: #666;
+  background: url(../img/patterns/1.png) fixed repeat;
+}
+strong,
+b {
+  font-weight: 600;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+ul,
+ol {
+  list-style: none;
+}
+ul {
+  padding: 0;
+  margin: 0;
+}
+a {
+  transition: color 0.2s ease-in-out;
+  -moz-transition: color 0.2s ease-in-out;
+  -webkit-transition: color 0.2s ease-in-out;
+  -o-transition: color 0.2s ease-in-out;
+}
+a:hover {
+  color: #444;
+}
+a,
+a:hover,
+a:focus {
+  text-decoration: none;
+  outline: none;
+}
+i {
+  font-size: 1.1em;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  margin: 0;
+}
+h1 {
+  font-size: 24px;
+  line-height: 30px;
+}
+h2 {
+  font-size: 22px;
+  line-height: 28px;
+}
+h3 {
+  font-size: 18px;
+  line-height: 24px;
+}
+h4 {
+  font-size: 16px;
+  line-height: 22px;
+}
+h5 {
+  font-size: 14px;
+  line-height: 20px;
+}
+h6 {
+  font-size: 12px;
+  line-height: 18px;
+}
+p {
+  color: #666;
+  font-size: 13px;
+  font-family: 'Raleway', sans-serif;
+  line-height: 22px;
+  margin: 0;
+}
+p strong {
+  font-weight: 600;
+}
+.accent-color-bg {
+  color: #fff;
+}
+.fittext {
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 1.6em;
+  margin-bottom: 35px;
+  color: rgba(0, 0, 0, 0.8);
+}
+.fittext strong {
+  font-weight: 700;
+}
+.page-content p {
+  margin-bottom: 15px;
+}
+.wite-text {
+  color: #fff;
+}
+.uppercase {
+  text-transform: uppercase;
+}
+.image-text {
+  margin-right: 10px;
+}
+input[type="submit"] {
+  display: inline-block;
+  text-decoration: none;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+}
+input[type="submit"]:hover {
+  background: #444;
+  color: #fff;
+}
+input[type="submit"] {
+  border: none;
+}
+.tooltip .tooltip-inner {
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -o-border-radius: 2px;
+}
+#content {
+  padding: 60px 0;
+}
+#content.full-sections {
+  padding: 0;
+}
+.section {
+  position: relative;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-position: center center;
+  -webkit-background-size: cover !important;
+  -moz-background-size: cover !important;
+  -o-background-size: cover !important;
+  background-size: cover !important;
+}
+.section.repeat-bg {
+  background-repeat: repeat;
+  -webkit-background-size: auto !important;
+  -moz-background-size: auto !important;
+  -o-background-size: auto !important;
+  background-size: auto !important;
+}
+.bg-parallax {
+  background-attachment: fixed;
+}
+.section-video {
+  position: absolute;
+  z-index: 33;
+  left: 0;
+  top: -100px;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+.section-video object {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+}
+.section-video img {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+}
+.section-video-content {
+  z-index: 35;
+  position: relative;
+  opacity: 0.98;
+}
+.section-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 34;
+  opacity: 0.7;
+}
+.light-section {
+  color: #fff;
+}
+.light-section .testimonials {
+  color: #666;
+}
+.light-section .testimonials .testimonial-content p {
+  color: #c4c4c4;
+}
+#container {
+  background-color: #fff;
+}
+.boxed-page {
+  position: relative;
+  width: 1220px;
+  margin: 0 auto;
+  background-color: #fff;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  -o-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.boxed-page header {
+  width: 1220px;
+}
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  z-index: 9999999999;
+}
+@-webkit-keyframes ball-scale-multiple {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+@keyframes ball-scale-multiple {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+.ball-scale-multiple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -40px;
+  margin-top: -40px;
+  -webkit-transform: translateY(-30px);
+  -ms-transform: translateY(-30px);
+  transform: translateY(-30px);
+}
+.ball-scale-multiple > div:nth-child(2) {
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+.ball-scale-multiple > div:nth-child(3) {
+  -webkit-animation-delay: 0.4s;
+  animation-delay: 0.4s;
+}
+.ball-scale-multiple > div {
+  background-color: #ED5565;
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  margin: 2px;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  opacity: 0;
+  margin: 0;
+  width: 60px;
+  height: 60px;
+  -webkit-animation: ball-scale-multiple 1s 0s linear infinite;
+  animation: ball-scale-multiple 1s 0s linear infinite;
+}
+#portfolio-list .mix {
+  display: none;
+}
+.page-banner {
+  padding: 30px 0;
+  background: #fbfbfb;
+  border-bottom: 1px solid #eee;
+}
+.page-banner h2 {
+  font-size: 30px;
+  color: #999;
+  font-weight: 700;
+}
+.breadcrumbs {
+  float: right;
+  margin: 3px 0 6px;
+  position: relative;
+  z-index: 1;
+  font-size: 13px;
+  color: #999;
+}
+.breadcrumbs a {
+  color: #444;
+}
+.breadcrumbs .crumbs-spacer {
+  color: #ccc;
+  margin: 0 4px;
+}

@@ -1,0 +1,78 @@
+<div>
+ <div class="page-title">                    
+        <h2><span class="fa fa-dot-circle-o"></span> Anchors</h2>
+
+</div>
+	<div class="row" ng-controller="anchorsController" ng-init="init()">
+    <div class="col-md-8 col-md-offset-2">
+      <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+      <li ng-repeat="x in statusMsg.content">
+      {{x}}
+      </li>
+
+     </div>
+        <p>
+          
+          To add an anchor just enter the domain name. E.g <em>saza.com.ng</em>
+          
+        </p>  
+        <p class="text-info"><i class="fa fa-info"></i> Note that by addidng an anchor you automaically trust this anchor and will be able to hold its assets.</p>    
+        <div class="panel panel-colorful">
+          
+          <div class="panel-body">
+
+            <form class="form-horizontal" name="anchorsForm" method="POST" ng-submit="addAnchor()">
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Anchor URL</label>
+              <div class="col-md-6 col-xs-12">                                            
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                  <input type="text" class="form-control" name="anchorURL" ng-model="anchorData.anchorURL" placeholder="Anchor URL" required/>
+                </div>                                            
+                <span class="help-block">Enter The URL of your anchor. e.g example.com</span>
+              </div>
+            </div>
+            <button class="btn btn-success pull-right" ng-disabled="anchorsForm.$error.required || anchorsForm.$error.$invalid">Add Anchor</button>
+            </form>      
+          </div>
+         
+          <div class="panel-footer">
+            
+          </div>
+        </div>
+      
+
+    </div>
+
+
+
+  </div>
+
+</div>
+<script type="text/javascript">
+
+/* MESSAGE BOX */
+$("[class^=mb-control-]").on("click",function(){
+  var box = $($(this).data("box"));
+  if(box.length > 0){
+    box.toggleClass("open");
+
+    var sound = box.data("sound");
+
+    if(sound === 'alert')
+      playAudio('alert');
+
+    if(sound === 'fail')
+      playAudio('fail');
+
+  }        
+  return false;
+});
+$(".mb-control-close").on("click",function(){
+ $(this).parents(".message-box").removeClass("open");
+ return false;
+});    
+/* END MESSAGE BOX */
+
+</script>	

@@ -1,0 +1,97 @@
+<div class="page-title">                    
+  <h2><span class="fa fa-cogs"></span> Settings</h2>
+</div>
+<div class="row" ng-controller="settingsController" ng-init="init()">
+  <div class="col-md-10 col-md-offset-1">
+    <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+      {{statusMsg.content}}
+    </div>
+    <div class="panel panel-colorful nav-tabs-vertical">                   
+      <div class="panel-heading ui-draggable-handle">
+        <h3 class="panel-title">Modify your settings</h3>
+      </div>
+      <div class="tabs">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#tab1" data-toggle="tab" aria-expanded="false"><i class="fa fa-list"></i> Account Details</a></li>
+          <!-- <li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false"><i class="fa fa-bullhorn"></i> Notifications</a></li> -->
+          <li class=""><a href="#tab3" data-toggle="tab" aria-expanded="true"><i class="fa fa-lock"></i> Security</a></li>
+        </ul>                    
+        <div class="panel-body tab-content">
+          <div class="tab-pane  active" id="tab1">
+            <h2 class="header-side">Account ID</h2>
+              <span id="acctID">{{currentUser.account_id}}  </span>
+              <span>
+                <button ngclipboard data-clipboard-target="#acctID" >
+                  <i class="fa fa-clipboard"></i>
+                </button>
+              </span>
+              <br>
+            <h2 class="header-side">Seed</h2>
+              <span>{{seed}}</span>  
+              <span>
+                <button ng-click="toggleSeedView()" class="btn btn-default">
+                  <i  class="fa fa-eye"></i>
+                </button>
+              </span>
+              <br>
+            <h2 class="header-side">Set Username</h2>
+
+             <h3 ng-if="currentUser.username"><strong>Current Stellar Address:</strong> {{currentUser.username}}</h3>
+
+            <p>You can set a username for your stellar account instead of using the long Account ID.</p>
+            <p>The name will be in this format <em>username</em>*<em>domain.com</em>.
+              For example: <em>jasmine*{{siteURL}}</em>
+            </p>
+            <p>To set a username <a ui-sref="setusername">click here</a></p>
+          </div>
+          <div class="tab-pane" id="tab2">
+            <h2 class="header-side">Emails</h2>
+            <p>
+              Receive notifications when sending payments
+            </p>
+            <p>
+              <span>No</span>
+              <label class="switch">
+                <input type="checkbox" checked="" value="0">
+                <span></span>
+              </label>
+              <span>Yes</span>
+            </p>
+
+          </div>
+          <div class="tab-pane" id="tab3">
+            <div class="row">
+              <h2 class="header-side">Change Password</h2>
+              <p>To change your password, please fill the new password below and click save</p>
+              <p class="text-info"><i class="fa fa-info"></i> You need to enter your old password for the change to be successful. If yor require a password reset, kindly logout and use the "forgot password" option on the login page</p>
+              <form method="post" ng-submit="changePassword()" name="changePasswordForm">
+                 <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="password" ng-model="passwordData.password" placeholder="Enter New Password" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="password_confirmation" ng-model="passwordData.password_confirmation" placeholder="Confirm New Password" required data-password-verify="passwordData.password">
+                  </div>
+                  <small style="color:red" ng-show="changePasswordForm.password.$dirty && changePasswordForm.password_confirmation.$error.required">
+                    Confirm Password!
+                  </small>
+                  <small style="color:red" ng-show="changePasswordForm.password_confirmation.$error.passwordVerify">
+                    Passwords do not match!
+                  </small>
+                  <div class="form-group">
+                    <label>Enter Old Password</label>
+                    <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="old_password" ng-model="passwordData.old_password" placeholder="Enter Old Password" required="">
+                  </div>
+                  <button class="btn btn-success pull-right" ng-disabled="changePasswordForm.$error.required || changePasswordForm.$error.$invalid || changePasswordForm.password_confirmation.$error.passwordVerify">Change Password</button>
+              </form>
+              
+            </div>
+
+          </div>                        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

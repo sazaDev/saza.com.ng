@@ -1,0 +1,160 @@
+<div class="page-title">                    
+  <h2><span class="fa fa-dashboard"></span> Account Overview</h2>
+</div>
+
+<div ng-controller="dashboardController" ng-init="init()">
+  <!-- START WIDGETS -->                    
+  <div class="row">
+    <div class="col-md-3">
+
+      <div class="widget widget-info">
+        <div class="widget-title">XLM Balance</div>
+        <div class="widget-subtitle">Lumens</div>
+        <div class="widget-int"><span data-toggle="counter" data-to="1564">{{balance.xlm || 0.00 | currency:"XLM":4}}</span></div>
+        <!-- <div class="widget-controls">
+          <a href="#" class="widget-control-left"><span class="fa fa-upload"></span></a>
+          <a href="#" class="widget-control-right"><span class="fa fa-times"></span></a>
+        </div> -->
+      </div>
+
+    </div>
+    <div class="col-md-3">
+
+      <div class="widget widget-success">
+        <div class="widget-title">XLM Value in USD</div>
+        <div class="widget-subtitle">US Dollars</div>
+        <div class="widget-int">
+          <span data-toggle="counter" data-to="1564">
+            {{balance.usd || 0.00 | currency}}
+        </span></div>
+        <!-- <div class="widget-controls">
+          <a href="#" class="widget-control-left"><span class="fa fa-upload"></span></a>
+          <a href="#" class="widget-control-right"><span class="fa fa-times"></span></a>
+        </div> -->
+      </div>
+
+    </div>
+    <div class="col-md-3">
+
+      <div class="widget widget-warning">
+        <div class="widget-title">XLM Value in BTC</div>
+        <div class="widget-subtitle">Bit Coin</div>
+        <div class="widget-int"><span data-toggle="counter" data-to="1564">
+          {{balance.btc || 0.00 | currency:"BTC"}}
+        </span></div>
+        <!-- <div class="widget-controls">
+          <a href="#" class="widget-control-left"><span class="fa fa-upload"></span></a>
+          <a href="#" class="widget-control-right"><span class="fa fa-times"></span></a>
+        </div> -->
+      </div>
+
+    </div>
+    <div class="col-md-3">
+
+      <div class="widget widget-default">
+        <div class="widget-title">XLM Value in NGN</div>
+        <div class="widget-subtitle">Nigerian Naira</div>
+        <div class="widget-int">
+          {{balance.ngn || 0.00 | currency:"NGN"}}
+        </div>
+        <!-- <div class="widget-controls">
+          <a href="#" class="widget-control-left"><span class="fa fa-upload"></span></a>
+          <a href="#" class="widget-control-right"><span class="fa fa-times"></span></a>
+        </div> -->
+      </div>
+
+    </div>    
+    <!-- <div class="col-md-3">
+
+      <div class="widget widget-danger widget-padding-sm">
+        <div class="widget-big-int plugin-clock">20<span>:</span>48</div>                            
+        <div class="widget-subtitle plugin-date">Thursday, August 18, 2016</div>
+        <div class="widget-controls">                                
+          <a href="#" class="widget-control-right"><span class="fa fa-times"></span></a>
+        </div>                            
+        <div class="widget-buttons widget-c3">
+          <div class="col">
+            <a href="#"><span class="fa fa-clock-o"></span></a>
+          </div>
+          <div class="col">
+            <a href="#"><span class="fa fa-bell"></span></a>
+          </div>
+          <div class="col">
+            <a href="#"><span class="fa fa-calendar"></span></a>
+          </div>
+        </div>                            
+      </div>                        
+
+    </div> -->
+
+
+  </div>
+  <!-- END WIDGETS -->                    
+
+  <div class="row">
+    <div class="col-md-8">
+
+      <!-- START transaction BLOCK -->
+        <div ui-view="txHistory"></div>
+      <!-- END transaction BLOCK -->
+      
+    </div>
+    <div class="col-md-4">
+      <div class="page-title">                    
+        <h2><span class="fa fa-list"></span> Assets</h2>
+      </div>
+      <!-- START ASSETS BLOCK -->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-title-box">
+            <h3>Assets</h3>
+            <span>Balance of assets in account</span>
+          </div>                                    
+          <ul class="panel-controls" style="margin-top: 2px;">
+            <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+            <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+              <ul class="dropdown-menu">
+                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+              </ul>                                        
+            </li>                                        
+          </ul>
+        </div>
+        <div class="panel-body panel-body-table">
+
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th width="50%">Asset Type</th>
+                  <th width="50%">Balance</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="x in assets">
+                  <td><strong>{{x.asset_type === 'native' ? 'XLM' : x.asset_code }}</strong></td>
+                  <td>{{x.balance}}</td>
+                  
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+      <!-- END PROJECTS BLOCK -->
+
+      <!-- Contact block starts -->
+      <div ui-view="contactForm"></div>
+      <!-- Contact block ends -->
+
+    </div>
+  </div>
+
+</div>
+
+

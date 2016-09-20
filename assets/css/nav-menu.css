@@ -1,0 +1,274 @@
+/*You can add your won color also */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999999;
+  transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+}
+.top-bar {
+  background: #101215;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.top-bar .contact-details li {
+  display: inline-block;
+  padding: 6px 0;
+}
+.top-bar .contact-details li a {
+  font-size: 12px;
+  display: block;
+  margin-right: 15px;
+  color: #fff;
+  line-height: 32px;
+}
+.top-bar .contact-details li a i {
+  padding-right: 5px;
+  vertical-align: middle;
+}
+ul.social-list {
+  float: right;
+}
+ul.social-list li {
+  float: left;
+  padding: 6px 0;
+}
+ul.social-list li a {
+  display: inline-block;
+  color: #808C8C;
+  transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+}
+ul.social-list li a i {
+  font-size: 16px;
+  display: block;
+  width: 34px;
+  height: 33px;
+  line-height: 33px;
+  text-align: center;
+}
+ul.social-list li a:hover {
+  color: #fff;
+}
+ul.social-list li a.facebook:hover {
+  background-color: #507CBE;
+}
+ul.social-list li a.twitter:hover {
+  background-color: #63CDF1;
+}
+ul.social-list li a.google:hover {
+  background-color: #F16261;
+}
+ul.social-list li a.dribbble:hover {
+  background-color: #E46387;
+}
+ul.social-list li a.linkdin:hover {
+  background-color: #90CADD;
+}
+ul.social-list li a.vimeo:hover {
+  background-color: #87D3E0;
+}
+.navbar {
+  margin-bottom: 0;
+  background: #fff;
+  border: none;
+  border-bottom: 1px solid #eee;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -o-border-radius: 0;
+}
+.navbar-brand {
+  position: relative;
+  padding: 22px 0;
+  margin: 0!important;
+  transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+}
+.navbar-default .navbar-nav {
+  margin-right: 10px!important;
+  position: relative;
+  transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+}
+.navbar-default .navbar-nav > li {
+  margin-left: 6px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.navbar-default .navbar-nav > li > a {
+  color: #999;
+  display: block;
+  font-size: 14px;
+  border-radius: 4px;
+  padding: 7px 20px;
+  text-transform: uppercase;
+  font-weight: 300;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  font-weight: 400;
+}
+.navbar-default .navbar-nav > li > a i {
+  margin: 0 -2px 0 -5px;
+}
+.navbar-default .navbar-nav .dropdown {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 200px;
+  padding: 10px 20px 20px 20px;
+  background-color: #fff;
+  visibility: hidden;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  -moz-transition: opacity 0.3s ease-in-out;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  -o-transition: opacity 0.3s ease-in-out;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  -o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.navbar-default .navbar-nav > li.drop:hover .dropdown {
+  visibility: visible;
+  opacity: 1;
+}
+.dropdown li,
+.sup-dropdown li {
+  position: relative;
+}
+.dropdown li a,
+.sup-dropdown li a {
+  display: block;
+  color: #666;
+  font-size: 13px;
+  font-family: 'Raleway', sans-serif;
+  padding: 11px 16px;
+  margin: 3px 0;
+  text-decoration: none;
+  text-transform: capitalize;
+  transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+}
+.dropdown li a i {
+  margin: 0 0 0 -4px;
+}
+.navbar-default .navbar-nav .sup-dropdown {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  width: 200px;
+  background-color: #fff;
+  margin-top: 10px;
+  transition: margin-top 0.2s ease-in-out;
+  -moz-transition: margin-top 0.2s ease-in-out;
+  -webkit-transition: margin-top 0.2s ease-in-out;
+  -o-transition: margin-top 0.2s ease-in-out;
+  visibility: hidden;
+  z-index: 3;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  -o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.navbar-default .navbar-nav li.drop .dropdown li:hover .sup-dropdown {
+  visibility: visible;
+  margin-top: 0;
+}
+.search-side {
+  position: relative;
+  float: right;
+  top: 19px;
+  right: -15px;
+  transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+}
+.show-search {
+  position: relative;
+  display: block;
+  cursor: pointer;
+  float: right;
+}
+.show-search i {
+  font-size: 1.2em !important;
+  display: block;
+  color: #666;
+  width: 36px;
+  height: 36px;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -o-border-radius: 2px;
+  line-height: 36px;
+  text-align: center;
+  background-color: #f2f2f2;
+  transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+}
+.show-search:hover i {
+  color: #666;
+}
+.full-search {
+  width: 100%;
+  background: #444444;
+  z-index: 9999;
+  position: absolute;
+  top: 0px;
+  display: none;
+  left: 0px;
+  height: 77px;
+  margin-bottom: -1px;
+}
+.full-search .form-control:focus {
+  border: none;
+}
+.full-search .close-search {
+  cursor: pointer;
+  color: #fff;
+  top: 24px;
+}
+.full-search input[type="text"] {
+  outline: none;
+  font-size: 22px;
+  display: inline-block;
+  color: #FFF;
+  width: 100%;
+  margin-left: -45px;
+  font-weight: 400;
+  border: none;
+  background: #444;
+  padding: 0px 65px;
+  line-height: 30px;
+}
+.wpb-mobile-menu {
+  display: none;
+}
+.slicknav_menu {
+  display: none;
+}
+@media screen and (max-width: 767px) {
+  .js #wpb-mobile-menu {
+    display: none;
+  }
+  .js .slicknav_menu {
+    display: block;
+  }
+}

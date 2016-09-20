@@ -1,0 +1,126 @@
+<div>
+ <div class="page-title">                    
+        <h2><span class="fa fa-money"></span> Send Payment</h2>
+
+</div>
+	<div class="row" ng-controller="sendPaymentController" ng-init="init()">
+    <div class="col-md-8 col-md-offset-2">
+      <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+      <li ng-repeat="x in statusMsg.content">
+      {{x}}
+      </li>
+
+    </div>
+      <form class="form-horizontal" name="paymentForm" method="POST" ng-submit="sendPayment()">
+        <div class="panel panel-colorful">
+          <div class="panel-heading">
+            <!-- <h3 class="panel-title"><strong>Send</strong> Payment</h3> -->
+            <ul class="panel-controls">
+              <!-- <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li> -->
+            </ul>
+          </div>
+          <div class="panel-body">
+            <p class="text-info"><i class="fa fa-info-circle"></i> For each payment, Stellar charges a base fee of 100 Stroops = 0.00001 XLM distributed via inflation through the stellar network</p>
+          </div>
+          <div class="panel-body">                                                                        
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Destination Account</label>
+              <div class="col-md-6 col-xs-12">                                            
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                  <input type="text" class="form-control" name="destAcct" ng-model="paymentData.destAcct" required ng-pattern="userRegex"/>
+                </div>                                            
+                <span class="help-block">Account ID  or Stellar Address of the recepient</span>
+                <span class="text-danger" ng-show="paymentForm.destAcct.$dirty && paymentForm.destAcct.$invalid">
+                  <small ng-show="paymentForm.destAcct.$error.required">Destination Account is required. </small>
+                  <small ng-show="paymentForm.destAcct.$invalid">
+                    The following characters are not allowed: <,|>.</small>
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Amount</label>
+              <div class="col-md-6 col-xs-12">                                            
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-money"></span></span>
+                  <input type="number" min="0" class="form-control" name="amount" ng-model="paymentData.amount" required/>
+                </div>                                            
+                <span class="help-block">Amount to send in XLM</span>
+              </div>
+            </div>  
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Memo</label>
+              <div class="col-md-6 col-xs-12">                                            
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-edit"></span></span>
+                  <input type="text" class="form-control" name="memoText" ng-model="paymentData.memoText" ng-maxlength="28"/>
+                </div>                                            
+                <span class="help-block">Short description: Max 28 characters</span>
+              </div>
+            </div>                       
+
+            <div class="form-group">                                        
+              <label class="col-md-3 col-xs-12 control-label">Password</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-unlock-alt"></span></span>
+                  <input type="password" class="form-control" name="password" ng-model="paymentData.password" required/>
+                </div>            
+                <span class="help-block">Please enter your Saza account password to verify operation</span>
+              </div>
+            </div>
+
+
+
+            <!-- <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Checkbox</label>
+              <div class="col-md-6 col-xs-12">                                                                                                                                        
+                <label class="check"><input type="checkbox" class="icheckbox" checked="checked"/> Checkbox title</label>
+                <span class="help-block">Checkbox sample, easy to use</span>
+              </div>
+            </div> -->
+
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-success pull-right" ng-disabled="paymentForm.$error.required || paymentForm.$invalid">Submit</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+
+
+  </div>
+
+</div>
+<script type="text/javascript">
+
+/* MESSAGE BOX */
+$("[class^=mb-control-]").on("click",function(){
+  var box = $($(this).data("box"));
+  if(box.length > 0){
+    box.toggleClass("open");
+
+    var sound = box.data("sound");
+
+    if(sound === 'alert')
+      playAudio('alert');
+
+    if(sound === 'fail')
+      playAudio('fail');
+
+  }        
+  return false;
+});
+$(".mb-control-close").on("click",function(){
+ $(this).parents(".message-box").removeClass("open");
+ return false;
+});    
+/* END MESSAGE BOX */
+
+</script>	

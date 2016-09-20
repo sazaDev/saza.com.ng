@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>       
+  <base href="/lumens/"></base>
+  <!-- META SECTION -->
+  <title>SAZA Wallet</title>            
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <!-- END META SECTION -->
+
+  <!-- CSS INCLUDE -->        
+  <link rel="stylesheet" type="text/css" id="theme" href="css/theme-default.css"/>
+  <link rel="stylesheet" type="text/css" id="theme" href="css/loading-bar.min.css"/>
+  <link rel="stylesheet" type="text/css"  href="css/custom.css"/>
+  <!-- EOF CSS INCLUDE -->
+<style>
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+</style>
+</head>
+<body ng-app="lumensWall">
+  <!-- START PAGE CONTAINER -->
+  <div class="page-container" ng-cloak ui-view="pgContainer">
+
+    <!-- START PAGE SIDEBAR -->
+    <div class="page-sidebar" ui-view="sideBar">
+      <!-- START X-NAVIGATION -->
+
+      <!-- END X-NAVIGATION -->
+    </div>
+    <!-- END PAGE SIDEBAR -->
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+      <!-- START X-NAVIGATION VERTICAL -->
+      <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
+        <!-- TOGGLE NAVIGATION -->
+        <li class="xn-icon-button">
+          <a class="x-navigation-minimize"><span class="fa fa-dedent"></span></a>
+        </li>
+
+        <!-- END TOGGLE NAVIGATION -->  
+        <li class="xn-icon-button pull-right" ng-controller="logoutController">
+          <a href="#" ng-click="logout()"><span class="fa fa-sign-out"></span></a>                        
+        </li>                  
+      </ul>
+      <!-- END X-NAVIGATION VERTICAL -->                     
+
+      <!-- START BREADCRUMB -->
+      <div class="breadcrumb row">
+        <p class="col-md-12" ng-cloak>Hi {{currentUser.username || currentUser.email}}  | Account ID: {{currentUser.account_id}}</p>
+      </div>
+      <!-- END BREADCRUMB -->                
+
+      <!-- <div class="page-title">                    
+        <h2><span class="fa fa-arrow-circle-o-left"></span> Page Title</h2>
+      </div> -->                   
+
+      <!-- PAGE CONTENT WRAPPER -->
+      <div class="page-content-wrap" ui-view="pgContent">
+	<!--
+        <div class="row">
+          <div class="col-md-12">
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Panel Title</h3>
+              </div>
+              <div class="panel-body">
+                Panel body
+              </div>
+            </div>
+
+          </div>
+        </div>
+	-->
+      </div>
+      <!-- END PAGE CONTENT WRAPPER --> 
+
+    </div>            
+    <!-- END PAGE CONTENT -->
+  </div>
+  <!-- END PAGE CONTAINER -->
+
+
+
+  <!-- START PRELOADS -->
+  <audio id="audio-alert" src="audio/alert.mp3" preload="auto"></audio>
+  <audio id="audio-fail" src="audio/fail.mp3" preload="auto"></audio>
+  <!-- END PRELOADS -->                 
+
+  <!-- START SCRIPTS -->
+  <!-- START PLUGINS -->
+  <script type="text/javascript" src="js/plugins/jquery/jquery.min.js"></script>
+  <!-- // <script type="text/javascript" src="js/plugins/jquery/jquery2.js"></script> -->
+
+  <script type="text/javascript" src="js/plugins/jquery/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="js/plugins/bootstrap/bootstrap.min.js"></script>        
+  <!-- END PLUGINS -->
+
+  <!-- THIS PAGE PLUGINS -->
+<script type="text/javascript" src="js/plugins/datatables/jquery.dataTables.min.js"></script> 
+  <!-- END PAGE PLUGINS -->         
+
+  <script type="text/javascript" src="js/angular/angular.js"></script>
+  <script type="text/javascript" src="js/angular/angular-ui-router.js"></script>
+  <script type="text/javascript" src="js/angular/angular-random-string.js"></script>
+  <script type="text/javascript" src="js/angular/angular-password.js"></script>
+  <script type="text/javascript" src="js/angular/angular-datatables.js"></script>
+  <script type="text/javascript" src="js/angular/loading-bar.min.js"></script>
+  <script type="text/javascript" src="js/plugins/clipboard/clipboard.min.js"></script> 
+  <script type="text/javascript" src="js/angular/ngclipboard.js"></script>
+  <script type="text/javascript" src="app/shared/services/login.service.js"></script>
+  <script type="text/javascript" src="app/shared/services/account.service.js"></script>
+  <script type="text/javascript" src="app/shared/services/contact.service.js"></script>
+  <script type="text/javascript" src="app/app.js"></script>
+  <script type="text/javascript" src="app/shared/directives.js"></script>
+  <script type="text/javascript" src="app/register/register.controller.js"></script>
+  <script type="text/javascript" src="app/login/login.controller.js"></script>
+  <script type="text/javascript" src="app/login/activate.controller.js"></script>
+  <script type="text/javascript" src="app/login/logout.controller.js"></script>
+  <script type="text/javascript" src="app/login/password.controller.js"></script>
+  <script type="text/javascript" src="app/dashboard/dashboard.controller.js"></script>  
+  <script type="text/javascript" src="app/account/create_account.controller.js"></script>  
+  <script type="text/javascript" src="app/account/send_payment.controller.js"></script>
+  <script type="text/javascript" src="app/account/set_username.controller.js"></script>  
+  <script type="text/javascript" src="app/account/set_inflation.controller.js"></script>
+  <script type="text/javascript" src="app/account/merge_account.controller.js"></script>  
+  <script type="text/javascript" src="app/account/transactions.controller.js"></script>
+  <script type="text/javascript" src="app/account/anchors.controller.js"></script>
+  <script type="text/javascript" src="app/contact/contact.controller.js"></script>
+  <script type="text/javascript" src="app/shared/menu/sidemenu.controller.js"></script>
+  <script type="text/javascript" src="app/settings/settings.controller.js"></script>
+
+
+  <!-- START TEMPLATE -->
+  <script type="text/javascript" src="js/plugins.js"></script>        
+  <script type="text/javascript" src="js/actions.js"></script>        
+  <!-- END TEMPLATE -->
+
+
+  <!-- END SCRIPTS -->         
+</body>
+</html>
+
+
+
+
+
+

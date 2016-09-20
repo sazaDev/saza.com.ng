@@ -1,0 +1,111 @@
+<div>
+ <div class="page-title">                    
+        <h2><span class="fa fa-money"></span> Receive Payment</h2>
+
+</div>
+	<div class="row" >
+    <div class="col-md-12">
+      <div class="panel panel-colorful">
+      <div class="panel-heading">                                
+        <h3 class="panel-title"></h3>
+                                      
+      </div>
+      <div class="panel-body">
+        <p>You can receive payment from other accounts on the stellar network using the following</p>
+
+        <h2 class="header-side">Use your Account ID</h2>
+        <span id="acctID">{{currentUser.account_id}}  </span>
+    
+        <h2 class="header-side">Use your Stellar Address</h2>
+        <h3 ng-if="currentUser.username"><strong>Current Stellar Address:</strong> {{currentUser.username}}</h3>
+        
+        <p ng-if="!currentUser.username">
+          You can set a username for your stellar account instead of using the long Account ID.
+
+          The name will be in this format <em>username</em>*<em>domain.com</em>.
+
+          For example: <em>jasmine*{{siteURL}}</em>
+          To set a username <a ui-sref="setusername">click here</a>
+        </p>
+        
+
+        <h2 class="header-side">Use our plugin</h2>
+        <p>You can use our plugin to receive payments directly to your account from your websites, and its free</p>
+        <p>
+          <span class="badge">1.</span> Include Saza's "<a href="https://raw.githubusercontent.com/poliha/stellar-donation-plugin/master/stellar.donate.js" target="_blank">stellar.donate.js</a>" file to your web page.
+
+        </p>
+        <p>
+          <span class="badge">2.</span> Add the following code snippet to your page.
+
+        </p>
+        <p>
+          <code>&lt;div id="stellar-donate" data-dest="{{currentUser.account_id}}"&gt;&lt;/div&gt;</code>
+        </p>
+
+      </div>
+    </div>
+    
+    </div>
+
+
+
+  </div>
+
+
+  <!-- MESSAGE BOX-->
+ <!--  <a href="#" class="mb-control-success" ng-hide="true" data-box="#mb-success"><span class="fa fa-sign-out"></span></a>
+  <div class="message-box row message-box-success animated fadeIn" data-sound="alert" id="mb-success">
+    <div class="mb-container">
+      <div class="mb-middle">
+        <div class="mb-title"></span> <i class="fa fa-smile-o"></i>  Account <strong>Created</strong> </div>
+        <div class="mb-content">
+          <p>Congratulations, your stellar account has been created</p>                    
+          <p>You are required to fund your account before, it is fully activated. </p>
+          <p>Learn how to fund your account <a href="#">here</a></p>
+          <h1>Keep your account details safe</h1>
+          <h3>Account ID: {{currentUser.account_id}}</h3>
+          <h3>Seed: {{currentUser.seed}}</h3>
+
+        </div>
+        <div class="mb-footer">
+          <div class="pull-right">
+            <a ui-sref="dashboard" class="btn btn-info btn-lg">Accounts Overview</a>
+            <button class="btn btn-default btn-lg mb-control-close">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <!-- END MESSAGE BOX-->
+
+
+
+
+</div>
+<script type="text/javascript">
+
+/* MESSAGE BOX */
+$("[class^=mb-control-]").on("click",function(){
+  var box = $($(this).data("box"));
+  if(box.length > 0){
+    box.toggleClass("open");
+
+    var sound = box.data("sound");
+
+    if(sound === 'alert')
+      playAudio('alert');
+
+    if(sound === 'fail')
+      playAudio('fail');
+
+  }        
+  return false;
+});
+$(".mb-control-close").on("click",function(){
+ $(this).parents(".message-box").removeClass("open");
+ return false;
+});    
+/* END MESSAGE BOX */
+
+</script>	

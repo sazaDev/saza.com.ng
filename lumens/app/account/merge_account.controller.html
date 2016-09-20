@@ -1,0 +1,95 @@
+<div>
+ <div class="page-title">                    
+        <h2><span class="fa fa-dot-circle-o"></span> Merge Account</h2>
+
+</div>
+	<div class="row" ng-controller="mergeAccountController" ng-init="init()">
+    <div class="col-md-8 col-md-offset-2">
+      <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+      <li ng-repeat="x in statusMsg.content">
+      {{x}}
+      </li>
+
+     </div>
+      <form class="form-horizontal" name="mergeForm" method="POST" ng-submit="mergeAccount()">
+        <div class="panel panel-colorful">
+          
+          <div class="panel-body alert alert-danger">
+            <p>
+              <h4>Note: </h4>
+              This action will modify your Stellar account in the following ways:
+            </p>
+            <ul>
+              <li>Transfers the native balance (the amount of XLM an account holds) to the destinantion account</li>
+              <li>Removes the source account(your account) from the ledger</li>
+              <li>This action is only reversible if you have the seed of the destination account.</li>
+              <p>Only Proceed if you know what you are doing.</p>
+
+            </ul>
+          </div>
+          <div class="panel-body">                                                                        
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Destination Account</label>
+              <div class="col-md-6 col-xs-12">                                            
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                  <input type="text" class="form-control" name="destAcct" ng-model="userData.destAcct" placeholder="Username" required/>
+                </div>                                            
+                <span class="help-block">Enter destination account where all your XLM balance will be sent.</span>
+              </div>
+            </div>
+
+            <div class="form-group">                                        
+              <label class="col-md-3 col-xs-12 control-label">Password</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-unlock-alt"></span></span>
+                  <input type="password" class="form-control" name="password" ng-model="userData.password" required/>
+                </div>            
+                <span class="help-block">Please enter your Saza account password to verify operation</span>
+              </div>
+            </div>
+
+
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-success pull-right" ng-disabled="mergeForm.$error.required || mergeForm.$error.$invalid">Merge Account</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+
+
+  </div>
+
+</div>
+<script type="text/javascript">
+
+/* MESSAGE BOX */
+$("[class^=mb-control-]").on("click",function(){
+  var box = $($(this).data("box"));
+  if(box.length > 0){
+    box.toggleClass("open");
+
+    var sound = box.data("sound");
+
+    if(sound === 'alert')
+      playAudio('alert');
+
+    if(sound === 'fail')
+      playAudio('fail');
+
+  }        
+  return false;
+});
+$(".mb-control-close").on("click",function(){
+ $(this).parents(".message-box").removeClass("open");
+ return false;
+});    
+/* END MESSAGE BOX */
+
+</script>	
