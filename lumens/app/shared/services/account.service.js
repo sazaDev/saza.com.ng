@@ -1,7 +1,8 @@
 // Login Service
 
 var login = angular.module('accountService', []);
-var baseUrl = 'https://saza.com.ng:8888/';
+// var baseUrl = 'https://saza.com.ng:8888/';
+var baseUrl = 'http://localhost:8888/';
 login.factory('Account', function($http) {
 
     return {
