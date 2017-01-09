@@ -1,7 +1,7 @@
 var lumensWall = angular.module('lumensWall');
 
 lumensWall.controller('dashboardController', function($scope, $state, $http, $rootScope, Account) {
-			if (!$rootScope.currentUser.account_id) {
+			if ($rootScope.currentUser.accounts.length < 1) {
           event.preventDefault();
               $state.go('setupaccount');
    }
@@ -18,7 +18,7 @@ lumensWall.controller('dashboardController', function($scope, $state, $http, $ro
 		// convert xlm balance to usd
 		// convert xlm balance to ngn
     $scope.rates.ngn = $rootScope.ngnRate;
-		Account.getAccount($rootScope.currentUser.token)
+		Account.getAccount($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
       .success(function(data) {
 				var balances = data.content.data.balances;
         $scope.assets = balances;
