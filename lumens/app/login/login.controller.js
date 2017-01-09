@@ -13,32 +13,33 @@ lumensWall.controller('loginController', function($scope, $state, $http, $rootSc
 
 				// console.log(data);
 				data.user.authenticated = true;
+				// set the currently active account
+				
+				if (data.user.accounts.length > 0) {
+					data.user.currentAccount = data.user.accounts[0].account_id;
+				}
+				
 				var user = JSON.stringify(data.user);
-				// console.log(user);
+				
 				// Set the stringified user data into local storage
         localStorage.setItem('user', user);
-
-        // The user's authenticated state gets flipped to
-        // true so we can now show parts of the UI that rely
-        // on the user being logged in
         $rootScope.authenticated = true;
 
         // Putting the user's data on $rootScope allows
         // us to access it anywhere across the app
         $rootScope.currentUser = data.user;
-        //console.log($rootScope.currentUser);
+        
+        console.log("currentUser", $rootScope.currentUser);
         // Everything worked out so we can now redirect to
         // the users state to view the data
         $state.go('dashboard');
-        // angular.element('.mb-control-success').triggerHandler('click');
-        // store user details in local storage
-        // redirect to dashboard or settings
+        
 			
 			})
 			.error(function(data) {
-				// console.log(data);
-					$scope.responseData = data;
-				// Display Error
+				
+				$scope.responseData = data;
+				
         angular.element('.mb-control-error').triggerHandler('click');
       });
 	};

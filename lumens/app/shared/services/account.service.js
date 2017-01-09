@@ -74,19 +74,19 @@ login.factory('Account', function($http) {
                 data: $.param(userData)
             });
         },
-        getTransactions : function(token) {
+        getTransactions : function(token,account_id) {
              return $http({
                 method: 'GET',
-                url: baseUrl+'gettransactions/?token='+token,
+                url: baseUrl+'gettransactions/?token='+token+'&account_id='+account_id,
                 headers: { 'Authorization': 'JWT '+token },
                 
             });
         },
 
-        getAccount : function(token) {
+        getAccount : function(token,account_id) {
             return $http({
                 method: 'GET',
-                url: baseUrl+'getaccount/?token='+token,
+                url: baseUrl+'getaccount/?token='+token+'&account_id='+account_id,
                 headers: { 'Authorization': 'JWT '+token },
                 
             });
