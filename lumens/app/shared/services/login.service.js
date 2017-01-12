@@ -19,6 +19,10 @@ login.factory('Login', function($http) {
             });
         },
 
+        socialLogin : function(type) {
+            return $http.get(baseUrl+'auth/'+type);
+        },
+
         logout : function(id) {
             return $http.get(baseUrl+'logout'+id);
         },
