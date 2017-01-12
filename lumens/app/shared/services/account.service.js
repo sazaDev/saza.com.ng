@@ -53,6 +53,17 @@ login.factory('Account', function($http) {
             });
         },
 
+        allowTrust : function(trustData) {
+            
+            return $http({
+                method: 'POST',
+                url: baseUrl+'allowtrust',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+trustData.token },
+                data: $.param(trustData)
+            });
+        },        
+
         setUsername : function(userData) {
             
             return $http({
