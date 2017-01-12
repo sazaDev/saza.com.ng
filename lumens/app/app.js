@@ -231,6 +231,22 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
         requireLogin: true
       }
     })    
+    .state('changetrust',{
+      url: '/change-trust',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/change_trust.controller.html',
+          controller: 'changeTrustController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })     
     .state('setusername',{
       url: '/set-username',
       views: {
