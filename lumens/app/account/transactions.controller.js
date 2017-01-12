@@ -12,13 +12,14 @@ lumensWall.controller('transactionsController', function($scope, $state, $http, 
   };
 
   $scope.getTransactions = function() {
+
     Account.getTransactions($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
     .success(function(data) {
       // console.log("data", data);
       $scope.records = data.content.data;
     })
     .error(function(data) {
-       // console.log("Error", data);
+       console.log("Error", data);
 		
     });
   };
