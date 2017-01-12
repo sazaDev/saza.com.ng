@@ -75,6 +75,7 @@ login.factory('Account', function($http) {
             });
         },
         getTransactions : function(token,account_id) {
+            
              return $http({
                 method: 'GET',
                 url: baseUrl+'gettransactions/?token='+token+'&account_id='+account_id,

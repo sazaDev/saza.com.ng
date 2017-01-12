@@ -1,6 +1,6 @@
 var lumensWall = angular.module('lumensWall');
 
-lumensWall.controller('createAccountController', function($scope, $state, $http, $rootScope, Account) {
+lumensWall.controller('createAccountController', function($scope, $state, $http, $rootScope, Account, User) {
   // if ($rootScope.currentUser.account_id) {
   //   event.preventDefault();
   //   $state.go('dashboard');
@@ -38,17 +38,22 @@ lumensWall.controller('createAccountController', function($scope, $state, $http,
       var user = data.content.data;
       user.seed = "";
       user.account_id = "";
-      localUser = JSON.stringify(user);
+      // localUser = JSON.stringify(user);
       
 
       // Set the stringified user data into local storage
-      localStorage.setItem('user', localUser);
+      // localStorage.setItem('user', localUser);
 
-      $rootScope.authenticated = true;
+      // $rootScope.authenticated = true;
 
-      $rootScope.currentUser = user;
-      console.log("currentUser", $rootScope.currentUser);
-      
+      // $rootScope.currentUser = user;
+      // console.log("currentUser", $rootScope.currentUser);
+        User.set(user);
+
+        
+        // Set the stringified user data into local storage
+        localStorage.setItem('user', JSON.stringify(user));
+        console.log("currentUser", User.get());
       angular.element('.mb-control-success').triggerHandler('click');
                 
 
@@ -77,15 +82,18 @@ lumensWall.controller('createAccountController', function($scope, $state, $http,
       
       var user = data.content.data;
       user.seed = "";
-      localUser = JSON.stringify(user);
+      // localUser = JSON.stringify(user);
         
       // Set the stringified user data into local storage
-      localStorage.setItem('user', localUser);
+      // localStorage.setItem('user', localUser);
 
-      $rootScope.authenticated = true;
+      // $rootScope.authenticated = true;
 
-      $rootScope.currentUser = user;
-      
+      // $rootScope.currentUser = user;
+      User.set(user);
+      // Set the stringified user data into local storage
+      localStorage.setItem('user', JSON.stringify(user));
+      console.log("currentUser", User.get());
       angular.element('.mb-control-link-success').triggerHandler('click');
       $scope.linkData = {};
 
