@@ -28,12 +28,12 @@
                 
                 <label class="switch switch-small">
                     Alphanumeric 4 <br>    
-                    <input type="radio" ng-model="trustData.assetType" ng-value="4" required>
+                    <input type="radio" ng-model="trustData.assetType" ng-change="clearAsset()" ng-value="4">
                     <span></span>
                 </label>                                        
                 <label class="switch switch-small">
                     Alphanumeric 12 <br>
-                    <input type="radio" ng-model="trustData.assetType" ng-value="12" required>
+                    <input type="radio" ng-model="trustData.assetType" ng-change="clearAsset()" ng-value="12">
                     <span></span>
                 </label>                                        
                                                             
@@ -45,7 +45,7 @@
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-key"></span></span>
-                  <input class="form-control" type="text" name="assetCode" ng-model="trustData.assetCode" maxlength="{{trustData.assetType}}"/>
+                  <input class="form-control" type="text" name="assetCode" ng-model="trustData.assetCode" maxlength="{{trustData.assetType}}" required/>
                   
                 </div>
                 <span class="help-block">Asset Alphanumeric Code; Eg: USD, EUR, XLM</span>
@@ -56,7 +56,7 @@
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-user"></span></span>
-                  <input class="form-control" type="text" name="assetIssuer" ng-model="trustData.assetIssuer"/>
+                  <input class="form-control" type="text" name="assetIssuer" ng-model="trustData.assetIssuer" required/>
                   
                 </div>
                 <span class="help-block">Stellar Account ID of the Asset Issuer</span>

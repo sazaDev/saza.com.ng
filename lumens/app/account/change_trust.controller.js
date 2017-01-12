@@ -68,6 +68,10 @@ lumensWall.controller('changeTrustController', function($scope, $state, $http, $
     }
   };
 
+  $scope.clearAsset = function() {
+    $scope.trustData.assetCode = "";
+    $scope.trustData.assetIssuer = "";
+  };
 
 
 
