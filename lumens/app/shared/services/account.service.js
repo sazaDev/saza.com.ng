@@ -1,4 +1,4 @@
-// Login Service
+    // Login Service
 
 var login = angular.module('accountService', []);
 // var baseUrl = 'https://saza.com.ng:8888/';
@@ -39,6 +39,17 @@ login.factory('Account', function($http) {
                 headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
                             'Authorization': 'JWT '+paymentData.token },
                 data: $.param(paymentData)
+            });
+        },
+
+        changeTrust : function(trustData) {
+            
+            return $http({
+                method: 'POST',
+                url: baseUrl+'changetrust',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+trustData.token },
+                data: $.param(trustData)
             });
         },
 
