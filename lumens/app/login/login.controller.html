@@ -28,22 +28,32 @@
             <button class="btn btn-info btn-block" ng-disabled="loginForm.$error.required || loginForm.$error.$invalid">Log In</button>
           </div>
         </div>
-        <!-- <div class="login-or">OR</div>
+        </form>
+        <div class="login-or">OR</div>
         <div class="form-group">
-          <div class="col-md-4">
-            <button class="btn btn-info btn-block btn-twitter"><span class="fa fa-twitter"></span> Twitter</button>
+          <div class="row">
+            <div class="col-md-6">
+              <button class="btn btn-info btn-block btn-twitter" ng-click="socialLogin('twitter')"><span class="fa fa-twitter"></span> Twitter</button>
+            </div>
+            <div class="col-md-6">
+              <button class="btn btn-info btn-block btn-facebook" ng-click="socialLogin('facebook')"><span class="fa fa-facebook"></span> Facebook</button>
+            </div>
           </div>
-          <div class="col-md-4">
-            <button class="btn btn-info btn-block btn-facebook"><span class="fa fa-facebook"></span> Facebook</button>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">                            
+              <button class="btn btn-info btn-block btn-google" ng-click="socialLogin('google')"><span class="fa fa-google-plus"></span> Google</button>
+            </div>
+            <div class="col-md-6">                            
+              <button class="btn btn-info btn-block btn-twitter" ng-click="socialLogin('github')"><span class="fa fa-github"></span> Github</button>
+            </div>
           </div>
-          <div class="col-md-4">                            
-            <button class="btn btn-info btn-block btn-google"><span class="fa fa-google-plus"></span> Google</button>
-          </div>
-        </div> -->
+        </div>
         <div class="login-subtitle">
           Don't have an account yet? <a ui-sref="register">Create an account</a>
         </div>
-      </form>
+      
     </div>
     <div class="login-footer">
       <div class="pull-left">

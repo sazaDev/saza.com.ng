@@ -7,7 +7,7 @@
     <div class="col-md-8 col-md-offset-2">
       <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
       <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
-      <li ng-repeat="x in statusMsg.content">
+      <li ng-repeat="x in statusMsg.content track by $index">
       {{x}}
       </li>
 
@@ -48,9 +48,54 @@
                   <span class="input-group-addon"><span class="fa fa-money"></span></span>
                   <input type="number" min="0" class="form-control" name="amount" ng-model="paymentData.amount" required/>
                 </div>                                            
-                <span class="help-block">Amount to send in XLM</span>
+                <span class="help-block">Amount to send</span>
               </div>
-            </div>  
+            </div>
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Asset Type</label>
+                
+                <label class="switch switch-small">
+                    Lumens(XLM) <br>    
+                    <input type="radio" ng-model="paymentData.assetType" checked="true" ng-value="0">
+                    <span></span>
+                </label>
+                
+                <label class="switch switch-small">
+                    Custom 4 <br>    
+                    <input type="radio" ng-model="paymentData.assetType" ng-value="4">
+                    <span></span>
+                </label>                                        
+                <label class="switch switch-small">
+                    Custom 12 <br>
+                    <input type="radio" ng-model="paymentData.assetType" ng-value="12">
+                    <span></span>
+                </label>                                        
+                                                            
+              
+            </div>
+
+            <div class="form-group" ng-show="isCustomAsset(paymentData.assetType)">
+              <label class="col-md-3 col-xs-12 control-label">Asset Code</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="assetCode" ng-model="paymentData.assetCode" maxlength="{{paymentData.assetType}}"/>
+                  
+                </div>
+                <span class="help-block">Asset Alphanumeric Code; Eg: USD, EUR, XLM</span>
+              </div>
+            </div>
+            <div class="form-group" ng-show="isCustomAsset(paymentData.assetType)">
+              <label class="col-md-3 col-xs-12 control-label">Asset Issuer</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-user"></span></span>
+                  <input class="form-control" type="text" name="assetIssuer" ng-model="paymentData.assetIssuer"/>
+                  
+                </div>
+                <span class="help-block">Stellar Account ID of the Asset Issuer</span>
+              </div>
+            </div>
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Memo</label>

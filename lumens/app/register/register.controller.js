@@ -1,6 +1,6 @@
 var lumensWall = angular.module('lumensWall');
 
-lumensWall.controller('registerController', function($scope, $state, $http, randomString, $rootScope, Login) {
+lumensWall.controller('registerController', function($scope, $state, $http, $window, $interval, randomString, $rootScope, Login, User) {
 		
 	$scope.userData = {};
 	$scope.responseData = {};
@@ -28,5 +28,41 @@ lumensWall.controller('registerController', function($scope, $state, $http, rand
 
 		});
 	};
+
+	$scope.socialLogin = function(type) {
+
+		var url = 'http://localhost:8888/auth/'+type,
+        width = 800,
+        height = 600,
+        top = (window.outerHeight - height) / 2,
+        left = (window.outerWidth - width) / 2,
+        interval = 1000;
+
+    var popup = $window.open(url, type+' Login', 'width=' + width + ',height=' + height + ',scrollbars = 0, top=' + top + ',left=' + left);
+
+
+ 		var i = $interval(function(){
+      interval += 500;
+      try {
+
+       if (popup.value){
+       		console.log("popup value", popup.value);
+       		User.set(popup.value);
+       		var user = JSON.stringify(popup.value);
+				
+					// Set the stringified user data into local storage
+        	localStorage.setItem('user', user);
+          $interval.cancel(i);
+          popup.close();
+          $state.go('dashboard');
+        }
+      } catch(e){
+        console.error(e);
+      }
+    }, interval);        
+		
+
+	};
+
 
 });

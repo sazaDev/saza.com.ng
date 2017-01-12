@@ -1,7 +1,8 @@
 // Login Service
 
 var login = angular.module('loginService', []);
-var baseUrl = 'https://saza.com.ng:8888/';
+// var baseUrl = 'https://saza.com.ng:8888/';
+var baseUrl = 'http://localhost:8888/';
 login.factory('Login', function($http) {
 
     return {
@@ -16,6 +17,10 @@ login.factory('Login', function($http) {
                 // headers: {'X-CSRF-TOKEN': CSRF_TOKEN},
                 data: $.param(userData)
             });
+        },
+
+        socialLogin : function(type) {
+            return $http.get(baseUrl+'auth/'+type);
         },
 
         logout : function(id) {
