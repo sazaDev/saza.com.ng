@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>       
-  <base href="/lumens/"></base>
+  <base href="/node_dev/saza.com.ng/lumens/"></base>
   <!-- META SECTION -->
   <title>SAZA Wallet</title>            
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -51,8 +51,13 @@
       <!-- END X-NAVIGATION VERTICAL -->                     
 
       <!-- START BREADCRUMB -->
-      <div class="breadcrumb row">
-        <p class="col-md-12" ng-cloak>Hi {{currentUser.username || currentUser.email}}  | Account ID: {{currentUser.account_id}}</p>
+      <div class="breadcrumb row" ng-controller="accountDetailsController" ng-init="init()">
+        <p class="col-md-12" ng-cloak>Hi {{currentUser.username || currentUser.email}}  | Account ID: {{currentUser.account_id}}
+          <select class="form-control" ng-model="currentUser.currentAccount" ng-change="changeCurrentAccount(currentUser.currentAccount)">
+            <option ng-repeat="acct in currentUser.accounts">{{acct.account_id}}</option>
+          </select>
+        </p>
+
       </div>
       <!-- END BREADCRUMB -->                
 
@@ -111,16 +116,19 @@
   <script type="text/javascript" src="js/angular/angular-random-string.js"></script>
   <script type="text/javascript" src="js/angular/angular-password.js"></script>
   <script type="text/javascript" src="js/angular/angular-datatables.js"></script>
+  
   <script type="text/javascript" src="js/angular/loading-bar.min.js"></script>
   <script type="text/javascript" src="js/plugins/clipboard/clipboard.min.js"></script> 
   <script type="text/javascript" src="js/angular/ngclipboard.js"></script>
   <script type="text/javascript" src="app/shared/services/login.service.js"></script>
   <script type="text/javascript" src="app/shared/services/account.service.js"></script>
   <script type="text/javascript" src="app/shared/services/contact.service.js"></script>
+  <script type="text/javascript" src="app/shared/services/user.service.js"></script>
   <script type="text/javascript" src="app/app.js"></script>
   <script type="text/javascript" src="app/shared/directives.js"></script>
   <script type="text/javascript" src="app/register/register.controller.js"></script>
   <script type="text/javascript" src="app/login/login.controller.js"></script>
+  <script type="text/javascript" src="app/login/custom.controller.js"></script>
   <script type="text/javascript" src="app/login/activate.controller.js"></script>
   <script type="text/javascript" src="app/login/logout.controller.js"></script>
   <script type="text/javascript" src="app/login/password.controller.js"></script>
@@ -134,6 +142,7 @@
   <script type="text/javascript" src="app/account/anchors.controller.js"></script>
   <script type="text/javascript" src="app/contact/contact.controller.js"></script>
   <script type="text/javascript" src="app/shared/menu/sidemenu.controller.js"></script>
+  <script type="text/javascript" src="app/shared/menu/account_details.controller.js"></script>
   <script type="text/javascript" src="app/settings/settings.controller.js"></script>
 
 

@@ -6,10 +6,12 @@ var app = angular.module('lumensWall',
                           'angular-loading-bar',
                           'ngclipboard',
                           'angularRandomString',
+                          
                           'ngPassword',
                           'loginService',
                           'accountService',
-                          'contactService'
+                          'contactService',
+                          'userService'
 
                         ]);
 
@@ -299,10 +301,12 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
 
 });
 
-app.run(function ($rootScope, $state ) {
+app.run(function ($rootScope, $state, User ) {
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
 
   $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
+  User.set($rootScope.currentUser);
+  // $rootScope.currentUser = User.get();
   $rootScope.ngnRate = 400;
   $rootScope.siteURL = 'saza.com.ng';
   var requireLogin = toState.data.requireLogin;
@@ -333,15 +337,19 @@ app.run(function ($rootScope, $state ) {
 
     if (toState.name === "login" || toState.name === "register" ) {
         
-        if ($rootScope.currentUser.authenticated) {
-        
+        if ($rootScope.currentUser) {
+          if ($rootScope.currentUser.authenticated) {
             event.preventDefault();
             $state.go('dashboard');
+          }
+            
         }
     }else{
         //console.log("NOT checking states, auth or register");
     }
 
   });
+
+
 
 });
