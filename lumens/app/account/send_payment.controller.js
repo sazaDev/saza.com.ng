@@ -11,6 +11,7 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
     $scope.paymentData.id = $rootScope.currentUser.id;
     $scope.paymentData.email = $rootScope.currentUser.email;
     $scope.paymentData.token = $rootScope.currentUser.token;
+    $scope.paymentData.assetType = 0;
     
   };
   
@@ -22,6 +23,19 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
     $scope.paymentData.id = $rootScope.currentUser.id;
     $scope.paymentData.email = $rootScope.currentUser.email;
     $scope.paymentData.token = $rootScope.currentUser.token;
+    $scope.paymentData.account_id = $rootScope.currentUser.currentAccount;
+    
+    if ($scope.paymentData.assetType > 0) {
+      // check asset details 
+      if (!$scope.paymentData.assetCode || !$scope.paymentData.assetIssuer) {
+        $scope.statusMsg = {};
+        $scope.statusMsg.type = 'alert-danger';
+        $scope.statusMsg.content = ['Asset details required'];
+        window.scrollTo(0, 0);
+        return null;
+      } 
+    } 
+
     Account.sendPayment($scope.paymentData)
       .success(function(data) {
 
@@ -32,24 +46,27 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
         $scope.statusMsg.content = data.content.message;
         $scope.paymentData = {};
 
-        
-        // angular.element('.mb-control-success').triggerHandler('click');
-                
-
       })
       .error(function(data) {
-        // console.log("error",data);
+        
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
         $scope.statusMsg.content = data.content.message;
         $scope.paymentData = {};
-				// Display Error
-        // angular.element('.mb-control-error').triggerHandler('click');
+        window.scrollTo(0, 0);
+
+				
       });
   };
 
 
-
+  $scope.isCustomAsset = function(type) {
+    if (type == 4 || type == 12) {
+      return true;
+    } else{
+      return false;
+    }
+  };
 
 
 
