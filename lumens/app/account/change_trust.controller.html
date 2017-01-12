@@ -1,0 +1,116 @@
+<div>
+ <div class="page-title">                    
+        <h2><span class="fa fa-money"></span>Change Trust</h2>
+
+</div>
+  <div class="row" ng-controller="changeTrustController" ng-init="init()">
+    <div class="col-md-8 col-md-offset-2">
+      <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+      <li ng-repeat="x in statusMsg.content track by $index">
+      {{x}}
+      </li>
+
+    </div>
+      <form class="form-horizontal" name="trustForm" method="POST" ng-submit="changeTrust()">
+        <div class="panel panel-colorful">
+          <div class="panel-heading">
+            
+            <ul class="panel-controls">
+            </ul>
+          </div>
+          <div class="panel-body">
+            <p class="text-info"><i class="fa fa-info-circle"></i> Creates, updates, or deletes a trustline. For more on trustlines, please refer to the <a href="https://www.stellar.org/developers/guides/concepts/assets.html" target="_blank"> assets documentation. </a></p>
+          </div>
+          <div class="panel-body">                                                                        
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Asset Type</label>
+                
+                <label class="switch switch-small">
+                    Alphanumeric 4 <br>    
+                    <input type="radio" ng-model="trustData.assetType" ng-value="4" required>
+                    <span></span>
+                </label>                                        
+                <label class="switch switch-small">
+                    Alphanumeric 12 <br>
+                    <input type="radio" ng-model="trustData.assetType" ng-value="12" required>
+                    <span></span>
+                </label>                                        
+                                                            
+              
+            </div>
+
+            <div class="form-group" ng-show="isCustomAsset(trustData.assetType)">
+              <label class="col-md-3 col-xs-12 control-label">Asset Code</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="assetCode" ng-model="trustData.assetCode" maxlength="{{trustData.assetType}}"/>
+                  
+                </div>
+                <span class="help-block">Asset Alphanumeric Code; Eg: USD, EUR, XLM</span>
+              </div>
+            </div>
+            <div class="form-group" ng-show="isCustomAsset(trustData.assetType)">
+              <label class="col-md-3 col-xs-12 control-label">Asset Issuer</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-user"></span></span>
+                  <input class="form-control" type="text" name="assetIssuer" ng-model="trustData.assetIssuer"/>
+                  
+                </div>
+                <span class="help-block">Stellar Account ID of the Asset Issuer</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Trust Limit</label>
+              <div class="col-md-6 col-xs-12">                                            
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-money"></span></span>
+                  <input type="text" class="form-control" name="limit" ng-model="trustData.limit"/>
+                </div>                                            
+                <span class="help-block">Leave empty to default to the max int64. Set to 0 to remove the trust line.</span>
+              </div>
+            </div>
+
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-success pull-right" ng-disabled="trustForm.$error.required || trustForm.$invalid">Submit</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+
+
+  </div>
+
+</div>
+<script type="text/javascript">
+
+/* MESSAGE BOX */
+$("[class^=mb-control-]").on("click",function(){
+  var box = $($(this).data("box"));
+  if(box.length > 0){
+    box.toggleClass("open");
+
+    var sound = box.data("sound");
+
+    if(sound === 'alert')
+      playAudio('alert');
+
+    if(sound === 'fail')
+      playAudio('fail');
+
+  }        
+  return false;
+});
+$(".mb-control-close").on("click",function(){
+ $(this).parents(".message-box").removeClass("open");
+ return false;
+});    
+/* END MESSAGE BOX */
+
+</script> 
