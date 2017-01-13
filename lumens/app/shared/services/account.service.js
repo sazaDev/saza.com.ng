@@ -107,6 +107,18 @@ login.factory('Account', function($http) {
             });
         },
 
+        setOptions : function(userData) {
+            
+            return $http({
+                method: 'POST',
+                url: baseUrl+'setoptions',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+userData.token },
+                data: $.param(userData)
+            });
+        },
+
+
         setUsername : function(userData) {
             
             return $http({
