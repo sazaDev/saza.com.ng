@@ -4,20 +4,22 @@
 
 </div>
 	<div class="row" ng-controller="anchorsController" ng-init="init()">
-    <div class="col-md-8 col-md-offset-2">
-      <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
-      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
-      <li ng-repeat="x in statusMsg.content">
-      {{x}}
-      </li>
+    <div class="col-md-12" ng-if="statusMsg">
+      <div ng-if="statusMsg" class="ng-class:statusMsg.type" role="alert">
+        <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+        <li ng-repeat="x in statusMsg.content track by $index">
+        {{x}}
+        </li>
+      </div>
+    </div>
+    <div class="col-md-6">
 
-     </div>
         <p>
           
           To add an anchor just enter the domain name. E.g <em>saza.com.ng</em>
           
         </p>  
-        <p class="text-info"><i class="fa fa-info"></i> Note that by addidng an anchor you automaically trust this anchor and will be able to hold its assets.</p>    
+        <p class="text-default"><i class="fa fa-info"></i> Note that by addidng an anchor this way, you automaically trust this anchor and will be able to hold all its assets. You can hold single assets using the <a ui-sref="changetrust">change trust</a> function</p>    
         <div class="panel panel-colorful">
           
           <div class="panel-body">
@@ -45,6 +47,43 @@
 
     </div>
 
+    <div class="col-md-6">
+      
+      <div class="panel panel-colorful">
+        <div class="panel-heading">
+          Known Stellar Anchors
+        </div>
+        <div class="panel-body">
+          <ul class="list-group border-bottom">
+            <li class="list-group-item"><a href="https://naobtc.com/.well-known/stellar.toml" target="_blank">naobtc.com</a><span class="badge">BTC</span> </li>
+
+            <li class="list-group-item"><a href="https://coins.ph/.well-known/stellar.toml" target="_blank">coins.ph</a><span class="badge">PHP</span> </li>
+
+            <li class="list-group-item"><a href="https://ripplefox.com/.well-known/stellar.toml" target="_blank">ripplefox.com</a><span class="badge">CNY</span> </li>
+
+            <li class="list-group-item"><a href="https://bitcoinfundi.com/.well-known/stellar.toml" target="_blank">bitcoinfundi.com</a><span class="badge">USD</span><span class="badge">BTC</span> </li>
+
+            <li class="list-group-item"><a href="https://vcbear.net/.well-known/stellar.toml" target="_blank">vcbear.net</a><span class="badge">JPY</span><span class="badge">XRP</span><span class="badge">BTC</span> </li>
+
+            <li class="list-group-item"><a href="https://tempo.eu.com/.well-known/stellar.toml" target="_blank">tempo.eu.com</a><span class="badge">EUR</span></li>
+
+            <li class="list-group-item"><a href="http://readycash.com.ng/.well-known/stellar.toml" target="_blank">readycash.com.ng</a><span class="badge">NGN</span></li>
+
+            <li class="list-group-item"><a href="https://funtracker.site/.well-known/stellar.toml" target="_blank">funtracker.site</a><span class="badge">USD</span><span class="badge">BTC</span><span class="badge">THB</span><span class="badge">mBTC</span><span class="badge">FUNT</span></li>
+
+            <li class="list-group-item"><a href="https://moni.com/.well-known/stellar.toml" target="_blank">moni.com</a><span class="badge">EUR</span></li>
+
+          </ul>
+               
+        </div>
+       
+        <div class="panel-footer">
+          
+        </div>
+      </div>
+      
+
+    </div>
 
 
   </div>
@@ -53,26 +92,26 @@
 <script type="text/javascript">
 
 /* MESSAGE BOX */
-$("[class^=mb-control-]").on("click",function(){
-  var box = $($(this).data("box"));
-  if(box.length > 0){
-    box.toggleClass("open");
+// $("[class^=mb-control-]").on("click",function(){
+//   var box = $($(this).data("box"));
+//   if(box.length > 0){
+//     box.toggleClass("open");
 
-    var sound = box.data("sound");
+//     var sound = box.data("sound");
 
-    if(sound === 'alert')
-      playAudio('alert');
+//     if(sound === 'alert')
+//       playAudio('alert');
 
-    if(sound === 'fail')
-      playAudio('fail');
+//     if(sound === 'fail')
+//       playAudio('fail');
 
-  }        
-  return false;
-});
-$(".mb-control-close").on("click",function(){
- $(this).parents(".message-box").removeClass("open");
- return false;
-});    
+//   }        
+//   return false;
+// });
+// $(".mb-control-close").on("click",function(){
+//  $(this).parents(".message-box").removeClass("open");
+//  return false;
+// });    
 /* END MESSAGE BOX */
 
 </script>	
