@@ -86,7 +86,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: false
       }
-    })    
+    })
     .state('login',{
       url: '/login',
       views: {
@@ -110,7 +110,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: false
       }
-    })    
+    })
     .state('dashboard',{
       url: '/dashboard',
       views: {
@@ -182,7 +182,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: true
       }
-    })    
+    })
     .state('transactions',{
       url: '/transactions',
       views: {
@@ -214,7 +214,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: true
       }
-    })    
+    })
     .state('addaccount',{
       url: '/add-account',
       views: {
@@ -230,7 +230,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: true
       }
-    })    
+    })
     .state('changetrust',{
       url: '/change-trust',
       views: {
@@ -294,7 +294,24 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: true
       }
-    })    
+    })
+    .state('pathpayment',{
+      url: '/path-payment',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/path_payment.controller.html',
+          controller: 'pathPaymentController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
+
     .state('setusername',{
       url: '/set-username',
       views: {
