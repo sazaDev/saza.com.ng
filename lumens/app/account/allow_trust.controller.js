@@ -11,14 +11,14 @@ lumensWall.controller('allowTrustController', function($scope, $state, $http, $r
     $scope.trustData.id = $rootScope.currentUser.id;
     $scope.trustData.email = $rootScope.currentUser.email;
     $scope.trustData.token = $rootScope.currentUser.token;
-    
+    $scope.trustData.authorize = true;
   };
   
   $scope.closeAlert = function() {
     $scope.statusMsg = {};
   };
 
-  $scope.changeTrust = function() {
+  $scope.allowTrust = function() {
     $scope.trustData.id = $rootScope.currentUser.id;
     $scope.trustData.email = $rootScope.currentUser.email;
     $scope.trustData.token = $rootScope.currentUser.token;
@@ -49,18 +49,6 @@ lumensWall.controller('allowTrustController', function($scope, $state, $http, $r
   };
 
 
-  $scope.isCustomAsset = function(type) {
-    if (type == 4 || type == 12) {
-      return true;
-    } else{
-      return false;
-    }
-  };
-
-  $scope.clearAsset = function() {
-    console.log("authorize", $scope.trustData.authorize);
-    
-  };
 
 
 

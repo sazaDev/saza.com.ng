@@ -1,6 +1,6 @@
 <div>
  <div class="page-title">                    
-        <h2><span class="fa fa-shield"></span>Allow Trust</h2>
+        <h2><span class="fa fa-shield"></span> Allow Trust</h2>
 
 </div>
   <div class="row" ng-controller="allowTrustController" ng-init="init()">
@@ -48,12 +48,20 @@
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Authorize</label>
                 
+                <span>True</span>
                 <label class="switch switch-small">
-                    True
-                    <input type="radio" ng-model="trustData.authorize" ng-value="true" required ng-change="clearAsset()"> False
+                    
+                    <input type="radio" ng-model="trustData.authorize" ng-value="true"> 
                     <span></span>
                 </label>                                        
+                <span>False</span>
+                <label class="switch switch-small">
+                    <input type="radio" ng-model="trustData.authorize" ng-value="false">
+                    <span></span>
+                </label>                 
+                <span class="help-block">True to authorize the line, false to deauthorize.</span>
                 
+
             </div>
 
 
