@@ -1,0 +1,64 @@
+<div>
+ <div class="page-title">                    
+        <h2><span class="fa fa-shield"></span> Manage Data</h2>
+
+</div>
+  <div class="row" ng-controller="manageDataController" ng-init="init()">
+    <div class="col-md-8 col-md-offset-2">
+      <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+      <li ng-repeat="x in statusMsg.content track by $index">
+      {{x}}
+      </li>
+
+    </div>
+      <form class="form-horizontal" name="manageForm" method="POST" ng-submit="manageData()">
+        <div class="panel panel-colorful">
+          <div class="panel-heading">
+            
+            <ul class="panel-controls">
+            </ul>
+          </div>
+          <div class="panel-body">
+            <p class="text-info"><i class="fa fa-info-circle"></i> Allows you to set,modify or delete a Data Entry (name/value pair) that is attached to a particular account. </p>
+          </div>
+          <div class="panel-body">                                                                        
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Entry Name</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-user"></span></span>
+                  <input class="form-control" type="text" name="entryName" ng-model="manageData.entryName" maxlength="64" required/>
+                </div>
+                <span class="help-block">The name of the data entry.</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Entry Value</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-user"></span></span>
+                  <input class="form-control" type="text" name="entryValue" ng-model="manageData.entryValue"/>
+                </div>
+                <span class="help-block">The value of the data entry. If not present then the exiting Name will be deleted. If present then this value will be set in the DataEntry</span>
+              </div>
+            </div>           
+
+
+
+
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-success pull-right" ng-disabled="manageForm.$error.required || manageForm.$invalid">Submit</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+
+
+  </div>
+
+</div>
