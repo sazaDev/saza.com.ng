@@ -41,6 +41,16 @@ login.factory('Account', function($http) {
                 data: $.param(paymentData)
             });
         },
+        pathPayment : function(paymentData) {
+            
+            return $http({
+                method: 'POST',
+                url: baseUrl+'pathpayment',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+paymentData.token },
+                data: $.param(paymentData)
+            });
+        },
 
         changeTrust : function(trustData) {
             
