@@ -45,7 +45,7 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
         $scope.statusMsg.type = 'alert-success';
         $scope.statusMsg.content = data.content.message;
         $scope.paymentData = {};
-
+        window.scrollTo(0, 0);
       })
       .error(function(data) {
         

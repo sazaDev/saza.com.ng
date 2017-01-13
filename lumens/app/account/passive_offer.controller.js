@@ -59,7 +59,7 @@ lumensWall.controller('passiveOfferController', function($scope, $state, $http, 
         $scope.statusMsg.type = 'alert-success';
         $scope.statusMsg.content = data.content.message;
         $scope.offerData = {};
-
+        window.scrollTo(0, 0);
       })
       .error(function(data) {
         

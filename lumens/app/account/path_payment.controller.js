@@ -20,7 +20,7 @@ lumensWall.controller('pathPaymentController', function($scope, $state, $http, $
     $scope.statusMsg = {};
   };
 
-  $scope.sendPayment = function() {
+  $scope.pathPayment = function() {
     $scope.paymentData.id = $rootScope.currentUser.id;
     $scope.paymentData.email = $rootScope.currentUser.email;
     $scope.paymentData.token = $rootScope.currentUser.token;
@@ -34,8 +34,8 @@ lumensWall.controller('pathPaymentController', function($scope, $state, $http, $
         $scope.statusMsg.content = ['Sending asset details required'];
         window.scrollTo(0, 0);
         return null;
-      } 
-    } 
+      }
+    }
 
 
     if ($scope.paymentData.destAssetType > 0) {
@@ -46,8 +46,8 @@ lumensWall.controller('pathPaymentController', function($scope, $state, $http, $
         $scope.statusMsg.content = ['Destination asset details required'];
         window.scrollTo(0, 0);
         return null;
-      } 
-    } 
+      }
+    }
 
     Account.pathPayment($scope.paymentData)
       .success(function(data) {
@@ -58,7 +58,7 @@ lumensWall.controller('pathPaymentController', function($scope, $state, $http, $
         $scope.statusMsg.type = 'alert-success';
         $scope.statusMsg.content = data.content.message;
         $scope.paymentData = {};
-
+        window.scrollTo(0, 0);
       })
       .error(function(data) {
         
