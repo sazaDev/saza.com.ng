@@ -1,0 +1,81 @@
+<div>
+ <div class="page-title">                    
+        <h2><span class="fa fa-shield"></span> Allow Trust</h2>
+
+</div>
+  <div class="row" ng-controller="allowTrustController" ng-init="init()">
+    <div class="col-md-8 col-md-offset-2">
+      <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+      <li ng-repeat="x in statusMsg.content track by $index">
+      {{x}}
+      </li>
+
+    </div>
+      <form class="form-horizontal" name="trustForm" method="POST" ng-submit="allowTrust()">
+        <div class="panel panel-colorful">
+          <div class="panel-heading">
+            
+            <ul class="panel-controls">
+            </ul>
+          </div>
+          <div class="panel-body">
+            <p class="text-info"><i class="fa fa-info-circle"></i> Updates the <code>authorized</code> flag of an existing trustline. This can only be called by the issuer of a trustline's asset.</p>
+          </div>
+          <div class="panel-body">                                                                        
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Trustor</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-user"></span></span>
+                  <input class="form-control" type="text" name="trustor" ng-model="trustData.trustor" required/>
+                </div>
+                <span class="help-block">The trusting account (the one being authorized)</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Asset Code</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="assetCode" ng-model="trustData.assetCode" maxlength="12" required/>
+                  
+                </div>
+                <span class="help-block">The asset code being authorized.</span>
+              </div>
+            </div>            
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Authorize</label>
+                
+                <span>True</span>
+                <label class="switch switch-small">
+                    
+                    <input type="radio" ng-model="trustData.authorize" ng-value="true"> 
+                    <span></span>
+                </label>                                        
+                <span>False</span>
+                <label class="switch switch-small">
+                    <input type="radio" ng-model="trustData.authorize" ng-value="false">
+                    <span></span>
+                </label>                 
+                <span class="help-block">True to authorize the line, false to deauthorize.</span>
+                
+
+            </div>
+
+
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-success pull-right" ng-disabled="trustForm.$error.required || trustForm.$invalid">Submit</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+
+
+  </div>
+
+</div>

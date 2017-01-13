@@ -231,6 +231,70 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
         requireLogin: true
       }
     })    
+    .state('changetrust',{
+      url: '/change-trust',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/change_trust.controller.html',
+          controller: 'changeTrustController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
+    .state('allowtrust',{
+      url: '/allow-trust',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/allow_trust.controller.html',
+          controller: 'allowTrustController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
+    .state('manageoffer',{
+      url: '/manage-offer',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/manage_offer.controller.html',
+          controller: 'manageOfferController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
+    .state('passiveoffer',{
+      url: '/passive-offer',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/passive_offer.controller.html',
+          controller: 'passiveOfferController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })    
     .state('setusername',{
       url: '/set-username',
       views: {
