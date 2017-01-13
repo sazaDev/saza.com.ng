@@ -326,8 +326,23 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: true
       }
-    })    
-
+    })   
+    .state('setoptions',{
+      url: '/set-options',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/set_options.controller.html',
+          controller: 'setOptionsController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
     .state('setusername',{
       url: '/set-username',
       views: {
