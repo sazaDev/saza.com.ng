@@ -311,6 +311,22 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
         requireLogin: true
       }
     })
+    .state('managedata',{
+      url: '/manage-data',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/manage_data.controller.html',
+          controller: 'manageDataController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })    
 
     .state('setusername',{
       url: '/set-username',
