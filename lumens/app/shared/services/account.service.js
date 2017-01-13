@@ -75,6 +75,17 @@ login.factory('Account', function($http) {
             });
         },
 
+        passiveOffer : function(offerData) {
+            
+            return $http({
+                method: 'POST',
+                url: baseUrl+'passiveoffer',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+offerData.token },
+                data: $.param(offerData)
+            });
+        },
+
         setUsername : function(userData) {
             
             return $http({
