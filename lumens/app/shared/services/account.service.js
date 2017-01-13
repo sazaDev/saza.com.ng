@@ -62,7 +62,18 @@ login.factory('Account', function($http) {
                             'Authorization': 'JWT '+trustData.token },
                 data: $.param(trustData)
             });
-        },        
+        },       
+
+        manageOffer : function(offerData) {
+            
+            return $http({
+                method: 'POST',
+                url: baseUrl+'manageoffer',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+offerData.token },
+                data: $.param(offerData)
+            });
+        },
 
         setUsername : function(userData) {
             
