@@ -24,6 +24,7 @@ lumensWall.controller('dashboardController', function($scope, $state, $http, $ro
     $scope.rates.ngn = $rootScope.ngnRate;
 		Account.getAccount($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
       .success(function(data) {
+        console.log(data.content.data);
 				var balances = data.content.data.balances;
         $scope.assets = balances;
 				balances.forEach(function(balance) {

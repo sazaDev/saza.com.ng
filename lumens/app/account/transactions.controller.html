@@ -1,7 +1,7 @@
 <div class="page-title">                    
   <h2><span class="fa fa-list"></span> Transaction History</h2>
 </div>
-<div ng-controller="transactionsController" ng-init="init()" class="row">
+<div ng-controller="transactionsController" ng-init="init()"  class="row ng-cloak" ng-cloak>
   <div class="col-md-12" ng-hide="showDetail">
     <!-- START DEFAULT DATATABLE -->
     <div class="panel panel-colorful">
@@ -14,22 +14,22 @@
         </ul>                                
       </div>
       <div class="panel-body table-responsive">
-        <table class="table datatable" datatable="ng">
+        <table class="table datatable ng-cloak" datatable="ng" dt-options="dtOptions" ng-cloak>
           <thead>
             <tr>
               <th>ID</th>
               <th>Type</th>
-              <th>From</th>
+              <th>Source</th>
               <th>Amount</th>
               
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="x in records">
+            <tr ng-repeat="x in records track by $index" class="ng-cloak tx-row">
               <td ng-click="txDetail(x)">{{x.id}}</td>
               <td ng-click="txDetail(x)">{{x.type}}</td>
-              <td ng-click="txDetail(x)">{{x.from | limitTo: 20}}<span ng-if="x.from.length > 20">...</span></td>
-              <td ng-click="txDetail(x)">{{x.amount | currency:"XLM":4}}</td>
+              <td ng-click="txDetail(x)">{{x.sourceAccount | limitTo: 20}}<span ng-if="x.sourceAccount.length > 20">...</span></td>
+              <td ng-click="txDetail(x)">{{x.amount}}</td>
             </tr>
           </tbody>
         </table>
@@ -57,11 +57,15 @@
                 
               </tr>
             </thead> -->
-            <tbody>                                            
-              <tr ng-repeat="(x,y) in txItem">
+            <tbody> 
+              <tr ng-repeat="x in txItem.textArray">
+                <td class="text-center"><strong>{{x}}</strong></td>
+                
+              </tr>                                           
+              <!-- <tr ng-repeat="(x,y) in txItem">
                 <td class="text-center"><strong>{{x}}</strong></td>
                 <td>{{y}}</td>                
-              </tr>
+              </tr> -->
               <!-- <tr>
                 <td class="text-center"><strong></strong></td>
                 <td></td>                

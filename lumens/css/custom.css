@@ -75,3 +75,16 @@ p, span{
 .message-box .mb-container {
     top: 10%;
 }
+
+.close:hover, .close:focus {
+	opacity: 0;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+.tx-row:hover{
+	background-color: #8BC34A;
+	cursor: pointer;
+}

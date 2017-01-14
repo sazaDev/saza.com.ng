@@ -422,7 +422,7 @@ app.run(function ($rootScope, $state, User ) {
   $rootScope.ngnRate = 400;
   $rootScope.siteURL = 'saza.com.ng';
   var requireLogin = toState.data.requireLogin;
-  // console.log("currentUser: ", $rootScope.currentUser);
+  console.log("currentUser: ", $rootScope.currentUser);
   // console.log("requireLogin: ", requireLogin);
     
     // if user is not logged in and page requires login

@@ -16,18 +16,14 @@
   <link rel="stylesheet" type="text/css" id="theme" href="css/loading-bar.min.css"/>
   <link rel="stylesheet" type="text/css"  href="css/custom.css"/>
   <!-- EOF CSS INCLUDE -->
-<style>
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
-}
-</style>
+
 </head>
-<body ng-app="lumensWall">
+<body class="ng-cloak" ng-app="lumensWall" ng-cloak>
   <!-- START PAGE CONTAINER -->
-  <div class="page-container" ng-cloak ui-view="pgContainer">
+  <div class="page-container ng-cloak" ng-cloak ui-view="pgContainer">
 
     <!-- START PAGE SIDEBAR -->
-    <div class="page-sidebar" ui-view="sideBar">
+    <div class="page-sidebar ng-cloak" ui-view="sideBar" ng-cloak>
       <!-- START X-NAVIGATION -->
 
       <!-- END X-NAVIGATION -->
@@ -35,7 +31,7 @@
     <!-- END PAGE SIDEBAR -->
 
     <!-- PAGE CONTENT -->
-    <div class="page-content">
+    <div class="page-content ng-cloak" ng-cloak>
       <!-- START X-NAVIGATION VERTICAL -->
       <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
         <!-- TOGGLE NAVIGATION -->
@@ -51,7 +47,7 @@
       <!-- END X-NAVIGATION VERTICAL -->                     
 
       <!-- START BREADCRUMB -->
-      <div class="breadcrumb row" ng-controller="accountDetailsController" ng-init="init()">
+      <div class="breadcrumb row ng-cloak" ng-controller="accountDetailsController" ng-init="init()" ng-cloak>
         <p class="col-md-12" ng-cloak>Hi {{currentUser.username || currentUser.email}}  | Account ID: {{currentUser.account_id}}
           <select class="form-control" ng-model="currentUser.currentAccount" ng-change="changeCurrentAccount(currentUser.currentAccount)">
             <option ng-repeat="acct in currentUser.accounts">{{acct.account_id}}</option>
@@ -61,28 +57,9 @@
       </div>
       <!-- END BREADCRUMB -->                
 
-      <!-- <div class="page-title">                    
-        <h2><span class="fa fa-arrow-circle-o-left"></span> Page Title</h2>
-      </div> -->                   
-
       <!-- PAGE CONTENT WRAPPER -->
-      <div class="page-content-wrap" ui-view="pgContent">
-	<!--
-        <div class="row">
-          <div class="col-md-12">
-
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">Panel Title</h3>
-              </div>
-              <div class="panel-body">
-                Panel body
-              </div>
-            </div>
-
-          </div>
-        </div>
-	-->
+      <div class="page-content-wrap ng-cloak" ui-view="pgContent" ng-cloak>
+	
       </div>
       <!-- END PAGE CONTENT WRAPPER --> 
 

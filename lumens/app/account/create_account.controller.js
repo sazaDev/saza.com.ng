@@ -80,8 +80,14 @@ lumensWall.controller('createAccountController', function($scope, $state, $http,
       $scope.userSeed = data.content.data.seed;
       $scope.userAcct = data.content.data.account_id;
       
+      // set the currently active account
+      if (data.content.data.accounts.length > 0) {
+        data.content.data.currentAccount = data.content.data.accounts[0].account_id;
+      }
+
       var user = data.content.data;
       user.seed = "";
+      user.account_id = "";
       // localUser = JSON.stringify(user);
         
       // Set the stringified user data into local storage
