@@ -97,6 +97,47 @@
       <!-- START transaction BLOCK -->
         <div ui-view="txHistory"></div>
       <!-- END transaction BLOCK -->
+
+      <!-- START trustlines BLOCK -->
+        <div>
+          <div class="panel panel-colorful">
+            <div class="panel-heading">
+              <div class="panel-title-box">
+                <h3>Trustlines</h3>
+                <span>Trustlines for assets in account with limits</span>
+                <a ui-sref="changetrust" class="btn btn-default pull-right">
+                      Change Trust <span class="fa fa-chevron-right"></span>
+                </a>
+                
+              </div>                                    
+              
+            </div>
+            <div class="panel-body panel-body-table">
+
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th width="10%">Asset Type</th>
+                      <th width="70%">Asset Issuer</th>
+                      <th width="20%">Limit</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="x in assets">
+                      <td><strong>{{x.asset_type === 'native' ? 'XLM' : x.asset_code }}</strong></td>
+                      <td>{{x.asset_issuer}}</td>
+                      <td>{{x.limit}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      <!-- END trustlines BLOCK -->      
       
     </div>
     <div class="col-md-4">
@@ -110,17 +151,7 @@
             <h3>Assets</h3>
             <span>Balance of assets in account</span>
           </div>                                    
-          <ul class="panel-controls" style="margin-top: 2px;">
-            <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
-            <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
-              <ul class="dropdown-menu">
-                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
-                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
-              </ul>                                        
-            </li>                                        
-          </ul>
+          
         </div>
         <div class="panel-body panel-body-table">
 
@@ -146,7 +177,7 @@
 
         </div>
       </div>
-      <!-- END PROJECTS BLOCK -->
+      <!-- ASSETS BLOCK -->
 
       <!-- Contact block starts -->
       <div ui-view="contactForm"></div>

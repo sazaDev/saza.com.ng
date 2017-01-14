@@ -88,3 +88,7 @@ p, span{
 	background-color: #8BC34A;
 	cursor: pointer;
 }
+
+.panel .panel-heading .panel-title-box {
+  width: 100%;
+}
