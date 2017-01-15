@@ -4,14 +4,92 @@
 
 </div>
 	<div class="row" ng-controller="manageOfferController" ng-init="init()">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-12">
       <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
-      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
-      <li ng-repeat="x in statusMsg.content track by $index">
-      {{x}}
-      </li>
+        <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+        <li ng-repeat="x in statusMsg.content track by $index">
+        {{x}}
+        </li>
+      </div>      
+      <div>
+        <p class="text-info"><i class="fa fa-info-circle"></i> Creates, updates, or deletes an offer.</p>
+      </div>
 
     </div>
+    <div class="col-md-6">
+      <div class="panel panel-colorful">
+        <div class="panel-heading">
+          <div class="panel-title-box">
+            <h3>Offers</h3>
+            <span>Offers made by this account</span>
+          </div>                                    
+          
+        </div>
+        <div class="panel-body panel-body-table">
+
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th width="10%">ID</th>
+                  <th width="35%">Selling</th>
+                  <th width="35%">Buying</th>
+                  <th width="10%">Amount</th>
+                  <th width="10%">Price</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="x in offers">
+                  <td>{{x.id}}</td>
+                  <td><strong>{{x.selling.asset_type === 'native' ? 'XLM' : x.selling.asset_code }}</strong></td>
+                  <td><strong>{{x.buying.asset_type === 'native' ? 'XLM' : x.buying.asset_code }}</strong></td>
+                  <td>{{x.amount}}</td>
+                  <td>{{x.price}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+      <div class="panel panel-colorful">
+        <div class="panel-heading">
+          <div class="panel-title-box">
+            <h3>Trustlines</h3>
+            <span>Trustlines for assets in account with limits</span>
+          </div>                                    
+          
+        </div>
+        <div class="panel-body panel-body-table">
+
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th width="10%">Asset Type</th>
+                  <th width="60%">Asset Issuer</th>
+                  <th width="15%">Balance</th>
+                  <th width="15%">Limit</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="x in assets">
+                  <td><strong>{{x.asset_type === 'native' ? 'XLM' : x.asset_code }}</strong></td>
+                  <td class="has_id">{{x.asset_type === 'native' ? 'stellar.org' :x.asset_issuer}}</td>
+                  <td>{{x.balance}}</td>
+                  <td>{{x.asset_type === 'native' ? 'No Limit' :x.limit}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>            
+    </div>
+    <div class="col-md-6">
+
       <form class="form-horizontal" name="offerForm" method="POST" ng-submit="manageOffer()">
         <div class="panel panel-colorful">
           <div class="panel-heading">
@@ -19,9 +97,6 @@
             <ul class="panel-controls">
             
             </ul>
-          </div>
-          <div class="panel-body">
-            <p class="text-info"><i class="fa fa-info-circle"></i> Creates, updates, or deletes an offer.</p>
           </div>
           <div class="panel-body">
 

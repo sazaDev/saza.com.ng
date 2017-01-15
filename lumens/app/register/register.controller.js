@@ -47,6 +47,14 @@ lumensWall.controller('registerController', function($scope, $state, $http, $win
 
        if (popup.value){
        		console.log("popup value", popup.value);
+       		popup.value.authenticated = true;
+					// set the currently active account
+				
+					if (popup.value.accounts.length > 0) {
+						popup.value.currentAccount = popup.value.accounts[0].account_id;
+						popup.value.currentUsername = popup.value.accounts[0].fed_name;
+					}
+       		
        		User.set(popup.value);
        		var user = JSON.stringify(popup.value);
 				

@@ -4,13 +4,14 @@ lumensWall.controller('manageDataController', function($scope, $state, $http, $r
   
   $scope.manageData = {};
   $scope.statusMsg = false;
-  
+  $scope.offers = [];
   
 
   $scope.init = function() {
     $scope.manageData.id = $rootScope.currentUser.id;
     $scope.manageData.email = $rootScope.currentUser.email;
     $scope.manageData.token = $rootScope.currentUser.token;
+    
     
   };
   

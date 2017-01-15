@@ -9,14 +9,19 @@ lumensWall.controller('accountDetailsController', function($scope, $state, $http
 	};
 
 	$scope.changeCurrentAccount = function (ca) {
-    console.log("before cca", $rootScope.currentUser.currentAccount);
+    
     $rootScope.currentUser.currentAccount = ca;
-    console.log("ca", ca);
-    console.log("after cca", $rootScope.currentUser.currentAccount);
+    $rootScope.currentUser.accounts.forEach(function(a) {
+        if (a.account_id === ca) {
+          $rootScope.currentUser.currentUsername = a.fed_name;
+        }
+      });
 
     User.setCurrentAccount(ca);
 
     var user = User.get();
+    user.currentUsername = $rootScope.currentUser.currentUsername;
+
     localStorage.setItem('user', JSON.stringify(user));
     
     $state.go('dashboard', {}, {reload: true});

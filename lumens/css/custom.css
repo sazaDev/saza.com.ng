@@ -92,3 +92,7 @@ p, span{
 .panel .panel-heading .panel-title-box {
   width: 100%;
 }
+
+.has_id{
+	word-wrap: break-word;
+}

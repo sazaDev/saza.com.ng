@@ -32,6 +32,7 @@ lumensWall.controller('createAccountController', function($scope, $state, $http,
       // set the currently active account
       if (data.content.data.accounts.length > 0) {
         data.content.data.currentAccount = data.content.data.accounts[0].account_id;
+        data.content.data.currentUsername = data.content.data.accounts[0].fed_name;
       }
 
 
@@ -82,6 +83,7 @@ lumensWall.controller('createAccountController', function($scope, $state, $http,
       
       // set the currently active account
       if (data.content.data.accounts.length > 0) {
+        data.content.data.currentUsername = data.content.data.accounts[0].fed_name;
         data.content.data.currentAccount = data.content.data.accounts[0].account_id;
       }
 

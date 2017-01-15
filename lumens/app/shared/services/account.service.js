@@ -84,6 +84,15 @@ login.factory('Account', function($http) {
                 data: $.param(manageData)
             });
         },
+        getOffers : function(token,account_id) {
+            
+             return $http({
+                method: 'GET',
+                url: baseUrl+'getoffers/?token='+token+'&account_id='+account_id,
+                headers: { 'Authorization': 'JWT '+token },
+                
+            });
+        },
 
         manageOffer : function(offerData) {
             
@@ -193,10 +202,10 @@ login.factory('Account', function($http) {
             });
         },
        
-        getSeed : function(token) {
+        getSeed : function(token,account_id) {
              return $http({
                 method: 'GET',
-                url: baseUrl+'getseed/?token='+token,
+                url: baseUrl+'getseed/?token='+token+'&account_id='+account_id,
                 headers: { 'Authorization': 'JWT '+token },
                 
             });

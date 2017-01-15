@@ -127,8 +127,8 @@
                   <tbody>
                     <tr ng-repeat="x in assets">
                       <td><strong>{{x.asset_type === 'native' ? 'XLM' : x.asset_code }}</strong></td>
-                      <td>{{x.asset_issuer}}</td>
-                      <td>{{x.limit}}</td>
+                      <td>{{x.asset_type === 'native' ? 'stellar.org' :x.asset_issuer}}</td>
+                      <td>{{x.asset_type === 'native' ? 'No Limit' :x.limit}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -141,6 +141,58 @@
       
     </div>
     <div class="col-md-4">
+      <div class="page-title">                    
+        <h2><span class="text-warning  fa fa-star"></span> New Features</h2>
+      </div>
+      <!-- START NEW FEATURES BLOCK -->
+      <div class="panel panel-colorful">
+        <div class="panel-heading">
+          <div class="panel-title-box">
+            <h3>Now you can</h3>
+            <span></span>
+          </div>                                    
+          
+        </div>
+        <div class="panel-body">
+          <a ui-sref="addaccount" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">Manage multiple stellar accounts</span>
+              <p></p>                                                                        
+          </a>
+          <a ui-sref="sendpayment" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">Send payments in different assets</span>
+              <p></p>                                                                        
+          </a>
+          <a ui-sref="changetrust" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">Create/Manage Trustlines</span>
+              <p></p>                                                                        
+          </a>          
+          <a ui-sref="manageoffer" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">Create/Manage Offers</span>
+              <p></p>                                                                        
+          </a>  
+          <a ui-sref="transactions" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">View all operations on account</span>
+              <p></p>                                                                        
+          </a>       
+          <a ui-sref="setoptions" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">Set all account options</span>
+              <p></p>                                                                        
+          </a>
+          <a href="#" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">...and much more.. </span>
+              <p></p>                                                                        
+          </a>
+
+        </div>
+      </div>
+      <!--END NEW FEATURES BLOCK -->
       <div class="page-title">                    
         <h2><span class="fa fa-list"></span> Assets</h2>
       </div>
@@ -177,7 +229,7 @@
 
         </div>
       </div>
-      <!-- ASSETS BLOCK -->
+      <!-- END ASSETS BLOCK -->
 
       <!-- Contact block starts -->
       <div ui-view="contactForm"></div>

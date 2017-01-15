@@ -18,6 +18,7 @@ lumensWall.controller('loginController', function($scope, $state, $window, $inte
 				
 				if (data.user.accounts.length > 0) {
 					data.user.currentAccount = data.user.accounts[0].account_id;
+					data.user.currentUsername = data.user.accounts[0].fed_name;
 				}
 				
 				// var user = JSON.stringify(data.user);
@@ -30,7 +31,7 @@ lumensWall.controller('loginController', function($scope, $state, $window, $inte
         // us to access it anywhere across the app
         // $rootScope.currentUser = data.user;
         User.set(data.user);
-        console.log("currentUser", User.get());
+        // console.log("currentUser", User.get());
 
         var user = JSON.stringify(data.user);
 				
@@ -70,6 +71,14 @@ lumensWall.controller('loginController', function($scope, $state, $window, $inte
 
        if (popup.value){
        		console.log("popup value", popup.value);
+       		popup.value.authenticated = true;
+					// set the currently active account
+				
+					if (popup.value.accounts.length > 0) {
+						popup.value.currentAccount = popup.value.accounts[0].account_id;
+						popup.value.currentUsername = popup.value.accounts[0].fed_name;
+					}
+
        		User.set(popup.value);
        		var user = JSON.stringify(popup.value);
 				

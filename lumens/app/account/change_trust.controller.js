@@ -4,14 +4,38 @@ lumensWall.controller('changeTrustController', function($scope, $state, $http, $
   
   $scope.trustData = {};
   $scope.statusMsg = false;
-  
+  $scope.assets = [];
   
 
   $scope.init = function() {
     $scope.trustData.id = $rootScope.currentUser.id;
     $scope.trustData.email = $rootScope.currentUser.email;
     $scope.trustData.token = $rootScope.currentUser.token;
-    // $scope.trustData.assetType = 4;
+    console.log("currentUser", $rootScope.currentUser);
+
+    $scope.assets = $rootScope.currentUser.balances;
+
+    Account.getAccount($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
+      .success(function(data) {
+        console.log(data.content.data);
+        var balances = data.content.data.balances;
+        $scope.assets = balances;
+
+        $rootScope.currentUser.balances = [];
+        $rootScope.currentUser.balances = balances;
+
+        var localUser = JSON.stringify($rootScope.currentUser);
+        // Set the stringified user data into local storage
+      
+        localStorage.setItem('user', localUser);
+        
+        console.log("currentUser", $rootScope.currentUser);
+
+      })
+      .error(function(data) {
+        // console.log("error",data);
+       
+      });
     
   };
   
@@ -33,8 +57,8 @@ lumensWall.controller('changeTrustController', function($scope, $state, $http, $
         $scope.statusMsg.content = ['Asset details required'];
         window.scrollTo(0, 0);
         return null;
-      } 
-    } 
+      }
+    }
 
     Account.changeTrust($scope.trustData)
       .success(function(data) {
@@ -46,6 +70,28 @@ lumensWall.controller('changeTrustController', function($scope, $state, $http, $
         $scope.statusMsg.content = data.content.message;
         $scope.trustData = {};
         window.scrollTo(0, 0);
+        // 
+        Account.getAccount($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
+          .success(function(data) {
+            console.log(data.content.data);
+            var balances = data.content.data.balances;
+            $scope.assets = balances;
+
+            $rootScope.currentUser.balances = [];
+            $rootScope.currentUser.balances = balances;
+
+            var localUser = JSON.stringify($rootScope.currentUser);
+            // Set the stringified user data into local storage
+          
+            localStorage.setItem('user', localUser);
+            
+            console.log("currentUser", $rootScope.currentUser);
+
+          })
+          .error(function(data) {
+            // console.log("error",data);
+           
+          });
 
       })
       .error(function(data) {
