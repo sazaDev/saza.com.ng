@@ -33,7 +33,7 @@
     <!-- PAGE CONTENT -->
     <div class="page-content ng-cloak" ng-cloak>
       <!-- START X-NAVIGATION VERTICAL -->
-      <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
+      <ul class="x-navigation x-navigation-horizontal x-navigation-panel ng-cloak">
         <!-- TOGGLE NAVIGATION -->
         <li class="xn-icon-button">
           <a class="x-navigation-minimize"><span class="fa fa-dedent"></span></a>
@@ -48,12 +48,12 @@
 
       <!-- START BREADCRUMB -->
       <div class="breadcrumb row ng-cloak" ng-controller="accountDetailsController" ng-init="init()" ng-cloak>
-        <p class="col-md-12" ng-cloak>Hi {{currentUser.currentUsername}} 
+        <p class="col-md-12 ng-cloak" ng-cloak>Hi {{currentUser.currentUsername}} 
           <span ng-if="!currentUser.currentUsername">
           Stellar address not set. <a ui-sref="setusername">Set Address?</a>
           </span> 
           |  Account ID: 
-          <select class="form-control" ng-model="currentUser.currentAccount" ng-change="changeCurrentAccount(currentUser.currentAccount)">
+          <select class="form-control ng-cloak" ng-model="currentUser.currentAccount" ng-change="changeCurrentAccount(currentUser.currentAccount)">
             <option ng-repeat="acct in currentUser.accounts">{{acct.account_id}}</option>
           </select>
         </p>
