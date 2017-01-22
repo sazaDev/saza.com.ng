@@ -97,9 +97,102 @@
       <!-- START transaction BLOCK -->
         <div ui-view="txHistory"></div>
       <!-- END transaction BLOCK -->
+
+      <!-- START trustlines BLOCK -->
+        <div>
+          <div class="panel panel-colorful">
+            <div class="panel-heading">
+              <div class="panel-title-box">
+                <h3>Trustlines</h3>
+                <span>Trustlines for assets in account with limits</span>
+                <a ui-sref="changetrust" class="btn btn-default pull-right">
+                      Change Trust <span class="fa fa-chevron-right"></span>
+                </a>
+                
+              </div>                                    
+              
+            </div>
+            <div class="panel-body panel-body-table">
+
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th width="10%">Asset Type</th>
+                      <th width="70%">Asset Issuer</th>
+                      <th width="20%">Limit</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="x in assets">
+                      <td><strong>{{x.asset_type === 'native' ? 'XLM' : x.asset_code }}</strong></td>
+                      <td>{{x.asset_type === 'native' ? 'stellar.org' :x.asset_issuer}}</td>
+                      <td>{{x.asset_type === 'native' ? 'No Limit' :x.limit}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      <!-- END trustlines BLOCK -->      
       
     </div>
     <div class="col-md-4">
+      <div class="page-title">                    
+        <h2><span class="text-warning  fa fa-star"></span> New Features</h2>
+      </div>
+      <!-- START NEW FEATURES BLOCK -->
+      <div class="panel panel-colorful">
+        <div class="panel-heading">
+          <div class="panel-title-box">
+            <h3>Now you can</h3>
+            <span></span>
+          </div>                                    
+          
+        </div>
+        <div class="panel-body">
+          <a ui-sref="addaccount" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">Manage multiple stellar accounts</span>
+              <p></p>                                                                        
+          </a>
+          <a ui-sref="sendpayment" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">Send payments in different assets</span>
+              <p></p>                                                                        
+          </a>
+          <a ui-sref="changetrust" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">Create/Manage Trustlines</span>
+              <p></p>                                                                        
+          </a>          
+          <a ui-sref="manageoffer" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">Create/Manage Offers</span>
+              <p></p>                                                                        
+          </a>  
+          <a ui-sref="transactions" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">View all operations on account</span>
+              <p></p>                                                                        
+          </a>       
+          <a ui-sref="setoptions" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">Set all account options</span>
+              <p></p>                                                                        
+          </a>
+          <a href="#" class="list-group-item">                                 
+              <div class="list-group-status status-online"></div>
+              <span class="contacts-title">...and much more.. </span>
+              <p></p>                                                                        
+          </a>
+
+        </div>
+      </div>
+      <!--END NEW FEATURES BLOCK -->
       <div class="page-title">                    
         <h2><span class="fa fa-list"></span> Assets</h2>
       </div>
@@ -110,17 +203,7 @@
             <h3>Assets</h3>
             <span>Balance of assets in account</span>
           </div>                                    
-          <ul class="panel-controls" style="margin-top: 2px;">
-            <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
-            <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
-              <ul class="dropdown-menu">
-                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
-                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
-              </ul>                                        
-            </li>                                        
-          </ul>
+          
         </div>
         <div class="panel-body panel-body-table">
 
@@ -146,7 +229,7 @@
 
         </div>
       </div>
-      <!-- END PROJECTS BLOCK -->
+      <!-- END ASSETS BLOCK -->
 
       <!-- Contact block starts -->
       <div ui-view="contactForm"></div>

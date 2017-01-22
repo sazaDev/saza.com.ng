@@ -9,7 +9,7 @@ lumensWall.controller('settingsController', function($scope, $state, $http, $roo
 	$scope.showSeed = false;
 	$scope.init = function() {
 		// load the seed here but dont display yet
-    Account.getSeed($rootScope.currentUser.token)
+    Account.getSeed($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
       .success(function(data) {
         // console.log("success",data);
         $scope.tempSeed = data.content.message;

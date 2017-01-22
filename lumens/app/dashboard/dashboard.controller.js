@@ -24,9 +24,21 @@ lumensWall.controller('dashboardController', function($scope, $state, $http, $ro
     $scope.rates.ngn = $rootScope.ngnRate;
 		Account.getAccount($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
       .success(function(data) {
+        console.log(data.content.data);
 				var balances = data.content.data.balances;
         $scope.assets = balances;
-				balances.forEach(function(balance) {
+
+        $rootScope.currentUser.balances = [];
+        $rootScope.currentUser.balances = balances;
+
+        var localUser = JSON.stringify($rootScope.currentUser);
+        // Set the stringified user data into local storage
+      
+        localStorage.setItem('user', localUser);
+        
+        console.log("currentUser", $rootScope.currentUser);
+				
+        balances.forEach(function(balance) {
           console.log('Type:', balance.asset_type, ', Balance:', balance.balance);
           if (balance.asset_type === 'native') {
 						$scope.balance.xlm = balance.balance;

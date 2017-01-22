@@ -16,18 +16,14 @@
   <link rel="stylesheet" type="text/css" id="theme" href="css/loading-bar.min.css"/>
   <link rel="stylesheet" type="text/css"  href="css/custom.css"/>
   <!-- EOF CSS INCLUDE -->
-<style>
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
-}
-</style>
+
 </head>
-<body ng-app="lumensWall">
+<body class="ng-cloak" ng-app="lumensWall" ng-cloak>
   <!-- START PAGE CONTAINER -->
-  <div class="page-container" ng-cloak ui-view="pgContainer">
+  <div class="page-container ng-cloak" ng-cloak ui-view="pgContainer">
 
     <!-- START PAGE SIDEBAR -->
-    <div class="page-sidebar" ui-view="sideBar">
+    <div class="page-sidebar ng-cloak" ui-view="sideBar" ng-cloak>
       <!-- START X-NAVIGATION -->
 
       <!-- END X-NAVIGATION -->
@@ -35,9 +31,9 @@
     <!-- END PAGE SIDEBAR -->
 
     <!-- PAGE CONTENT -->
-    <div class="page-content">
+    <div class="page-content ng-cloak" ng-cloak>
       <!-- START X-NAVIGATION VERTICAL -->
-      <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
+      <ul class="x-navigation x-navigation-horizontal x-navigation-panel ng-cloak">
         <!-- TOGGLE NAVIGATION -->
         <li class="xn-icon-button">
           <a class="x-navigation-minimize"><span class="fa fa-dedent"></span></a>
@@ -51,9 +47,13 @@
       <!-- END X-NAVIGATION VERTICAL -->                     
 
       <!-- START BREADCRUMB -->
-      <div class="breadcrumb row" ng-controller="accountDetailsController" ng-init="init()">
-        <p class="col-md-12" ng-cloak>Hi {{currentUser.username || currentUser.email}}  | Account ID: {{currentUser.account_id}}
-          <select class="form-control" ng-model="currentUser.currentAccount" ng-change="changeCurrentAccount(currentUser.currentAccount)">
+      <div class="breadcrumb row ng-cloak" ng-controller="accountDetailsController" ng-init="init()" ng-cloak>
+        <p class="col-md-12 ng-cloak" ng-cloak>Hi {{currentUser.currentUsername}} 
+          <span ng-if="!currentUser.currentUsername">
+          Stellar address not set. <a ui-sref="setusername">Set Address?</a>
+          </span> 
+          |  Account ID: 
+          <select class="form-control ng-cloak" ng-model="currentUser.currentAccount" ng-change="changeCurrentAccount(currentUser.currentAccount)">
             <option ng-repeat="acct in currentUser.accounts">{{acct.account_id}}</option>
           </select>
         </p>
@@ -61,28 +61,9 @@
       </div>
       <!-- END BREADCRUMB -->                
 
-      <!-- <div class="page-title">                    
-        <h2><span class="fa fa-arrow-circle-o-left"></span> Page Title</h2>
-      </div> -->                   
-
       <!-- PAGE CONTENT WRAPPER -->
-      <div class="page-content-wrap" ui-view="pgContent">
-	<!--
-        <div class="row">
-          <div class="col-md-12">
-
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">Panel Title</h3>
-              </div>
-              <div class="panel-body">
-                Panel body
-              </div>
-            </div>
-
-          </div>
-        </div>
-	-->
+      <div class="page-content-wrap ng-cloak" ui-view="pgContent" ng-cloak>
+	
       </div>
       <!-- END PAGE CONTENT WRAPPER --> 
 
@@ -137,8 +118,11 @@
   <script type="text/javascript" src="app/account/send_payment.controller.js"></script>
   <script type="text/javascript" src="app/account/change_trust.controller.js"></script>
   <script type="text/javascript" src="app/account/allow_trust.controller.js"></script>
+  <script type="text/javascript" src="app/account/manage_data.controller.js"></script>
   <script type="text/javascript" src="app/account/manage_offer.controller.js"></script>
   <script type="text/javascript" src="app/account/passive_offer.controller.js"></script>
+  <script type="text/javascript" src="app/account/path_payment.controller.js"></script>
+  <script type="text/javascript" src="app/account/set_options.controller.js"></script>  
   <script type="text/javascript" src="app/account/set_username.controller.js"></script>  
   <script type="text/javascript" src="app/account/set_inflation.controller.js"></script>
   <script type="text/javascript" src="app/account/merge_account.controller.js"></script>  

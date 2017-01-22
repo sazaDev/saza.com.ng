@@ -41,6 +41,16 @@ login.factory('Account', function($http) {
                 data: $.param(paymentData)
             });
         },
+        pathPayment : function(paymentData) {
+            
+            return $http({
+                method: 'POST',
+                url: baseUrl+'pathpayment',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+paymentData.token },
+                data: $.param(paymentData)
+            });
+        },
 
         changeTrust : function(trustData) {
             
@@ -64,6 +74,26 @@ login.factory('Account', function($http) {
             });
         },       
 
+        manageData : function(manageData) {
+            
+            return $http({
+                method: 'POST',
+                url: baseUrl+'managedata',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+manageData.token },
+                data: $.param(manageData)
+            });
+        },
+        getOffers : function(token,account_id) {
+            
+             return $http({
+                method: 'GET',
+                url: baseUrl+'getoffers/?token='+token+'&account_id='+account_id,
+                headers: { 'Authorization': 'JWT '+token },
+                
+            });
+        },
+
         manageOffer : function(offerData) {
             
             return $http({
@@ -85,6 +115,18 @@ login.factory('Account', function($http) {
                 data: $.param(offerData)
             });
         },
+
+        setOptions : function(userData) {
+            
+            return $http({
+                method: 'POST',
+                url: baseUrl+'setoptions',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+userData.token },
+                data: $.param(userData)
+            });
+        },
+
 
         setUsername : function(userData) {
             
@@ -160,10 +202,10 @@ login.factory('Account', function($http) {
             });
         },
        
-        getSeed : function(token) {
+        getSeed : function(token,account_id) {
              return $http({
                 method: 'GET',
-                url: baseUrl+'getseed/?token='+token,
+                url: baseUrl+'getseed/?token='+token+'&account_id='+account_id,
                 headers: { 'Authorization': 'JWT '+token },
                 
             });

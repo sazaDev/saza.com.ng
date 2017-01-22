@@ -15,6 +15,7 @@ lumensWall.controller('anchorsController', function($scope, $state, $http, $root
   $scope.addAnchor = function() {
     
     $scope.anchorData.token = $rootScope.currentUser.token;
+    $scope.anchorData.account_id = $rootScope.currentUser.currentAccount;
 
     Account.addAnchor($scope.anchorData)
     .success(function(data) {
@@ -22,7 +23,7 @@ lumensWall.controller('anchorsController', function($scope, $state, $http, $root
       // console.log(data);
       
       $scope.statusMsg = {};
-      $scope.statusMsg.type = 'alert-success';
+      $scope.statusMsg.type = 'alert alert-success';
       $scope.statusMsg.content = data.content.message;
 
       // angular.element('.mb-control-success').triggerHandler('click');
@@ -32,7 +33,7 @@ lumensWall.controller('anchorsController', function($scope, $state, $http, $root
     .error(function(data) {
       // console.log(data);
       $scope.statusMsg = {};
-      $scope.statusMsg.type = 'alert-danger';
+      $scope.statusMsg.type = 'alert alert-danger';
       $scope.statusMsg.content = data.content.message;
       // angular.element('.mb-control-error').triggerHandler('click');
     });

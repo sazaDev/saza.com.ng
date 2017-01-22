@@ -18,25 +18,24 @@ lumensWall.controller('setUsernameController', function($scope, $state, $http, $
   $scope.setUsername = function() {
     
     $scope.userData.token = $rootScope.currentUser.token;
+    $scope.userData.account_id = $rootScope.currentUser.currentAccount;
 
     Account.setUsername($scope.userData)
     .success(function(data) {
   
-      // console.log(data);
-      data.content.user.authenticated = true;
-      var user = JSON.stringify(data.content.user);
-      // console.log(user);
-      // Set the stringified user data into local storage
-      localStorage.setItem('user', user);
+      
+      $rootScope.currentUser.currentUsername = $scope.userData.username+"*"+$rootScope.siteURL;
+      // save in accounts array as well
 
-      // The user's authenticated state gets flipped to
-      // true so we can now show parts of the UI that rely
-      // on the user being logged in
-      $rootScope.authenticated = true;
+      $rootScope.currentUser.accounts.forEach(function(a) {
+        if (a.account_id === $rootScope.currentUser.currentAccount) {
+          a.fed_name = $scope.userData.username+"*"+$rootScope.siteURL;
+        }
+      });
 
-      // Putting the user's data on $rootScope allows
-      // us to access it anywhere across the app
-      $rootScope.currentUser = data.content.user;
+      console.log("currentUser", $rootScope.currentUser);
+      localStorage.setItem('user', JSON.stringify($rootScope.currentUser));
+
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert-success';
       $scope.statusMsg.content = data.content.message;

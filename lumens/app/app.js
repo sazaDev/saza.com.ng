@@ -86,7 +86,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: false
       }
-    })    
+    })
     .state('login',{
       url: '/login',
       views: {
@@ -110,7 +110,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: false
       }
-    })    
+    })
     .state('dashboard',{
       url: '/dashboard',
       views: {
@@ -182,7 +182,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: true
       }
-    })    
+    })
     .state('transactions',{
       url: '/transactions',
       views: {
@@ -214,7 +214,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: true
       }
-    })    
+    })
     .state('addaccount',{
       url: '/add-account',
       views: {
@@ -230,7 +230,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: true
       }
-    })    
+    })
     .state('changetrust',{
       url: '/change-trust',
       views: {
@@ -294,7 +294,55 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: true
       }
-    })    
+    })
+    .state('pathpayment',{
+      url: '/path-payment',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/path_payment.controller.html',
+          controller: 'pathPaymentController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
+    .state('managedata',{
+      url: '/manage-data',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/manage_data.controller.html',
+          controller: 'manageDataController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })   
+    .state('setoptions',{
+      url: '/set-options',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/set_options.controller.html',
+          controller: 'setOptionsController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
     .state('setusername',{
       url: '/set-username',
       views: {
@@ -311,22 +359,22 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
         requireLogin: true
       }
     })
-    .state('setinflation',{
-      url: '/set-inflation',
-      views: {
-        'sideBar' : {
-          templateUrl: 'app/shared/menu/sidemenu.controller.html',
-          controller: 'sideBarController'
-        },
-        'pgContent': {
-          templateUrl: 'app/account/set_inflation.controller.html',
-          controller: 'setInflationController'
-        }
-      },
-      data:{
-        requireLogin: true
-      }
-    })    
+    // .state('setinflation',{
+    //   url: '/set-inflation',
+    //   views: {
+    //     'sideBar' : {
+    //       templateUrl: 'app/shared/menu/sidemenu.controller.html',
+    //       controller: 'sideBarController'
+    //     },
+    //     'pgContent': {
+    //       templateUrl: 'app/account/set_inflation.controller.html',
+    //       controller: 'setInflationController'
+    //     }
+    //   },
+    //   data:{
+    //     requireLogin: true
+    //   }
+    // })    
     .state('mergeaccount',{
       url: '/merge-account',
       views: {
@@ -365,7 +413,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
 
 });
 
-app.run(function ($rootScope, $state, User ) {
+app.run(function ($rootScope, $state, User) {
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
 
   $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
@@ -374,6 +422,7 @@ app.run(function ($rootScope, $state, User ) {
   $rootScope.ngnRate = 400;
   $rootScope.siteURL = 'saza.com.ng';
   var requireLogin = toState.data.requireLogin;
+  window.scrollTo(0, 0);
   // console.log("currentUser: ", $rootScope.currentUser);
   // console.log("requireLogin: ", requireLogin);
     

@@ -1,6 +1,6 @@
 var lumensWall = angular.module('lumensWall');
 
-lumensWall.controller('sendPaymentController', function($scope, $state, $http, $rootScope, Account) {
+lumensWall.controller('pathPaymentController', function($scope, $state, $http, $rootScope, Account) {
   
   $scope.paymentData = {};
   $scope.statusMsg = false;
@@ -11,7 +11,8 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
     $scope.paymentData.id = $rootScope.currentUser.id;
     $scope.paymentData.email = $rootScope.currentUser.email;
     $scope.paymentData.token = $rootScope.currentUser.token;
-    $scope.paymentData.assetType = 0;
+    $scope.paymentData.sendAssetType = 0;
+    $scope.paymentData.destAssetType = 0;
     
   };
   
@@ -19,24 +20,36 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
     $scope.statusMsg = {};
   };
 
-  $scope.sendPayment = function() {
+  $scope.pathPayment = function() {
     $scope.paymentData.id = $rootScope.currentUser.id;
     $scope.paymentData.email = $rootScope.currentUser.email;
     $scope.paymentData.token = $rootScope.currentUser.token;
     $scope.paymentData.account_id = $rootScope.currentUser.currentAccount;
     
-    if ($scope.paymentData.assetType > 0) {
+    if ($scope.paymentData.sendAssetType > 0) {
       // check asset details 
-      if (!$scope.paymentData.assetCode || !$scope.paymentData.assetIssuer) {
+      if (!$scope.paymentData.sendAssetCode || !$scope.paymentData.sendAssetIssuer) {
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
-        $scope.statusMsg.content = ['Asset details required'];
+        $scope.statusMsg.content = ['Sending asset details required'];
         window.scrollTo(0, 0);
         return null;
-      } 
-    } 
+      }
+    }
 
-    Account.sendPayment($scope.paymentData)
+
+    if ($scope.paymentData.destAssetType > 0) {
+      // check asset details 
+      if (!$scope.paymentData.destAssetCode || !$scope.paymentData.destAssetIssuer) {
+        $scope.statusMsg = {};
+        $scope.statusMsg.type = 'alert-danger';
+        $scope.statusMsg.content = ['Destination asset details required'];
+        window.scrollTo(0, 0);
+        return null;
+      }
+    }
+
+    Account.pathPayment($scope.paymentData)
       .success(function(data) {
 
         // console.log("success",data);

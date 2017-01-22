@@ -1,0 +1,189 @@
+<div>
+ <div class="page-title">                    
+        <h2><span class="fa fa-cog"></span> Set Options</h2>
+
+</div>
+  <div class="row" ng-controller="setOptionsController" ng-init="init()">
+    <div class="col-md-8 col-md-offset-2">
+      <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+      <li ng-repeat="x in statusMsg.content track by $index">
+      {{x}}
+      </li>
+
+    </div>
+      <form class="form-horizontal" name="optionsForm" method="POST" ng-submit="setOptions()">
+        <div class="panel panel-colorful">
+          <div class="panel-heading">
+            
+            <ul class="panel-controls">
+            </ul>
+          </div>
+          <div class="panel-body">
+            <p class="text-info"><i class="fa fa-info-circle"></i> Set various options related to your stellar account</p>
+          </div>
+          <div class="panel-body">
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Inflation Address</label>
+              <div class="col-md-6 col-xs-12">                                            
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                  <input type="text" class="form-control" name="inflationDest" ng-model="userData.inflationDest" placeholder="Inflation Destination"/>
+                </div>                                            
+                <span class="help-block">Enter inflation destination for your Stellar Account</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Set Flags</label>
+                
+                <label class="switch switch-small">
+                    Authorization Required<br>    
+                    <input type="checkbox" ng-model="userData.setFlags.authRq" ng-true-value="1" ng-false-value="0">
+                    <span></span>
+                </label> 
+                <label class="switch switch-small">
+                    Authorization Revocable<br>    
+                    <input type="checkbox" ng-model="userData.setFlags.authRv" ng-true-value="2" ng-false-value="0">
+                    <span></span>
+                </label>
+                <label class="switch switch-small">
+                    Authorization Immutable<br>    
+                    <input type="checkbox" ng-model="userData.setFlags.authIm" ng-true-value="4" ng-false-value="0">
+                    <span></span>
+                </label>                                       
+                
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Clear Flags</label>
+                
+                <label class="switch switch-small">
+                    Authorization Required<br>    
+                    <input type="checkbox" ng-model="userData.clearFlags.authRq" ng-true-value="1" ng-false-value="0">
+                    <span></span>
+                </label> 
+                <label class="switch switch-small">
+                    Authorization Revocable<br>    
+                    <input type="checkbox" ng-model="userData.clearFlags.authRv"  ng-true-value="2" ng-false-value="0">
+                    <span></span>
+                </label>
+                <label class="switch switch-small">
+                    Authorization Immutable<br>    
+                    <input type="checkbox" ng-model="userData.clearFlags.authIm"  ng-true-value="4" ng-false-value="0">
+                    <span></span>
+                </label>                                       
+                
+            </div>            
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Master Weight</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="number" name="masterWeight" ng-model="userData.masterWeight"/>
+                </div>
+                <span class="help-block">Value between 0 - 255</span>
+                <span class="text-danger" ng-show="{{userData.masterWeight > 255}}">
+                  <small>Maximum value is 255</small>
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Low Threshold</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="number" name="lowThreshold" ng-model="userData.lowThreshold"/>
+                  
+                </div>
+                <span class="help-block">Value between 0 - 255</span>
+                <span class="text-danger" ng-show="{{userData.lowThreshold > 255}}">
+                  <small>Maximum value is 255</small>
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Medium Threshold</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="number" name="medThreshold" ng-model="userData.medThreshold"/>
+                  
+                </div>
+                <span class="help-block">Value between 0 - 255</span>
+                <span class="text-danger" ng-show="{{userData.medThreshold > 255}}">
+                  <small>Maximum value is 255</small>
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">High Threshold</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="number" name="highThreshold" ng-model="userData.highThreshold"/>
+                  
+                </div>
+                <span class="help-block">Value between 0 - 255</span>
+                <span class="text-danger" ng-show="{{userData.highThreshold > 255}}">
+                  <small>Maximum value is 255</small>
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Signer Public Key</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="signerKey" ng-model="userData.signerKey"/>
+                </div>
+                <span class="help-block">Account Id of signer</span>
+                
+              </div>
+            </div>            
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Signer Weight</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="number" name="signerWeight" ng-model="userData.signerWeight"/>
+                </div>
+                <span class="help-block">Value between 0 - 255</span>
+                <span class="text-danger" ng-show="{{userData.signerWeight > 255}}">
+                  <small>Maximum value is 255</small>
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Home Domain</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-globe"></span></span>
+                  <input class="form-control" type="text" name="homeDomain" ng-model="userData.homeDomain"/>
+                </div>
+                <span class="help-block"></span>
+              </div>
+            </div>            
+
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-success pull-right" ng-disabled="optionsForm.$error.required || optionsForm.$invalid">Submit</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+
+
+  </div>
+
+</div>

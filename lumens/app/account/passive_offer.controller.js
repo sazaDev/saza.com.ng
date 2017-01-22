@@ -13,6 +13,8 @@ lumensWall.controller('passiveOfferController', function($scope, $state, $http, 
     $scope.offerData.token = $rootScope.currentUser.token;
     $scope.offerData.sellingAssetType = 0;
     $scope.offerData.buyingAssetType = 0;
+    $scope.assets = $rootScope.currentUser.balances;
+    $scope.getOffers();
     
   };
   
@@ -59,7 +61,8 @@ lumensWall.controller('passiveOfferController', function($scope, $state, $http, 
         $scope.statusMsg.type = 'alert-success';
         $scope.statusMsg.content = data.content.message;
         $scope.offerData = {};
-
+        window.scrollTo(0, 0);
+        $scope.getOffers();
       })
       .error(function(data) {
         
@@ -96,5 +99,19 @@ lumensWall.controller('passiveOfferController', function($scope, $state, $http, 
 
   };
 
+
+  $scope.getOffers = function() {
+    Account.getOffers($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
+      .success(function(data) {
+        console.log(data.content.data);
+        
+        $scope.offers = data.content.data;
+
+      })
+      .error(function(data) {
+        console.log("error",data);
+       
+      });    
+  };
 
 });
