@@ -3,6 +3,7 @@ var lumensWall = angular.module('lumensWall');
 lumensWall.controller('settingsController', function($scope, $state, $http, $rootScope, Account) {
 
 	$scope.passwordData = {};
+  $scope.deleteData = {};
 	$scope.statusMsg = false;
 	$scope.seed = 'XXXXXXXXXXXXXXXXXXXXXXXXXXX';
 	$scope.tempSeed = "";
@@ -52,6 +53,63 @@ lumensWall.controller('settingsController', function($scope, $state, $http, $roo
       });
 
 	};
+
+  $scope.deleteAccount = function() {
+    // body...
+  
+    $scope.deleteData.id = $rootScope.currentUser.id;
+    $scope.deleteData.email = $rootScope.currentUser.email;
+    $scope.deleteData.token = $rootScope.currentUser.token;
+    $scope.deleteData.account_id = $rootScope.currentUser.currentAccount;
+
+    Account.deleteAccount($scope.deleteData)
+      .success(function(data) {
+
+        $scope.statusMsg = {};
+        $scope.statusMsg.type = 'alert-success';
+        $scope.statusMsg.content = data.content.message;
+        $scope.deleteData = {};
+
+        var temp_id = -1;
+
+        $rootScope.currentUser.accounts.forEach(function(a, index) {
+          if(a.account_id === $rootScope.currentUser.currentAccount){
+            temp_id = index;
+            console.log(temp_id);
+          }
+        });
+        $rootScope.currentUser.accounts.splice(temp_id,1);
+
+        if ($rootScope.currentUser.accounts.length > 0) {
+          console.log($rootScope.currentUser);
+          $rootScope.currentUser.currentAccount = $rootScope.currentUser.accounts[0].account_id;
+          $rootScope.currentUser.currentUsername = $rootScope.currentUser.accounts[0].fed_name;
+        } else{
+          console.log($rootScope.currentUser);
+          $rootScope.currentUser.currentAccount = "";
+          $rootScope.currentUser.currentUsername = "";
+        }
+        
+        
+
+        localStorage.setItem('user', JSON.stringify($rootScope.currentUser));
+
+        console.log($rootScope.currentUser);
+        window.scrollTo(0, 0); 
+        $state.go('dashboard', {}, {reload: true});
+
+      })
+      .error(function(data) {
+        // console.log("error",data);
+        $scope.statusMsg = {};
+       $scope.statusMsg.type = 'alert-danger';
+       $scope.statusMsg.content = data.content.message;
+       $scope.deleteData = {};
+       window.scrollTo(0, 0);
+        
+      });
+
+  };
 
 	$scope.toggleSeedView = function() {
 

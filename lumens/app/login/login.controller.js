@@ -97,7 +97,9 @@ lumensWall.controller('loginController', function($scope, $state, $window, $inte
 
     var origin = event.origin || event.originalEvent.origin;
       // IMPORTANT: Check the origin of the data! 
-    if (origin === 'https://saza.com.ng:8888') {
+    // var serverUrl = 'https://saza.com.ng:8888';
+    var serverUrl = 'http://localhost:8888';
+    if (origin ===  serverUrl) {
           // The data has been sent from your site 
 
           // The data sent with postMessage is stored in event.data 

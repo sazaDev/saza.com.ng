@@ -1,36 +1,19 @@
 var lumensWall = angular.module('lumensWall');
 
-lumensWall.controller('sendPaymentController', function($scope, $state, $http, $rootScope, Account) {
+lumensWall.controller('emailTxController', function($scope, $state, $http, $rootScope, Account) {
   
   $scope.paymentData = {};
   $scope.statusMsg = false;
   $scope.userRegex = /^()[a-z0-9][^<,|>]+$/i;
-  $scope.contacts = [];
+  
 
   $scope.init = function() {
     $scope.paymentData.id = $rootScope.currentUser.id;
     $scope.paymentData.email = $rootScope.currentUser.email;
     $scope.paymentData.token = $rootScope.currentUser.token;
     $scope.paymentData.assetType = 0;
-    $scope.getContacts();
+    
   };
-
-  $scope.getContacts = function() {
-
-    Account.getContacts($rootScope.currentUser.token, $rootScope.currentUser.id)
-    .success(function(data) {
-      // console.log("data", data);
-      // $scope.contacts = data.content.data;
-      // console.log($scope.contacts);
-      $scope.contacts = data.content.data;
-    })
-    .error(function(data) {
-       console.log("Error", data);
-       // $scope.contacts = [{name: "amos", account_id: "1234"}, {name: "ssdsmos", account_id: "sdsds82"}];
-
-    });
-  };
-
   
   $scope.closeAlert = function() {
     $scope.statusMsg = {};
@@ -53,7 +36,7 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
       } 
     } 
 
-    Account.sendPayment($scope.paymentData)
+    Account.emailTx($scope.paymentData)
       .success(function(data) {
 
         // console.log("success",data);
@@ -61,7 +44,10 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-success';
         $scope.statusMsg.content = data.content.message;
-        $scope.paymentData = {};
+        $scope.paymentData.destAcct = "";
+        $scope.paymentData.memoText = "";
+        $scope.paymentData.amount = "";
+        $scope.paymentData.password = "";
         window.scrollTo(0, 0);
       })
       .error(function(data) {
@@ -69,7 +55,7 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
         $scope.statusMsg.content = data.content.message;
-        $scope.paymentData = {};
+        // $scope.paymentData = {};
         window.scrollTo(0, 0);
 
 				
@@ -85,11 +71,6 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
     }
   };
 
-  $scope.contactChange = function(id) {
-    console.log(id);
-    $scope.paymentData.destAcct = id;
-    console.log($scope.paymentData.destAcct);
-  };
 
 
 

@@ -1,17 +1,17 @@
-<div class="page-title">                    
+<div class="page-title">
   <h2><span class="fa fa-list"></span> Transaction History</h2>
 </div>
 <div ng-controller="transactionsController" ng-init="init()"  class="row ng-cloak" ng-cloak>
   <div class="col-md-12" ng-hide="showDetail">
     <!-- START DEFAULT DATATABLE -->
     <div class="panel panel-colorful">
-      <div class="panel-heading">                                
+      <div class="panel-heading">
         <h3 class="panel-title">Transactions</h3>
         <!-- <ul class="panel-controls">
           <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
           <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
           <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
-        </ul>  -->                               
+        </ul>  -->
       </div>
       <div class="panel-body table-responsive">
         <table class="table datatable ng-cloak" datatable="ng" dt-options="dtOptions" ng-cloak>
@@ -21,7 +21,7 @@
               <th>Type</th>
               <th>Source</th>
               <th>Amount</th>
-              
+
             </tr>
           </thead>
           <tbody>
@@ -54,75 +54,75 @@
               <tr>
                 <th></th>
                 <th></th>
-                
+
               </tr>
             </thead> -->
-            <tbody> 
+            <tbody>
               <tr ng-repeat="x in txItem.textArray">
                 <td class="text-center"><strong>{{x}}</strong></td>
-                
-              </tr>                                           
+
+              </tr>
               <!-- <tr ng-repeat="(x,y) in txItem">
                 <td class="text-center"><strong>{{x}}</strong></td>
-                <td>{{y}}</td>                
+                <td>{{y}}</td>
               </tr> -->
               <!-- <tr>
                 <td class="text-center"><strong></strong></td>
-                <td></td>                
+                <td></td>
               </tr>
               <tr>
                 <td class="text-center"><strong></strong></td>
-                <td></td>                
+                <td></td>
               </tr>
               <tr>
                 <td class="text-center"><strong></strong></td>
-                <td></td>                
+                <td></td>
               </tr>
               <tr>
                 <td class="text-center"><strong></strong></td>
-                <td></td>                
+                <td></td>
               </tr>
               <tr>
                 <td class="text-center"><strong></strong></td>
-                <td></td>                
+                <td></td>
               </tr>
               <tr>
                 <td class="text-center"><strong></strong></td>
-                <td></td>                
+                <td></td>
               </tr>
               <tr>
                 <td class="text-center"><strong></strong></td>
-                <td></td>                
-              </tr> -->              
+                <td></td>
+              </tr> -->
             </tbody>
           </table>
-        </div>                                
+        </div>
 
       </div>
-    </div>                                                
+    </div>
 
   </div>
 </div>
 <script type="text/javascript">
 //Datatables
 // var uiDatatable = function(){
-  if($(".datatable").length > 0){                
+  if($(".datatable").length > 0){
     $(".datatable").dataTable();
     $(".datatable").on('page.dt',function () {
       onresize(100);
     });
   }
 
-  // if($(".datatable_simple").length > 0){                
+  // if($(".datatable_simple").length > 0){
   //   $(".datatable_simple").dataTable({"ordering": false, "info": false, "lengthChange": false,"searching": false});
   //   $(".datatable_simple").on('page.dt',function () {
   //     onresize(100);
-  //   });                
-  // }            
-        // }//END Datatable 
+  //   });
+  // }
+        // }//END Datatable
 
 /* PAGE ON RESIZE WITH TIMEOUT */
-function onresize(timeout){    
+function onresize(timeout){
     timeout = timeout ? timeout : 200;
 
     setTimeout(function(){
@@ -134,24 +134,24 @@ function onresize(timeout){
 
 function page_content_onresize(){
     $(".page-content,.content-frame-body,.content-frame-right,.content-frame-left").css("width","").css("height","");
-    
+
     var content_minus = 0;
     content_minus = ($(".page-container-boxed").length > 0) ? 40 : content_minus;
     content_minus += ($(".page-navigation-top-fixed").length > 0) ? 50 : 0;
-    
+
     var content = $(".page-content");
     var sidebar = $(".page-sidebar");
-    
-    if(content.height() < $(document).height() - content_minus){        
+
+    if(content.height() < $(document).height() - content_minus){
         content.height($(document).height() - content_minus);
-    }        
-    
-    if(sidebar.height() > content.height()){        
+    }
+
+    if(sidebar.height() > content.height()){
         content.height(sidebar.height());
     }
-    
+
     if($(window).width() > 1024){
-        
+
         if($(".page-sidebar").hasClass("scroll")){
             if($("body").hasClass("page-container-boxed")){
                 var doc_height = $(document).height() - 40;
@@ -159,24 +159,24 @@ function page_content_onresize(){
                 var doc_height = $(window).height();
             }
            $(".page-sidebar").height(doc_height);
-           
+
        }
-       
+
         if($(".content-frame-body").height() < $(document).height()-162){
-            $(".content-frame-body,.content-frame-right,.content-frame-left").height($(document).height()-162);            
+            $(".content-frame-body,.content-frame-right,.content-frame-left").height($(document).height()-162);
         }else{
             $(".content-frame-right,.content-frame-left").height($(".content-frame-body").height());
         }
-        
+
         $(".content-frame-left").show();
         $(".content-frame-right").show();
     }else{
         $(".content-frame-body").height($(".content-frame").height()-80);
-        
+
         if($(".page-sidebar").hasClass("scroll"))
            $(".page-sidebar").css("height","");
     }
-    
+
     if($(window).width() < 1200){
         if($("body").hasClass("page-container-boxed")){
             $("body").removeClass("page-container-boxed").data("boxed","1");

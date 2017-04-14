@@ -4,8 +4,11 @@
 <div class="row" ng-controller="settingsController" ng-init="init()">
   <div class="col-md-10 col-md-offset-1">
     <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
-      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-      {{statusMsg.content}}
+      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+      <li ng-repeat="x in statusMsg.content track by $index">
+      {{x}}
+      </li>
+
     </div>
     <div class="panel panel-colorful nav-tabs-vertical">                   
       <div class="panel-heading ui-draggable-handle">
@@ -37,13 +40,28 @@
               <br>
             <h2 class="header-side">Set Username</h2>
 
-             <h3 ng-if="currentUser.username"><strong>Current Stellar Address:</strong> {{currentUser.username}}</h3>
+             <h3 ng-if="currentUser.currentUsername"><strong>Current Stellar Address:</strong> {{currentUser.currentUsername}}</h3>
 
             <p>You can set a username for your stellar account instead of using the long Account ID.</p>
             <p>The name will be in this format <em>username</em>*<em>domain.com</em>.
               For example: <em>jasmine*{{siteURL}}</em>
             </p>
             <p>To set a username <a ui-sref="setusername">click here</a></p>
+
+            <h2 class="header-side text-danger">Delete Account</h2>
+            <p class="alert alert-danger" role="alert">Caution!! This is irreversible.</p>
+            <p>This will remove your account from Saza Wallet, but it will still be active on the Stellar network. To remove the account from Stellar, use the <a ui-sref="mergeaccount">account merge</a> operation</p>
+
+            <h4>Delete {{currentUser.currentAccount}} ?</h4>
+
+              <form method="post" ng-submit="deleteAccount()" name="deleteAccountForm">
+                <div class="form-group">
+                  <label>Enter Password</label>
+                    <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="password" ng-model="deleteData.password" placeholder="Enter Password" required>
+                  </div>
+                  <button class="btn btn-success pull-right" ng-disabled="deleteAccountForm.$error.required || deleteAccountForm.$error.$invalid">Yes, Delete Account</button>
+              </form>            
+
           </div>
           <div class="tab-pane" id="tab2">
             <h2 class="header-side">Emails</h2>

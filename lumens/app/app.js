@@ -1,12 +1,12 @@
 
-var app = angular.module('lumensWall', 
-                        [ 
+var app = angular.module('lumensWall',
+                        [
                           'ui.router',
                           'datatables',
                           'angular-loading-bar',
                           'ngclipboard',
                           'angularRandomString',
-                          
+
                           'ngPassword',
                           'loginService',
                           'accountService',
@@ -37,7 +37,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
             // Need to use $injector.get to bring in $state or else we get
             // a circular dependency error
             var $state = $injector.get('$state');
-          
+
             if (rejection.status === 401 || rejection.status === 403) {
               localStorage.removeItem('user');
               $state.go('login', {message: "Login Expired. Please sign in"});
@@ -69,7 +69,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
           templateUrl: 'app/register/register.controller.html',
       	  controller: 'registerController'
       	},
-      			
+
       },
       data: {
         requireLogin: false
@@ -100,7 +100,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       }
     })
     .state('resetpassword',{
-      url: '/reset-password/?:token',
+      url: '/reset-password/:token',
       views: {
         'pgContainer': {
           templateUrl: 'app/login/password.controller.html',
@@ -151,6 +151,38 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
         requireLogin: true
       }
     })
+    .state('savepassphrase',{
+      url: '/save-passphrase',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/save_passphrase.controller.html',
+          controller: 'savePassphraseController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
+    .state('contacts',{
+      url: '/contacts',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/contacts.controller.html',
+          controller: 'contactsController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
     .state('sendpayment',{
       url: '/send_payment',
       views: {
@@ -167,6 +199,66 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
         requireLogin: true
       }
     })
+    .state('emailtx',{
+      url: '/lumens-to-email',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/emailtx.controller.html',
+          controller: 'emailTxController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
+    .state('claimlumens',{
+      url: '/claim-lumens/',
+      views: {
+        'pgContainer': {
+          templateUrl: 'app/account/claim_emailtx.controller.html',
+          controller: 'claimEmailTxController'
+        }
+      },
+      data:{
+        requireLogin: false
+      }
+    })
+    .state('userclaimlumens',{
+      url: '/user-claim-lumens/',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/user_claim_lumens.controller.html',
+          controller: 'userClaimLumensController'
+        }
+      },
+      data:{
+        requireLogin: false
+      }
+    })
+    .state('revokelumens',{
+      url: '/revoke-lumens',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/reclaim_emailtx.controller.html',
+          controller: 'reclaimEmailTxController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
     .state('recvpayment',{
       url: '/recv-payment',
       views: {
@@ -176,7 +268,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
         },
         'pgContent': {
           templateUrl: 'app/account/recv_payment.controller.html',
-          
+
         }
       },
       data:{
@@ -326,7 +418,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: true
       }
-    })   
+    })
     .state('setoptions',{
       url: '/set-options',
       views: {
@@ -374,7 +466,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
     //   data:{
     //     requireLogin: true
     //   }
-    // })    
+    // })
     .state('mergeaccount',{
       url: '/merge-account',
       views: {
@@ -390,7 +482,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
       data:{
         requireLogin: true
       }
-    })    
+    })
     .state('settings',{
       url: '/settings',
       views: {
@@ -409,7 +501,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
     });
 
   $locationProvider.html5Mode(true);
-  
+
 
 });
 
@@ -425,13 +517,20 @@ app.run(function ($rootScope, $state, User) {
   window.scrollTo(0, 0);
   // console.log("currentUser: ", $rootScope.currentUser);
   // console.log("requireLogin: ", requireLogin);
-    
+
     // if user is not logged in and page requires login
-    if (requireLogin && !angular.isObject($rootScope.currentUser)) {
-        event.preventDefault();
-        $state.go('login');
+    if (requireLogin) {
+        if (!angular.isObject($rootScope.currentUser)) {
+          event.preventDefault();
+          $state.go('login');
+        }
+
+        //if user needs to set local password: enforced for social media users
+        // if ($rootScope.currentUser.need_password == 1) {
+        //   $rootScope.announcement.need_password = true;
+        // }
     }
-    
+
     if (requireLogin && angular.isObject($rootScope.currentUser)) {
       // console.log("page req login");
         // event.preventDefault();
@@ -445,17 +544,20 @@ app.run(function ($rootScope, $state, User) {
         //   event.preventDefault();
         //       $state.go('setupAccount');
         // }
-    
+
     }
 
+    
+
+
     if (toState.name === "login" || toState.name === "register" ) {
-        
+
         if ($rootScope.currentUser) {
           if ($rootScope.currentUser.authenticated) {
             event.preventDefault();
             $state.go('dashboard');
           }
-            
+
         }
     }else{
         //console.log("NOT checking states, auth or register");

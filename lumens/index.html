@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>       
+<head>
   <base href="/node_dev/saza.com.ng/lumens/"></base>
   <!-- META SECTION -->
-  <title>SAZA Wallet</title>            
+  <title>SAZA Wallet</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,7 +11,7 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <!-- END META SECTION -->
 
-  <!-- CSS INCLUDE -->        
+  <!-- CSS INCLUDE -->
   <link rel="stylesheet" type="text/css" id="theme" href="css/theme-default.css"/>
   <link rel="stylesheet" type="text/css" id="theme" href="css/loading-bar.min.css"/>
   <link rel="stylesheet" type="text/css"  href="css/custom.css"/>
@@ -39,35 +39,46 @@
           <a class="x-navigation-minimize"><span class="fa fa-dedent"></span></a>
         </li>
 
-        <!-- END TOGGLE NAVIGATION -->  
+        <!-- END TOGGLE NAVIGATION -->
         <li class="xn-icon-button pull-right" ng-controller="logoutController">
-          <a href="#" ng-click="logout()"><span class="fa fa-sign-out"></span></a>                        
-        </li>                  
+          <a href="#" ng-click="logout()"><span class="fa fa-sign-out"></span></a>
+        </li>
       </ul>
-      <!-- END X-NAVIGATION VERTICAL -->                     
+      <!-- END X-NAVIGATION VERTICAL -->
 
       <!-- START BREADCRUMB -->
       <div class="breadcrumb row ng-cloak" ng-controller="accountDetailsController" ng-init="init()" ng-cloak>
-        <p class="col-md-12 ng-cloak" ng-cloak>Hi {{currentUser.currentUsername}} 
+        <p class="col-md-12 ng-cloak" ng-cloak>Hi {{currentUser.currentUsername}}
           <span ng-if="!currentUser.currentUsername">
           Stellar address not set. <a ui-sref="setusername">Set Address?</a>
-          </span> 
-          |  Account ID: 
+          </span>
+          |  Account ID:
           <select class="form-control ng-cloak" ng-model="currentUser.currentAccount" ng-change="changeCurrentAccount(currentUser.currentAccount)">
             <option ng-repeat="acct in currentUser.accounts">{{acct.account_id}}</option>
           </select>
         </p>
-
+        <div ng-if="currentUser.need_password">
+          <div class="alert alert-warning" role="alert">
+            Password is not set. You will be unable to complete some actions. Please set password now
+            <a ui-sref="savepassphrase" class="btn btn-success">Set Password</a>
+          </div>
+        </div>
+        <div ng-if="currentUser.accounts.length == 0">
+          <div class="alert alert-warning" role="alert">
+            No Account found. You need to create a Stellar Account
+            <a ui-sref="setupaccount" class="btn btn-success">Create Account</a>
+          </div>
+        </div>
       </div>
-      <!-- END BREADCRUMB -->                
+      <!-- END BREADCRUMB -->
 
       <!-- PAGE CONTENT WRAPPER -->
       <div class="page-content-wrap ng-cloak" ui-view="pgContent" ng-cloak>
-	
-      </div>
-      <!-- END PAGE CONTENT WRAPPER --> 
 
-    </div>            
+      </div>
+      <!-- END PAGE CONTENT WRAPPER -->
+
+    </div>
     <!-- END PAGE CONTENT -->
   </div>
   <!-- END PAGE CONTAINER -->
@@ -77,7 +88,7 @@
   <!-- START PRELOADS -->
   <audio id="audio-alert" src="audio/alert.mp3" preload="auto"></audio>
   <audio id="audio-fail" src="audio/fail.mp3" preload="auto"></audio>
-  <!-- END PRELOADS -->                 
+  <!-- END PRELOADS -->
 
   <!-- START SCRIPTS -->
   <!-- START PLUGINS -->
@@ -85,21 +96,21 @@
   <!-- // <script type="text/javascript" src="js/plugins/jquery/jquery2.js"></script> -->
 
   <script type="text/javascript" src="js/plugins/jquery/jquery-ui.min.js"></script>
-  <script type="text/javascript" src="js/plugins/bootstrap/bootstrap.min.js"></script>        
+  <script type="text/javascript" src="js/plugins/bootstrap/bootstrap.min.js"></script>
   <!-- END PLUGINS -->
 
   <!-- THIS PAGE PLUGINS -->
-<script type="text/javascript" src="js/plugins/datatables/jquery.dataTables.min.js"></script> 
-  <!-- END PAGE PLUGINS -->         
+<script type="text/javascript" src="js/plugins/datatables/jquery.dataTables.min.js"></script>
+  <!-- END PAGE PLUGINS -->
 
   <script type="text/javascript" src="js/angular/angular.js"></script>
   <script type="text/javascript" src="js/angular/angular-ui-router.js"></script>
   <script type="text/javascript" src="js/angular/angular-random-string.js"></script>
   <script type="text/javascript" src="js/angular/angular-password.js"></script>
   <script type="text/javascript" src="js/angular/angular-datatables.js"></script>
-  
+
   <script type="text/javascript" src="js/angular/loading-bar.min.js"></script>
-  <script type="text/javascript" src="js/plugins/clipboard/clipboard.min.js"></script> 
+  <script type="text/javascript" src="js/plugins/clipboard/clipboard.min.js"></script>
   <script type="text/javascript" src="js/angular/ngclipboard.js"></script>
   <script type="text/javascript" src="app/shared/services/login.service.js"></script>
   <script type="text/javascript" src="app/shared/services/account.service.js"></script>
@@ -109,12 +120,12 @@
   <script type="text/javascript" src="app/shared/directives.js"></script>
   <script type="text/javascript" src="app/register/register.controller.js"></script>
   <script type="text/javascript" src="app/login/login.controller.js"></script>
-  
+
   <script type="text/javascript" src="app/login/activate.controller.js"></script>
   <script type="text/javascript" src="app/login/logout.controller.js"></script>
   <script type="text/javascript" src="app/login/password.controller.js"></script>
-  <script type="text/javascript" src="app/dashboard/dashboard.controller.js"></script>  
-  <script type="text/javascript" src="app/account/create_account.controller.js"></script>  
+  <script type="text/javascript" src="app/dashboard/dashboard.controller.js"></script>
+  <script type="text/javascript" src="app/account/create_account.controller.js"></script>
   <script type="text/javascript" src="app/account/send_payment.controller.js"></script>
   <script type="text/javascript" src="app/account/change_trust.controller.js"></script>
   <script type="text/javascript" src="app/account/allow_trust.controller.js"></script>
@@ -122,12 +133,18 @@
   <script type="text/javascript" src="app/account/manage_offer.controller.js"></script>
   <script type="text/javascript" src="app/account/passive_offer.controller.js"></script>
   <script type="text/javascript" src="app/account/path_payment.controller.js"></script>
-  <script type="text/javascript" src="app/account/set_options.controller.js"></script>  
-  <script type="text/javascript" src="app/account/set_username.controller.js"></script>  
+  <script type="text/javascript" src="app/account/set_options.controller.js"></script>
+  <script type="text/javascript" src="app/account/set_username.controller.js"></script>
   <script type="text/javascript" src="app/account/set_inflation.controller.js"></script>
-  <script type="text/javascript" src="app/account/merge_account.controller.js"></script>  
+  <script type="text/javascript" src="app/account/merge_account.controller.js"></script>
   <script type="text/javascript" src="app/account/transactions.controller.js"></script>
   <script type="text/javascript" src="app/account/anchors.controller.js"></script>
+  <script type="text/javascript" src="app/account/contacts.controller.js"></script>
+  <script type="text/javascript" src="app/account/emailtx.controller.js"></script>
+  <script type="text/javascript" src="app/account/claim_emailtx.controller.js"></script>
+  <script type="text/javascript" src="app/account/reclaim_emailtx.controller.js"></script>
+  <script type="text/javascript" src="app/account/save_passphrase.controller.js"></script>
+  <script type="text/javascript" src="app/account/user_claim_lumens.controller.js"></script>
   <script type="text/javascript" src="app/contact/contact.controller.js"></script>
   <script type="text/javascript" src="app/shared/menu/sidemenu.controller.js"></script>
   <script type="text/javascript" src="app/shared/menu/account_details.controller.js"></script>
@@ -135,12 +152,12 @@
 
 
   <!-- START TEMPLATE -->
-  <script type="text/javascript" src="js/plugins.js"></script>        
-  <script type="text/javascript" src="js/actions.js"></script>        
+  <script type="text/javascript" src="js/plugins.js"></script>
+  <script type="text/javascript" src="js/actions.js"></script>
   <!-- END TEMPLATE -->
 
 
-  <!-- END SCRIPTS -->         
+  <!-- END SCRIPTS -->
 </body>
 </html>
 

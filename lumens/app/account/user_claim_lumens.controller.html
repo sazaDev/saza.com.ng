@@ -1,0 +1,89 @@
+<div>
+ <div class="page-title">
+        <h2><span class="fa fa-money"></span> Claim Lumens</h2>
+
+</div>
+	<div class="row" ng-controller="userClaimLumensController" ng-init="init()">
+    <div class="col-md-8 col-md-offset-2">
+      <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+      <li ng-repeat="x in statusMsg.content track by $index">
+      {{x}}
+      </li>
+
+    </div>
+      <form class="form-horizontal" name="claimForm" method="POST" ng-submit="claimLumens()">
+        <div class="panel panel-colorful">
+          <div class="panel-heading">
+            <!-- <h3 class="panel-title"><strong>Send</strong> Payment</h3> -->
+            <ul class="panel-controls">
+              <!-- <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li> -->
+            </ul>
+          </div>
+          <div class="panel-body">
+            <p class="text-info"><i class="fa fa-info-circle"></i> Here you can claim Lumens that was sent to you via email.</p>
+          </div>
+          <div class="panel-body">
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Recepient Email</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                  <input type="email" class="form-control text-primary" name="rcvr_email" ng-model="userData.rcvr_email" ng-disabled="true" required/>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Claim Code</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-edit"></span></span>
+                  <input type="text" class="form-control" name="claim_code" ng-model="userData.claim_code" placeholder="Enter your claim code"/>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-success pull-right" ng-disabled="claimForm.$error.required || claimForm.$invalid">Submit</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+
+
+  </div>
+
+</div>
+<script type="text/javascript">
+
+/* MESSAGE BOX */
+$("[class^=mb-control-]").on("click",function(){
+  var box = $($(this).data("box"));
+  if(box.length > 0){
+    box.toggleClass("open");
+
+    var sound = box.data("sound");
+
+    if(sound === 'alert')
+      playAudio('alert');
+
+    if(sound === 'fail')
+      playAudio('fail');
+
+  }
+  return false;
+});
+$(".mb-control-close").on("click",function(){
+ $(this).parents(".message-box").removeClass("open");
+ return false;
+});
+/* END MESSAGE BOX */
+
+</script>
