@@ -1,5 +1,5 @@
 <div>
- <div class="page-title">                    
+ <div class="page-title">
         <h2><span class="fa fa-money"></span> Change Trust</h2>
 
 </div>
@@ -10,11 +10,11 @@
         <li ng-repeat="x in statusMsg.content track by $index">
         {{x}}
         </li>
-      </div> 
+      </div>
       <div>
         <p class="text-info"><i class="fa fa-info-circle"></i> Creates, updates, or deletes a trustline. For more on trustlines, please refer to the <a href="https://www.stellar.org/developers/guides/concepts/assets.html" target="_blank"> assets documentation. </a></p>
       </div>
-      
+
 
     </div>
     <div class="col-md-6">
@@ -23,8 +23,8 @@
           <div class="panel-title-box">
             <h3>Trustlines</h3>
             <span>Trustlines for assets in account with limits</span>
-          </div>                                    
-          
+          </div>
+
         </div>
         <div class="panel-body panel-body-table">
 
@@ -35,7 +35,7 @@
                   <th width="10%">Asset Type</th>
                   <th width="70%">Asset Issuer</th>
                   <th width="20%">Limit</th>
-                  
+
                 </tr>
               </thead>
               <tbody>
@@ -52,33 +52,33 @@
       </div>
     </div>
     <div class="col-md-6">
-      
+
       <form class="form-horizontal" name="trustForm" method="POST" ng-submit="changeTrust()">
         <div class="panel panel-colorful">
           <div class="panel-heading">
-            
+
             <ul class="panel-controls">
             </ul>
           </div>
           <div class="panel-body">
-            
+
           </div>
-          <div class="panel-body">                                                                        
+          <div class="panel-body">
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Asset Type</label>
-                
+
                 <label class="switch switch-small">
-                    Alphanumeric 4 <br>    
+                    Alphanumeric 4 <br>
                     <input type="radio" ng-model="trustData.assetType" ng-change="clearAsset()" ng-value="4">
                     <span></span>
-                </label>                                        
+                </label>
                 <label class="switch switch-small">
                     Alphanumeric 12 <br>
                     <input type="radio" ng-model="trustData.assetType" ng-change="clearAsset()" ng-value="12">
                     <span></span>
-                </label>                                        
-                                                            
-              
+                </label>
+
+
             </div>
 
             <div class="form-group" ng-show="isCustomAsset(trustData.assetType)">
@@ -87,7 +87,7 @@
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-key"></span></span>
                   <input class="form-control" type="text" name="assetCode" ng-model="trustData.assetCode" maxlength="{{trustData.assetType}}" required/>
-                  
+
                 </div>
                 <span class="help-block">Asset Alphanumeric Code; Eg: USD, EUR, XLM</span>
               </div>
@@ -98,7 +98,7 @@
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-user"></span></span>
                   <input class="form-control" type="text" name="assetIssuer" ng-model="trustData.assetIssuer" required/>
-                  
+
                 </div>
                 <span class="help-block">Stellar Account ID of the Asset Issuer</span>
               </div>
@@ -106,11 +106,11 @@
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Trust Limit</label>
-              <div class="col-md-6 col-xs-12">                                            
+              <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-money"></span></span>
                   <input type="text" class="form-control" name="limit" ng-model="trustData.limit"/>
-                </div>                                            
+                </div>
                 <span class="help-block">Leave empty to default to the max int64. Set to 0 to remove the trust line.</span>
               </div>
             </div>
@@ -146,13 +146,13 @@ $("[class^=mb-control-]").on("click",function(){
     if(sound === 'fail')
       playAudio('fail');
 
-  }        
+  }
   return false;
 });
 $(".mb-control-close").on("click",function(){
  $(this).parents(".message-box").removeClass("open");
  return false;
-});    
+});
 /* END MESSAGE BOX */
 
-</script> 
+</script>

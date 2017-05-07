@@ -4,7 +4,7 @@ lumensWall.controller('dashboardController', function($scope, $state, $http, $ro
 			// $rootScope.currentUser = User.get();
       console.log(User.get());
       if ($rootScope.currentUser.accounts.length < 1) {
-          event.preventDefault();
+          // event.preventDefault();
               $state.go('setupaccount');
    }
    $scope.balance = {};

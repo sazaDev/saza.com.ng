@@ -1,9 +1,9 @@
 <div>
  <div class="page-title">
-        <h2><span class="fa fa-money"></span> Send Payment</h2>
+        <h2><span class="fa fa-money"></span> Send Payment to Email Address</h2>
 
 </div>
-	<div class="row" ng-controller="sendPaymentController" ng-init="init()">
+	<div class="row" ng-controller="emailTxController" ng-init="init()">
     <div class="col-md-8 col-md-offset-2">
       <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
       <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
@@ -25,38 +25,19 @@
           </div>
           <div class="panel-body">
 
-            <div class="form-group" ng-if="contacts.length > 0">
-              <label class="col-md-3 col-xs-12 control-label">Select Contact</label>
-              <div class="col-md-6 col-xs-12">
-                <select class="form-control ng-cloak" ng-model="paymentData.contact" ng-change="contactChange(paymentData.contact)">
-
-                  <option ng-repeat="x in contacts" value="{{x.account_id}}">{{x.name}}</option>
-                </select>
-                <span class="help-block">Select a user from your address book or enter an Account Id below</span>
-
-              </div>
-            </div>
-            <div class="form-group" ng-if="contacts.length == 0">
-              <label class="col-md-3 col-xs-12 control-label">Select Contact</label>
-              <div class="col-md-6 col-xs-12">
-                <p>No Contacts Saved. <a ui-sref="contacts">Add a contact to your Address Book</a></p>
-                <span class="help-block">Select a user from your address book or enter an Account Id below</span>
-
-              </div>
-            </div>
-
             <div class="form-group">
-              <label class="col-md-3 col-xs-12 control-label">Destination Account</label>
+              <label class="col-md-3 col-xs-12 control-label">Recepient Email</label>
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
-                  <input type="text" class="form-control" name="destAcct" ng-model="paymentData.destAcct" required ng-pattern="userRegex"/>
+                  <input type="email" class="form-control" name="destAcct" ng-model="paymentData.destAcct" required/>
                 </div>
-                <span class="help-block">Account ID  or Stellar Address of the recepient</span>
+                <span class="help-block">Email address of the recepient</span>
                 <span class="text-danger" ng-show="paymentForm.destAcct.$dirty && paymentForm.destAcct.$invalid">
-                  <small ng-show="paymentForm.destAcct.$error.required">Destination Account is required. </small>
-                  <small ng-show="paymentForm.destAcct.$invalid">
-                    The following characters are not allowed: <,|>.</small>
+                  <small ng-show="paymentForm.destAcct.$error.required">an email address is required. </small>
+                  <!--<small ng-show="paymentForm.destAcct.$invalid">
+                    The following characters are not allowed: <,|>.
+                  </small>-->
                 </span>
               </div>
             </div>
@@ -68,10 +49,10 @@
                   <span class="input-group-addon"><span class="fa fa-money"></span></span>
                   <input type="number" min="0" class="form-control" name="amount" ng-model="paymentData.amount" required/>
                 </div>
-                <span class="help-block">Amount to send</span>
+                <span class="help-block">Amount to send in Lumens</span>
               </div>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Asset Type</label>
 
                 <label class="switch switch-small">
@@ -92,9 +73,9 @@
                 </label>
 
 
-            </div>
+            </div> -->
 
-            <div class="form-group" ng-show="isCustomAsset(paymentData.assetType)">
+            <!--<div class="form-group" ng-show="isCustomAsset(paymentData.assetType)">
               <label class="col-md-3 col-xs-12 control-label">Asset Code</label>
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
@@ -115,7 +96,7 @@
                 </div>
                 <span class="help-block">Stellar Account ID of the Asset Issuer</span>
               </div>
-            </div>
+            </div>-->
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Memo</label>

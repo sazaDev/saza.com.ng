@@ -1,48 +1,31 @@
-<div  ng-controller="passwordController" ng-init="init()">
+<div  ng-controller="claimEmailTxController" ng-init="init()">
 <div class="login-container">
 
-  <div ng-hide="token" class="login-box animated fadeInDown">
+
+  <div class="login-box animated fadeInDown">
     <div class="login-logo"></div>
     <div class="login-body">
-      <div class="login-title"><strong>Reset Password</strong> to your account</div>
-      <form ng-submit="requestLink()" class="form-horizontal" method="post" name="passwordForm">
+      <div class="login-title"><strong>Claim your Lumens</strong> to your account</div>
+      <form ng-submit="claimLumens()" class="form-horizontal" method="post" name="claimForm">
         <div class="form-group">
           <div class="col-md-12">
-             <input class="form-control" placeholder="E-mail" type="email" name="email" ng-model="userData.email" required/>
+            <input type="email" class="form-control"  placeholder="Enter your email"
+            name="email" ng-model="userData.email" required/>
           </div>
-          <span style="color:red" ng-show="passwordForm.email.$dirty && passwordForm.email.$invalid">                  
-            <small ng-show="passwordForm.email.$error.email">Invalid email address.</small>
-          </span>
+        </div>
+        <div class="form-group">
+          <div class="col-md-12">
+            <input type="text" class="form-control" placeholder="Enter your claim code"
+             name="claim_code" ng-model="userData.claim_code" required/>
+          </div>
         </div>
 
         <div class="form-group">
-          <div class="col-md-6">
-            <button class="btn btn-info btn-block" ng-disabled="passwordForm.$error.required || passwordForm.$error.$invalid">Request Reset Link</button>
+          <div class="col-md-12">
+            <span class="help-text login-title" >Please enter the password for your account that will be created for you</span>
           </div>
         </div>
 
-        <div class="login-subtitle">
-          Already have an account yet? <a ui-sref="login">Login</a>
-        </div>
-      </form>
-    </div>
-    <div class="login-footer">
-      <div class="pull-left">
-        &copy; 2016 Saza
-      </div>
-      <div class="pull-right">
-        <a href="https://saza.com.ng">Home</a> |
-        <a href="https://saza.com.ng/terms.html">Terms</a> |
-        <a href="mailto: hello@saza.com.ng">Contact Us</a>
-      </div>
-    </div>
-  </div>
-
-  <div ng-show="token" class="login-box animated fadeInDown">
-    <div class="login-logo"></div>
-    <div class="login-body">
-      <div class="login-title"><strong>Reset Password</strong> to your account</div>
-      <form ng-submit="resetPassword()" class="form-horizontal" method="post" name="resetForm">
         <div class="form-group">
           <div class="col-md-12">
             <input type="password" class="form-control"  placeholder="Password"
@@ -53,10 +36,10 @@
           <div class="col-md-12">
             <input type="password" class="form-control" placeholder="Confirm Password"
              name="password_confirmation" ng-model="userData.password_confirmation" required data-password-verify="userData.password"/>
-            <small style="color:red" ng-show="resetForm.password.$dirty && resetForm.password_confirmation.$error.required">
+            <small style="color:red" ng-show="claimForm.password.$dirty && claimForm.password_confirmation.$error.required">
                   Confirm Password!
             </small>
-            <small style="color:red" ng-show="resetForm.password_confirmation.$error.passwordVerify">
+            <small style="color:red" ng-show="claimForm.password_confirmation.$error.passwordVerify">
               Passwords do not match!
             </small>
           </div>
@@ -64,7 +47,7 @@
 
         <div class="form-group">
           <div class="col-md-6">
-            <button class="btn btn-info btn-block" ng-disabled="resetForm.$error.required || resetForm.$error.$invalid">Reset Password</button>
+            <button class="btn btn-info btn-block" ng-disabled="claimForm.$error.required || claimForm.$error.$invalid">Claim Lumens</button>
           </div>
         </div>
 
@@ -75,7 +58,7 @@
     </div>
     <div class="login-footer">
       <div class="pull-left">
-        &copy; 2016 Saza
+        &copy; 2017 Saza
       </div>
       <div class="pull-right">
         <a href="https://saza.com.ng">Home</a> |
@@ -117,8 +100,12 @@
         <div class="mb-title"></span> <i class="fa fa-frown-o"></i> Oops! <strong>Invalid Credentials</strong>  </div>
         <div class="mb-content">
           <p>Unable to complete request.</p>   
-          <p>{{error_msg}}</p>
+          
+          <li ng-repeat="x in error_msg track by $index">
+            {{x}}
+          </li>
           <p>Please verify your details and try again.</p>
+          <p>If you have an account please Login and use the "Claim Lumens" menu </p>
           
         </div>
         <div class="mb-footer">

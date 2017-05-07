@@ -4,7 +4,7 @@ lumensWall.controller('passwordController', function($scope, $state, $http, $roo
 		$scope.token = false;
 	$scope.init = function() {
 		if ($stateParams.token) {
-			// console.log("token available");
+			console.log("token available");
 			$scope.token = true;
 		};
 	};

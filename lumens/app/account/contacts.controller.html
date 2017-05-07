@@ -1,0 +1,216 @@
+<div>
+ <div class="page-title">
+        <h2><span class="fa fa-book"></span> My Contacts</h2>
+</div>
+  <div class="row" ng-controller="contactsController" ng-init="init()">
+    <div class="col-md-12">
+      <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+        <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+        <li ng-repeat="x in statusMsg.content track by $index">
+        {{x}}
+        </li>
+      </div>
+    </div>
+    <!-- contact list -->
+    <div class="col-md-8 col-md-offset-2" ng-if="showDetail == 0">
+      <div class="panel panel-colorful">
+        <div class="panel-heading">
+          <div class="panel-title-box">
+            <h3>Contact List </h3>
+            <a ng-click="switchView(1,{})" class="btn btn-lg btn-success pull-right"><i class="fa fa-plus"></i> Add Contact</a>
+          </div>
+
+        </div>
+        <div class="panel-body panel-body-table">
+
+          <div class="table-responsive">
+            <table class="table datatable ng-cloak" datatable="ng" dt-options="dtOptions" ng-cloak>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Account ID</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="x in records track by $index" class="ng-cloak tx-row">
+                  <td>{{x.name}}</td>
+                  <td>{{x.account_id | limitTo: 20}}<span ng-if="x.account_id.length > 20">...</span></td>
+                  <td>
+                    <span ng-click="switchView(2,x)" class="btn btn-xs btn-warning">
+                      <i class="fa fa-edit"></i>  Edit
+                    </span> 
+                    <span ng-click="switchView(3,x)" class="btn btn-xs btn-danger">
+                      <i class="fa fa-trash-o"></i> Delete
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- contact add -->
+    <div class="col-md-8 col-md-offset-2" ng-if="showDetail == 1">
+      <div class="panel panel-colorful">
+        <div class="panel-heading">
+          <div class="panel-title-box">
+            <h3>Add a Contact</h3>
+            <a ng-click="switchView(0,{})" class="btn btn-lg btn-success pull-right"><i class="fa fa-chevron-left"></i>Back</a>
+          </div>
+
+        </div>
+        <div class="panel-body">
+
+          <form class="form-horizontal" name="addContactForm" method="POST" ng-submit="addContact()">
+            <div class="panel panel-colorful">
+
+
+              <div class="panel-body">
+
+
+                <div class="form-group">
+                  <label class="col-md-3 col-xs-12 control-label">Name</label>
+                  <div class="col-md-6 col-xs-12">
+                    <div class="input-group">
+                      <span class="input-group-addon"><span class="fa fa-user"></span></span>
+                      <input class="form-control" type="text" name="contact_name" ng-model="userData.contact_name" required/>
+
+                    </div>
+                    <span class="help-block">Contact name</span>
+                  </div>
+                </div>
+                <div class="form-group" n>
+                  <label class="col-md-3 col-xs-12 control-label">Account ID</label>
+                  <div class="col-md-6 col-xs-12">
+                    <div class="input-group">
+                      <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                      <input class="form-control" type="text" name="contact_accountId" ng-model="userData.contact_accountId" required/>
+
+                    </div>
+                    <span class="help-block">Stellar Account ID of the contact</span>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="panel-footer">
+                <button class="btn btn-success pull-right" ng-disabled="addContactForm.$error.required || addContactForm.$invalid">Submit</button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- contact edit -->
+    <div class="col-md-8 col-md-offset-2" ng-if="showDetail == 2">
+      <div class="panel panel-colorful">
+        <div class="panel-heading">
+          <div class="panel-title-box">
+            <h3>Edit Contact</h3>
+            <a ng-click="switchView(0,{})" class="btn btn-lg btn-success pull-right"><i class="fa fa-chevron-left"></i>Back</a>
+          </div>
+
+        </div>
+        <div class="panel-body">
+
+          <form class="form-horizontal" name="editContactForm" method="POST" ng-submit="editContact()">
+            <div class="panel panel-colorful">
+
+
+              <div class="panel-body">
+
+
+                <div class="form-group">
+                  <label class="col-md-3 col-xs-12 control-label">Name</label>
+                  <div class="col-md-6 col-xs-12">
+                    <div class="input-group">
+                      <span class="input-group-addon"><span class="fa fa-user"></span></span>
+                      <input class="form-control" type="text" name="contact_name" ng-model="userData.contact_name" required/>
+
+                    </div>
+                    <span class="help-block">Contact name</span>
+                  </div>
+                </div>
+                <div class="form-group" n>
+                  <label class="col-md-3 col-xs-12 control-label">Account ID</label>
+                  <div class="col-md-6 col-xs-12">
+                    <div class="input-group">
+                      <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                      <input class="form-control" type="text" name="contact_accountId" ng-model="userData.contact_accountId" required/>
+
+                    </div>
+                    <span class="help-block">Stellar Account ID of the contact</span>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="panel-footer">
+                <button class="btn btn-success pull-right" ng-disabled="editContactForm.$error.required || editContactForm.$invalid">Submit</button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- contact delete -->
+    <div class="col-md-8 col-md-offset-2" ng-if="showDetail == 3">
+      <div class="panel panel-colorful">
+        <div class="panel-heading">
+          <div class="panel-title-box">
+            <h3>Delete Contact</h3>
+            <a ng-click="switchView(0,{})" class="btn btn-lg btn-success pull-right"><i class="fa fa-chevron-left"></i>Back</a>
+          </div>
+
+        </div>
+        <div class="panel-body">
+          <h3>Delete {{contact.name}}?</h3>
+          <h3>Account ID: {{contact.account_id}}?</h3>
+          <span ng-click="switchView(0,{})" class="btn btn-danger btn-lg">No</span>
+          <span ng-click="deleteContact(contact.id)" class="btn btn-success btn-lg">Yes</span>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+  </div>
+
+</div>
+<script type="text/javascript">
+
+/* MESSAGE BOX */
+$("[class^=mb-control-]").on("click",function(){
+  var box = $($(this).data("box"));
+  if(box.length > 0){
+    box.toggleClass("open");
+
+    var sound = box.data("sound");
+
+    if(sound === 'alert')
+      playAudio('alert');
+
+    if(sound === 'fail')
+      playAudio('fail');
+
+  }
+  return false;
+});
+$(".mb-control-close").on("click",function(){
+ $(this).parents(".message-box").removeClass("open");
+ return false;
+});
+/* END MESSAGE BOX */
+
+</script>

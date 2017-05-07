@@ -8,7 +8,7 @@ lumensWall.controller('createAccountController', function($scope, $state, $http,
   $scope.userData = {};
   $scope.linkData = {};
   $scope.tempUser = {};
-  $scope.statusMsg = {};
+  $scope.statusMsg = false;
 
   $scope.init = function() {
     $scope.userData.id = $rootScope.currentUser.id;

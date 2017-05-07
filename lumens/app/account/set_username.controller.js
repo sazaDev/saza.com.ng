@@ -16,7 +16,9 @@ lumensWall.controller('setUsernameController', function($scope, $state, $http, $
   };
 
   $scope.setUsername = function() {
-    
+
+    $scope.userData.id = $rootScope.currentUser.id;
+    $scope.userData.email = $rootScope.currentUser.email;
     $scope.userData.token = $rootScope.currentUser.token;
     $scope.userData.account_id = $rootScope.currentUser.currentAccount;
 

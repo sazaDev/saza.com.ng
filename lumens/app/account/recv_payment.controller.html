@@ -1,25 +1,25 @@
 <div>
- <div class="page-title">                    
+ <div class="page-title">
         <h2><span class="fa fa-money"></span> Receive Payment</h2>
 
 </div>
 	<div class="row" >
     <div class="col-md-12">
       <div class="panel panel-colorful">
-      <div class="panel-heading">                                
+      <div class="panel-heading">
         <h3 class="panel-title"></h3>
-                                      
+
       </div>
       <div class="panel-body">
         <p>You can receive payment from other accounts on the stellar network using the following</p>
 
         <h2 class="header-side">Use your Account ID</h2>
         <span id="acctID">{{currentUser.currentAccount}}  </span>
-    
+
         <h2 class="header-side">Use your Stellar Address</h2>
-        <h3 ng-if="currentUser.username"><strong>Current Stellar Address:</strong> {{currentUser.username}}</h3>
-        
-        <p ng-if="!currentUser.username">
+        <h3 ng-if="currentUser.currentUsername"><strong>Current Stellar Address:</strong> {{currentUser.currentUsername}}</h3>
+
+        <p ng-if="!currentUser.currentUsername">
           You can set a username for your stellar account instead of using the long Account ID.
 
           The name will be in this format <em>username</em>*<em>domain.com</em>.
@@ -27,7 +27,7 @@
           For example: <em>jasmine*{{siteURL}}</em>
           To set a username <a ui-sref="setusername">click here</a>
         </p>
-        
+
 
         <h2 class="header-side">Use our plugin</h2>
         <p>You can use our plugin to receive payments directly to your account from your websites, and its free</p>
@@ -45,7 +45,7 @@
 
       </div>
     </div>
-    
+
     </div>
 
 
@@ -60,7 +60,7 @@
       <div class="mb-middle">
         <div class="mb-title"></span> <i class="fa fa-smile-o"></i>  Account <strong>Created</strong> </div>
         <div class="mb-content">
-          <p>Congratulations, your stellar account has been created</p>                    
+          <p>Congratulations, your stellar account has been created</p>
           <p>You are required to fund your account before, it is fully activated. </p>
           <p>Learn how to fund your account <a href="#">here</a></p>
           <h1>Keep your account details safe</h1>
@@ -99,13 +99,13 @@ $("[class^=mb-control-]").on("click",function(){
     if(sound === 'fail')
       playAudio('fail');
 
-  }        
+  }
   return false;
 });
 $(".mb-control-close").on("click",function(){
  $(this).parents(".message-box").removeClass("open");
  return false;
-});    
+});
 /* END MESSAGE BOX */
 
-</script>	
+</script>
