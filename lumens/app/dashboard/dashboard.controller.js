@@ -11,8 +11,6 @@ lumensWall.controller('dashboardController', function($scope, $state, $http, $ro
    $scope.rates = {};
    $scope.assets = [];
 	$scope.init = function () {
-    console.log("inside dashb", $rootScope.currentUser.currentAccount);
-    console.log("inside dashb2", User.getCurrentAccount());
 
 		// get stellar account balance
 		// load xlm to btc rate
@@ -24,7 +22,7 @@ lumensWall.controller('dashboardController', function($scope, $state, $http, $ro
     $scope.rates.ngn = $rootScope.ngnRate;
 		Account.getAccount($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
       .success(function(data) {
-        console.log(data.content.data);
+
 				var balances = data.content.data.balances;
         $scope.assets = balances;
 
@@ -33,11 +31,11 @@ lumensWall.controller('dashboardController', function($scope, $state, $http, $ro
 
         var localUser = JSON.stringify($rootScope.currentUser);
         // Set the stringified user data into local storage
-      
+
         localStorage.setItem('user', localUser);
-        
+
         console.log("currentUser", $rootScope.currentUser);
-				
+
         balances.forEach(function(balance) {
           console.log('Type:', balance.asset_type, ', Balance:', balance.balance);
           if (balance.asset_type === 'native') {
@@ -50,7 +48,7 @@ lumensWall.controller('dashboardController', function($scope, $state, $http, $ro
           .success(function(data) {
             // console.log("success",data);
             $scope.rates.usd = data.ticker.price;
-            
+
               $scope.balance.usd = $scope.balance.xlm * $scope.rates.usd;
               $scope.balance.ngn = $scope.balance.xlm*$scope.rates.usd*$scope.rates.ngn;
             // console.log("xlm bal", $scope.balance.xlm);
@@ -59,7 +57,7 @@ lumensWall.controller('dashboardController', function($scope, $state, $http, $ro
           })
           .error(function(data) {
             // console.log("error",data);
-           
+
           });
         Account.getBTC()
           .success(function(data) {
@@ -69,22 +67,22 @@ lumensWall.controller('dashboardController', function($scope, $state, $http, $ro
           })
           .error(function(data) {
             // console.log("error",data);
-           
-          });          
-       
+
+          });
+
       })
       .error(function(data) {
         // console.log("error",data);
-       
+
       });
 
-    
-		
 
 
-    
-      
-      
+
+
+
+
+
 	};
 
 });

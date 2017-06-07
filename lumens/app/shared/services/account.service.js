@@ -327,7 +327,7 @@ login.factory('Account', function($http) {
         getUSD : function(token) {
              return $http({
                 method: 'GET',
-                url: 'https://www.cryptonator.com/api/ticker/xlm-usd',
+                url: 'https://api.cryptonator.com/api/ticker/xlm-usd',
 
 
             });
@@ -335,7 +335,7 @@ login.factory('Account', function($http) {
         getBTC : function(token) {
              return $http({
                 method: 'GET',
-                url: 'https://www.cryptonator.com/api/ticker/xlm-btc',
+                url: 'https://api.cryptonator.com/api/ticker/xlm-btc',
 
             });
         },
