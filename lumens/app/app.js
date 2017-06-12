@@ -6,7 +6,6 @@ var app = angular.module('lumensWall',
                           'angular-loading-bar',
                           'ngclipboard',
                           'angularRandomString',
-
                           'ngPassword',
                           'loginService',
                           'accountService',

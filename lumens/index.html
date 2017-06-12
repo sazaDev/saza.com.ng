@@ -59,8 +59,8 @@
         </p>
         <div ng-if="currentUser.need_password">
           <div class="alert alert-warning" role="alert">
-            Password is not set. You will be unable to complete some actions. Please set password now
-            <a ui-sref="savepassphrase" class="btn btn-success">Set Password</a>
+            Passphrase is not set. You will be unable to complete some actions. Please set a passhprase for your transactions now.
+            <a ui-sref="savepassphrase" class="btn btn-success">Set Passphrase</a>
           </div>
         </div>
         <div ng-if="currentUser.accounts.length == 0">
@@ -94,6 +94,9 @@
   <!-- START PLUGINS -->
   <script type="text/javascript" src="js/plugins/jquery/jquery.min.js"></script>
   <script type="text/javascript" src="js/plugins/stellar-sdk.min.js"></script>
+  <script type="text/javascript" src="node_modules/node-forge/dist/forge.min.js"></script>
+  <script type="text/javascript" src="node_modules/bcryptjs/dist/bcrypt.min.js"></script>
+  <script type="text/javascript" src="app/shared/services/utility.js"></script>
 
   <script type="text/javascript" src="js/plugins/jquery/jquery-ui.min.js"></script>
   <script type="text/javascript" src="js/plugins/bootstrap/bootstrap.min.js"></script>

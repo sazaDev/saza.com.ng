@@ -1,22 +1,30 @@
-    // Login Service
+// Account Service
 
-var login = angular.module('accountService', []);
+var StellarSDK = StellarSdk;
+var Utility = Utility;
+// var forge = require('node-forge');
+var account = angular.module('accountService', []);
 // var baseUrl = 'https://saza.com.ng:8888/';
 var baseUrl = 'http://localhost:8888/';
-login.factory('Account', function($http) {
+account.factory('Account', function($http, $rootScope) {
 
     return {
 
 
         create : function(userData) {
+            // create stellar account
+            var pair = StellarSDK.Keypair.random();
+            console.log(Utility);
+            // save encrypted secret key and account Id in backend
+            // return account ID and secret key
             //console.log(userData);
-            return $http({
-                method: 'POST',
-                url: baseUrl+'createaccount',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+userData.token},
-                data: $.param(userData)
-            });
+            // return $http({
+            //     method: 'POST',
+            //     url: baseUrl+'createaccount',
+            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+            //                 'Authorization': 'JWT '+userData.token},
+            //     data: $.param(userData)
+            // });
         },
 
         link : function(userData) {
@@ -253,7 +261,16 @@ login.factory('Account', function($http) {
 
         // save passphrase
         savePassphrase : function(userData) {
+            // get hash of passphrase, 
+            var passphraseHash = Utility.getHash(userData.password);
 
+            // save hash locally,
+            $rootScope.currentUser.passphraseHash = passphraseHash;
+
+            userData.password = "";//remove password
+            userData.passwordHash = passphraseHash;
+
+            // save hash in server
             return $http({
                 method: 'POST',
                 url: baseUrl+'savepassphrase',
@@ -262,6 +279,48 @@ login.factory('Account', function($http) {
                 data: $.param(userData)
             });
         },
+
+        // change passphrase
+        changePassphrase : function(userData) {
+            // compare old passphrase for match, 
+            console.log(userData);
+
+            var isValid = Utility.validatePassphrase(userData.old_passphrase, $rootScope.currentUser.tx_passphrase);
+            console.log("isValid: ", isValid);
+            if (isValid) {
+                var passphraseHash = Utility.getHash(userData.passphrase);
+
+                // save hash locally,
+                $rootScope.currentUser.passphraseHash = passphraseHash;
+
+                userData.password = "";//remove password
+                userData.passwordHash = passphraseHash;
+
+                // save hash in server
+                return $http({
+                    method: 'POST',
+                    url: baseUrl+'changepassphrase',
+                    headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                'Authorization': 'JWT '+userData.token  },
+                    data: $.param(userData)
+                });
+
+
+            } else{
+                return new Promise(function(resolve, reject) {
+                    var errObj = {
+                                    content: {
+                                        message: ['Invalid passphrase']
+                                    }
+                    };
+                    // resolve(errObj);
+                    reject(errObj);
+                });
+            }
+
+
+        },
+
 
         // delete account
         deleteAccount : function(deleteData) {
