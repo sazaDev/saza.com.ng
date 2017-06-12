@@ -1,62 +1,94 @@
 var lumensWall = angular.module('lumensWall');
 
-lumensWall.controller('settingsController', function($scope, $state, $http, $rootScope, Account) {
+lumensWall.controller('settingsController', function($scope, $state, $http, $rootScope, Account, User) {
 
 	$scope.passwordData = {};
+  $scope.userData = {};
   $scope.deleteData = {};
-	$scope.statusMsg = false;
-	$scope.seed = 'XXXXXXXXXXXXXXXXXXXXXXXXXXX';
+	$scope.statusMsg = null;
+	$scope.seed = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
 	$scope.tempSeed = "";
 	$scope.showSeed = false;
 	$scope.init = function() {
 		// load the seed here but dont display yet
     Account.getSeed($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
       .success(function(data) {
-        // console.log("success",data);
         $scope.tempSeed = data.content.message;
       })
       .error(function(data) {
-        // console.log("error",data);
+
       });
 
 	};
 
 	$scope.changePassword = function() {
-		// body...
-	
-		
+
     $scope.passwordData.token = $rootScope.currentUser.token;
 
     Account.changePassword($scope.passwordData)
       .success(function(data) {
 
-        // console.log("success",data);
        // clear form
        // show success message
        $scope.statusMsg = {};
        $scope.statusMsg.type = 'alert-success';
        $scope.statusMsg.content = data.content.message;
        $scope.passwordData = {};
-        
-        // angular.element('.mb-control-success').triggerHandler('click');
-                
 
       })
       .error(function(data) {
-        // console.log("error",data);
+
         $scope.statusMsg = {};
-       $scope.statusMsg.type = 'alert-danger';
-       $scope.statusMsg.content = data.content.message;
-       $scope.passwordData = {};
-				// Display Error
-        // angular.element('.mb-control-error').triggerHandler('click');
+        $scope.statusMsg.type = 'alert-danger';
+        $scope.statusMsg.content = data.content.message;
+        $scope.passwordData = {};
+
       });
 
 	};
 
+  $scope.changePassphrase = function() {
+
+    $scope.userData.token = $rootScope.currentUser.token;
+    $scope.userData.id = $rootScope.currentUser.id;
+    Account.changePassphrase($scope.userData)
+    .then(function(resp) {
+      console.log(resp);
+      resp.data.content.data.authenticated = true;
+
+      // set the currently active account
+      if (resp.data.content.data.accounts.length > 0) {
+        resp.data.content.data.currentAccount = resp.data.content.data.accounts[0].account_id;
+        resp.data.content.data.currentUsername = resp.data.content.data.accounts[0].fed_name;
+      }
+
+      var user = resp.data.content.data;
+
+      User.set(user);
+
+      // Set the stringified user data into local storage
+      localStorage.setItem('user', JSON.stringify(user));
+      console.log("currentUser", User.get());
+      $scope.statusMsg = {};
+      $scope.statusMsg.type = 'alert-success';
+      $scope.statusMsg.content = resp.data.content.message;
+
+    })
+    .catch(function(data) {
+      console.log(data);
+      $scope.statusMsg = {};
+      $scope.statusMsg.type = 'alert-danger';
+      if (data.content) {
+        $scope.statusMsg.content = data.content.message;
+      } else{
+        $scope.statusMsg.content = data.data.content.message;
+      }
+
+    });
+  };
+
   $scope.deleteAccount = function() {
-    // body...
-  
+
     $scope.deleteData.id = $rootScope.currentUser.id;
     $scope.deleteData.email = $rootScope.currentUser.email;
     $scope.deleteData.token = $rootScope.currentUser.token;
@@ -78,6 +110,7 @@ lumensWall.controller('settingsController', function($scope, $state, $http, $roo
             console.log(temp_id);
           }
         });
+        // remove from local accounts array
         $rootScope.currentUser.accounts.splice(temp_id,1);
 
         if ($rootScope.currentUser.accounts.length > 0) {
@@ -89,24 +122,22 @@ lumensWall.controller('settingsController', function($scope, $state, $http, $roo
           $rootScope.currentUser.currentAccount = "";
           $rootScope.currentUser.currentUsername = "";
         }
-        
-        
 
         localStorage.setItem('user', JSON.stringify($rootScope.currentUser));
 
         console.log($rootScope.currentUser);
-        window.scrollTo(0, 0); 
+        window.scrollTo(0, 0);
         $state.go('dashboard', {}, {reload: true});
 
       })
       .error(function(data) {
-        // console.log("error",data);
+
         $scope.statusMsg = {};
-       $scope.statusMsg.type = 'alert-danger';
-       $scope.statusMsg.content = data.content.message;
-       $scope.deleteData = {};
-       window.scrollTo(0, 0);
-        
+        $scope.statusMsg.type = 'alert-danger';
+        $scope.statusMsg.content = data.content.message;
+        $scope.deleteData = {};
+        window.scrollTo(0, 0);
+
       });
 
   };
@@ -117,10 +148,10 @@ lumensWall.controller('settingsController', function($scope, $state, $http, $roo
 			$scope.seed = $scope.tempSeed;
 			$scope.showSeed = true;
 		}else{
-			$scope.seed = 'XXXXXXXXXXXXXXXXXXXXXXXXXXX';
+			$scope.seed = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
 			$scope.showSeed = false;
 		}
-		
+
 	};
 
 });
