@@ -338,8 +338,8 @@ account.factory('Account', function($http, $rootScope) {
 
               }
 
-              if (req.body.buyingAssetType > 0) {
-                if (!StellarSDK.StrKey.isValidEd25519PublicKey(req.body.buyingAssetIssuer) || !buyingAsset) {
+              if (offerData.buyingAssetType > 0) {
+                if (!StellarSDK.StrKey.isValidEd25519PublicKey(offerData.buyingAssetIssuer) || !buyingAsset) {
                     messages.push('Invalid Buying Asset. Code must be alphanumeric and Issuer must be a valid stellar account');
                     return Utility.returnError(messages);
                 }
@@ -435,8 +435,8 @@ account.factory('Account', function($http, $rootScope) {
 
               }
 
-              if (req.body.buyingAssetType > 0) {
-                if (!StellarSDK.StrKey.isValidEd25519PublicKey(req.body.buyingAssetIssuer) || !buyingAsset) {
+              if (offerData.buyingAssetType > 0) {
+                if (!StellarSDK.StrKey.isValidEd25519PublicKey(offerData.buyingAssetIssuer) || !buyingAsset) {
                     messages.push('Invalid Buying Asset. Code must be alphanumeric and Issuer must be a valid stellar account');
                     return Utility.returnError(messages);
                 }
@@ -510,14 +510,158 @@ account.factory('Account', function($http, $rootScope) {
         },
 
         setOptions : function(userData) {
+          console.log(userData);
+            var messages = [];
 
-            return $http({
-                method: 'POST',
-                url: baseUrl+'setoptions',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+userData.token },
-                data: $.param(userData)
-            });
+            // check if passphrase is valid,
+            var isValid = Utility.validatePassphrase(offerData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+
+              // check if source account is active
+              return server.loadAccount(userData.account_id)
+                      .then(function(srcAcct) {
+
+                        var transaction = new StellarSDK.TransactionBuilder(srcAcct);
+                        var operationObj = {};
+                        var setFlags = 0;
+                        var clearFlags = 0;
+
+                        if (userData.setFlags) {
+                          if (userData.setFlags.authRq) {
+                            setFlags += parseInt(userData.setFlags.authRq);
+                          }
+                          if (userData.setFlags.authRv) {
+                            setFlags += parseInt(userData.setFlags.authRv);
+                          }
+                          if (userData.setFlags.authIm) {
+                            setFlags += parseInt(userData.setFlags.authIm);
+                          }
+                        }
+
+                        if (userData.clearFlags) {
+                          if (userData.clearFlags.authRq) {
+                            clearFlags += parseInt(userData.clearFlags.authRq);
+                          }
+                          if (userData.clearFlags.authRv) {
+                            clearFlags += parseInt(userData.clearFlags.authRv);
+                          }
+                          if (userData.clearFlags.authIm) {
+                            clearFlags += parseInt(userData.clearFlags.authIm);
+                          }
+                        }
+
+                        if(userData.inflationDest){
+                          operationObj.inflationDest = userData.inflationDest;
+                        }
+
+                        if (setFlags > 0) {
+                          operationObj.setFlags = setFlags;
+                        }
+
+                        if (clearFlags > 0) {
+                          operationObj.clearFlags = clearFlags;
+                        }
+
+                        if (userData.masterWeight) {
+                          operationObj.masterWeight = userData.masterWeight;
+                        }
+
+                        if (userData.lowThreshold) {
+                          operationObj.lowThreshold = userData.lowThreshold;
+                        }
+
+                        if (userData.medThreshold) {
+                          operationObj.medThreshold = userData.medThreshold;
+                        }
+
+                        if (userData.highThreshold) {
+                          operationObj.highThreshold = userData.highThreshold;
+                        }
+
+                        if (userData.signerType && userData.signerKey && userData.signerWeight) {
+                          operationObj.signer = {};
+
+                          if (userData.signerType == 0) {
+                            operationObj.signer.ed25519PublicKey = userData.signerKey;
+                            operationObj.signer.weight = userData.signerWeight;
+                          }
+
+                          if (userData.signerType == 1) {
+                            operationObj.signer.sha256Hash = userData.signerKey;
+                            operationObj.signer.weight = userData.signerWeight;
+                          }
+
+                          if (userData.signerType == 2) {
+                            operationObj.signer.preAuthTx = userData.signerKey;
+                            operationObj.signer.weight = userData.signerWeight;
+                          }
+                        }
+
+                        if (userData.homeDomain) {
+                          operationObj.homeDomain = userData.homeDomain;
+                        }
+
+                        console.log("operationObj",operationObj);
+
+                        if (Utility.isEmpty(operationObj)) {
+                          messages.push('No options given');
+                          throw new Error('EmptyObject');
+                        } else{
+                          transaction.addOperation(StellarSDK.Operation.setOptions(operationObj));
+
+                          // get seed
+                          var seedObj = Utility.getSeedObj(trustData.account_id, $rootScope.currentUser.accounts);
+
+                          // build and sign transaction
+                          var builtTx = transaction.build();
+                          builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, userData.tx_passphrase)));
+
+                          // console.log("BTX", builtTx.toEnvelope().toXDR().toString("base64"));
+                          return server.submitTransaction(builtTx);
+                        }
+
+                      })
+                      .catch(StellarSDK.NotFoundError, function(error) {
+                        // for load source account
+                        messages.push('Source Account is not active');
+                        throw new Error('SourceInactive');
+                      })
+                      .then(function(xdrResult) {
+                        messages.push('Set Options operation successful');
+                        return Utility.returnSuccess(messages);
+
+                      })
+                      .catch(function(error) {
+                        // for submit tx
+                        console.log("error", error);
+                        var errorMessages = Utility.extractError(error);
+                        errorMessages.forEach(function(m) {
+                          messages.push(m);
+                        });
+
+                        throw new Error('TxError');
+
+                      })
+                      .catch(function(error) {
+                        // catch all
+                        console.log("error", error);
+                        messages.push('Unable to complete set options operation');
+                        return Utility.returnError(messages);
+                      });
+
+            } else{
+                return Utility.returnError(['Invalid passphrase']);
+            }
+
+
+            // return $http({
+            //     method: 'POST',
+            //     url: baseUrl+'setoptions',
+            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+            //                 'Authorization': 'JWT '+userData.token },
+            //     data: $.param(userData)
+            // });
+
         },
 
 
