@@ -345,7 +345,7 @@ account.factory('Account', function($http, $rootScope) {
                 }
 
               }
-    
+
               // check if source account is active
               return server.loadAccount(offerData.account_id)
                 .then(function(srcAcct) {
@@ -418,13 +418,95 @@ account.factory('Account', function($http, $rootScope) {
 
         passiveOffer : function(offerData) {
 
-            return $http({
-                method: 'POST',
-                url: baseUrl+'passiveoffer',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+offerData.token },
-                data: $.param(offerData)
-            });
+          console.log(offerData);
+            var messages = [];
+            var buyingAsset = Utility.generateAsset(offerData.buyingAssetType,offerData.buyingAssetCode, offerData.buyingAssetIssuer);
+            var sellingAsset = Utility.generateAsset(offerData.sellingAssetType,offerData.sellingAssetCode, offerData.sellingAssetIssuer);
+            // check if passphrase is valid,
+            var isValid = Utility.validatePassphrase(offerData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+
+
+              if (offerData.sellingAssetType > 0) {
+                if (!StellarSDK.StrKey.isValidEd25519PublicKey(offerData.sellingAssetIssuer) || !sellingAsset) {
+                  messages.push('Invalid Selling Asset. Code must be alphanumeric and Issuer must be a valid stellar account');
+                  return Utility.returnError(messages);
+                 }
+
+              }
+
+              if (req.body.buyingAssetType > 0) {
+                if (!StellarSDK.StrKey.isValidEd25519PublicKey(req.body.buyingAssetIssuer) || !buyingAsset) {
+                    messages.push('Invalid Buying Asset. Code must be alphanumeric and Issuer must be a valid stellar account');
+                    return Utility.returnError(messages);
+                }
+
+              }
+
+              // check if source account is active
+              return server.loadAccount(offerData.account_id)
+                .then(function(srcAcct) {
+
+
+                  var transaction = new StellarSDK.TransactionBuilder(srcAcct);
+                  var operationObj = {};
+                  operationObj.selling = sellingAsset;
+                  operationObj.buying = buyingAsset;
+                  operationObj.amount = offerData.amount;
+                  operationObj.price = offerData.price;
+
+                  transaction.addOperation(StellarSDK.Operation.createPassiveOffer(operationObj));
+                  // get seed
+                  var seedObj = Utility.getSeedObj(trustData.account_id, $rootScope.currentUser.accounts);
+
+                  // build and sign transaction
+                  var builtTx = transaction.build();
+                  builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, offerData.tx_passphrase)));
+                  // console.log("BTX", builtTx.toEnvelope().toXDR().toString("base64"));
+                  return server.submitTransaction(builtTx);
+
+                })
+                .catch(StellarSDK.NotFoundError, function(error) {
+                  // for load source account
+                  console.log(error);
+                  messages.push('Source Account is not active');
+                  throw new Error('SourceInactive');
+                })
+                .then(function(xdrResult) {
+                  messages.push('Create passive offer operation successful');
+                  return Utility.returnSuccess(messages);
+                })
+                .catch(function(error) {
+                  // for submit tx
+                  console.log(error);
+                  var errorMessages = Utility.extractError(error);
+                  errorMessages.forEach(function(m) {
+                    messages.push(m);
+                  });
+
+                  throw new Error('TxError');
+
+                })
+                .catch(function(error) {
+                  // catch all
+                  console.log(error);
+                  messages.push('Unable to complete create passive offer operation');
+                  return Utility.returnError(messages);
+
+                });
+
+            } else{
+                return Utility.returnError(['Invalid passphrase']);
+            }
+
+
+            // return $http({
+            //     method: 'POST',
+            //     url: baseUrl+'passiveoffer',
+            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+            //                 'Authorization': 'JWT '+offerData.token },
+            //     data: $.param(offerData)
+            // });
         },
 
         setOptions : function(userData) {
