@@ -1,11 +1,11 @@
 var lumensWall = angular.module('lumensWall');
 
 lumensWall.controller('changeTrustController', function($scope, $state, $http, $rootScope, Account, User) {
-  
+
   $scope.trustData = {};
   $scope.statusMsg = false;
   $scope.assets = [];
-  
+
 
   $scope.init = function() {
     $scope.trustData.id = $rootScope.currentUser.id;
@@ -15,30 +15,10 @@ lumensWall.controller('changeTrustController', function($scope, $state, $http, $
 
     $scope.assets = $rootScope.currentUser.balances;
 
-    Account.getAccount($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
-      .success(function(data) {
-        console.log(data.content.data);
-        var balances = data.content.data.balances;
-        $scope.assets = balances;
+    $scope.getTrustlines();
 
-        $rootScope.currentUser.balances = [];
-        $rootScope.currentUser.balances = balances;
-
-        var localUser = JSON.stringify($rootScope.currentUser);
-        // Set the stringified user data into local storage
-      
-        localStorage.setItem('user', localUser);
-        
-        console.log("currentUser", $rootScope.currentUser);
-
-      })
-      .error(function(data) {
-        // console.log("error",data);
-       
-      });
-    
   };
-  
+
   $scope.closeAlert = function() {
     $scope.statusMsg = {};
   };
@@ -48,9 +28,9 @@ lumensWall.controller('changeTrustController', function($scope, $state, $http, $
     $scope.trustData.email = $rootScope.currentUser.email;
     $scope.trustData.token = $rootScope.currentUser.token;
     $scope.trustData.account_id = $rootScope.currentUser.currentAccount;
-    
+
     if ($scope.trustData.assetType > 0) {
-      // check asset details 
+      // check asset details
       if (!$scope.trustData.assetCode || !$scope.trustData.assetIssuer) {
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
@@ -61,7 +41,7 @@ lumensWall.controller('changeTrustController', function($scope, $state, $http, $
     }
 
     Account.changeTrust($scope.trustData)
-      .success(function(data) {
+      .then(function(data) {
 
         // console.log("success",data);
         // show success message
@@ -70,39 +50,26 @@ lumensWall.controller('changeTrustController', function($scope, $state, $http, $
         $scope.statusMsg.content = data.content.message;
         $scope.trustData = {};
         window.scrollTo(0, 0);
-        // 
-        Account.getAccount($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
-          .success(function(data) {
-            console.log(data.content.data);
-            var balances = data.content.data.balances;
-            $scope.assets = balances;
-
-            $rootScope.currentUser.balances = [];
-            $rootScope.currentUser.balances = balances;
-
-            var localUser = JSON.stringify($rootScope.currentUser);
-            // Set the stringified user data into local storage
-          
-            localStorage.setItem('user', localUser);
-            
-            console.log("currentUser", $rootScope.currentUser);
-
-          })
-          .error(function(data) {
-            // console.log("error",data);
-           
-          });
+        //
+        // get trustlines
+        $scope.getTrustlines();
 
       })
-      .error(function(data) {
-        
+      .catch(function(resp) {
+
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
-        $scope.statusMsg.content = data.content.message;
-        $scope.trustData = {};
+        if (resp.content) {
+          $scope.statusMsg.content = resp.content.message;
+        } else{
+          $scope.statusMsg.content = resp.data.content.message;
+        }
+
+        $scope.$apply();
+        // $scope.trustData = {};
         window.scrollTo(0, 0);
 
-        
+
       });
   };
 
@@ -120,6 +87,32 @@ lumensWall.controller('changeTrustController', function($scope, $state, $http, $
     $scope.trustData.assetIssuer = "";
   };
 
+  $scope.getTrustlines = function() {
+
+    Account.getAccount($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
+      .success(function(data) {
+        console.log(data.content.data);
+        var balances = data.content.data.balances;
+        $scope.assets = balances;
+
+        $rootScope.currentUser.balances = [];
+        $rootScope.currentUser.balances = balances;
+
+        var localUser = JSON.stringify($rootScope.currentUser);
+        // Set the stringified user data into local storage
+
+        localStorage.setItem('user', localUser);
+
+        console.log("currentUser", $rootScope.currentUser);
+
+      })
+      .error(function(data) {
+        // console.log("error",data);
+
+      });
+
+
+  };
 
 
 });
