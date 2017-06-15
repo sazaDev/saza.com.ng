@@ -26,7 +26,7 @@ lumensWall.controller('allowTrustController', function($scope, $state, $http, $r
     
     
     Account.allowTrust($scope.trustData)
-      .success(function(data) {
+      .then(function(data) {
 
         // console.log("success",data);
         // show success message
@@ -37,7 +37,7 @@ lumensWall.controller('allowTrustController', function($scope, $state, $http, $r
         window.scrollTo(0, 0);
 
       })
-      .error(function(data) {
+      .catch(function(data) {
         
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';

@@ -1,5 +1,5 @@
 <div>
- <div class="page-title">                    
+ <div class="page-title">
         <h2><span class="fa fa-shield"></span> Allow Trust</h2>
 
 </div>
@@ -15,14 +15,14 @@
       <form class="form-horizontal" name="trustForm" method="POST" ng-submit="allowTrust()">
         <div class="panel panel-colorful">
           <div class="panel-heading">
-            
+
             <ul class="panel-controls">
             </ul>
           </div>
           <div class="panel-body">
             <p class="text-info"><i class="fa fa-info-circle"></i> Updates the <code>authorized</code> flag of an existing trustline. This can only be called by the issuer of a trustline's asset.</p>
           </div>
-          <div class="panel-body">                                                                        
+          <div class="panel-body">
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Trustor</label>
               <div class="col-md-6 col-xs-12">
@@ -39,31 +39,42 @@
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-key"></span></span>
                   <input class="form-control" type="text" name="assetCode" ng-model="trustData.assetCode" maxlength="12" required/>
-                  
+
                 </div>
                 <span class="help-block">The asset code being authorized.</span>
               </div>
-            </div>            
+            </div>
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Authorize</label>
-                
+              <div class="col-md-6 col-xs-12">
                 <span>True</span>
                 <label class="switch switch-small">
-                    
-                    <input type="radio" ng-model="trustData.authorize" ng-value="true"> 
+
+                    <input type="radio" ng-model="trustData.authorize" ng-value="true">
                     <span></span>
-                </label>                                        
+                </label>
                 <span>False</span>
                 <label class="switch switch-small">
                     <input type="radio" ng-model="trustData.authorize" ng-value="false">
                     <span></span>
-                </label>                 
+                </label>
                 <span class="help-block">True to authorize the line, false to deauthorize.</span>
-                
+              </div>
 
             </div>
 
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Transaction Passphrase</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="assword" name="tx_passphrase" ng-model="trustData.tx_passphrase" required/>
+
+                </div>
+                <span class="help-block">Transaction passphrase</span>
+              </div>
+            </div>
 
           </div>
           <div class="panel-footer">
