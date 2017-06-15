@@ -83,6 +83,8 @@ lumensWall.controller('settingsController', function($scope, $state, $http, $roo
       } else{
         $scope.statusMsg.content = data.data.content.message;
       }
+      $scope.$apply();
+
 
     });
   };

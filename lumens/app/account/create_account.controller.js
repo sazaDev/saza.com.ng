@@ -1,10 +1,7 @@
 var lumensWall = angular.module('lumensWall');
 
 lumensWall.controller('createAccountController', function($scope, $state, $http, $rootScope, Account, User) {
-  // if ($rootScope.currentUser.account_id) {
-  //   event.preventDefault();
-  //   $state.go('dashboard');
-  // }
+
   $scope.userData = {};
   $scope.linkData = {};
   $scope.tempUser = {};
@@ -20,51 +17,48 @@ lumensWall.controller('createAccountController', function($scope, $state, $http,
 
   $scope.createAccount = function() {
     Account.create($scope.userData)
-    .success(function(data) {
+    .then(function(resp) {
 
-      //console.log(data);
-      data.content.data.authenticated = true;
-      
-      // store seed to display in browser
-      $scope.userSeed = data.content.data.seed;
-      $scope.userAcct = data.content.data.account_id;
-      
+      console.log(resp);
+      var respContent = resp.data.content;
+
+      respContent.data.authenticated = true;
+
+
+      $scope.userSeed = Utility.decrypt(respContent.data.seed, $scope.userData.tx_passphrase);
+      $scope.userAcct = respContent.data.account_id;
+
       // set the currently active account
-      if (data.content.data.accounts.length > 0) {
-        data.content.data.currentAccount = data.content.data.accounts[0].account_id;
-        data.content.data.currentUsername = data.content.data.accounts[0].fed_name;
+      if (respContent.data.accounts.length > 0) {
+        respContent.data.currentAccount = respContent.data.accounts[0].account_id;
+        respContent.data.currentUsername = respContent.data.accounts[0].fed_name;
       }
 
 
-      var user = data.content.data;
+      var user = respContent.data;
       user.seed = "";
       user.account_id = "";
-      // localUser = JSON.stringify(user);
-      
+      User.set(user);
 
       // Set the stringified user data into local storage
-      // localStorage.setItem('user', localUser);
-
-      // $rootScope.authenticated = true;
-
-      // $rootScope.currentUser = user;
-      // console.log("currentUser", $rootScope.currentUser);
-        User.set(user);
-
-        
-        // Set the stringified user data into local storage
-        localStorage.setItem('user', JSON.stringify(user));
-        console.log("currentUser", User.get());
+      localStorage.setItem('user', JSON.stringify(user));
+      console.log("currentUser", User.get());
       angular.element('.mb-control-success').triggerHandler('click');
-                
+
 
     })
-    .error(function(data) {
-      console.log(data);
+    .catch(function(resp) {
+      console.log(resp);
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert-danger';
-      $scope.statusMsg.content = data.content.message;
-        
+      if (resp.content) {
+        $scope.statusMsg.content = resp.content.message;
+      } else{
+        $scope.statusMsg.content = resp.data.content.message;
+      }
+
+      $scope.$apply();
+
     });
   };
 
@@ -74,44 +68,48 @@ lumensWall.controller('createAccountController', function($scope, $state, $http,
     $scope.linkData.token = $rootScope.currentUser.token;
 
     Account.link($scope.linkData)
-    .success(function(data) {
+    .then(function(resp) {
 
-      
-      data.content.data.authenticated = true;
-      $scope.userSeed = data.content.data.seed;
-      $scope.userAcct = data.content.data.account_id;
-      
+      console.log(resp);
+      var respContent = resp.data.content;
+      respContent.data.authenticated = true;
+
+      $scope.userSeed = $scope.linkData.seed;
+      $scope.userAcct = respContent.data.account_id;
+
       // set the currently active account
-      if (data.content.data.accounts.length > 0) {
-        data.content.data.currentUsername = data.content.data.accounts[0].fed_name;
-        data.content.data.currentAccount = data.content.data.accounts[0].account_id;
+      if (respContent.data.accounts.length > 0)
+      {
+        respContent.data.currentUsername = respContent.data.accounts[0].fed_name;
+        respContent.data.currentAccount = respContent.data.accounts[0].account_id;
       }
 
-      var user = data.content.data;
+      var user = respContent.data;
       user.seed = "";
       user.account_id = "";
-      // localUser = JSON.stringify(user);
-        
-      // Set the stringified user data into local storage
-      // localStorage.setItem('user', localUser);
-
-      // $rootScope.authenticated = true;
-
-      // $rootScope.currentUser = user;
       User.set(user);
+
+
       // Set the stringified user data into local storage
       localStorage.setItem('user', JSON.stringify(user));
       console.log("currentUser", User.get());
       angular.element('.mb-control-link-success').triggerHandler('click');
       $scope.linkData = {};
 
-      })
-    .error(function(data) {
-      
+    })
+    .catch(function(resp) {
+
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert-danger';
-      $scope.statusMsg.content = data.content.message;
+      if (resp.content) {
+        $scope.statusMsg.content = resp.content.message;
+      } else{
+        $scope.statusMsg.content = resp.data.content.message;
+      }
+
+      $scope.$apply();
       $scope.linkData = {};
+
     });
   };
 

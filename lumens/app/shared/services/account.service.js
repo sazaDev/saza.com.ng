@@ -2,10 +2,27 @@
 
 var StellarSDK = StellarSdk;
 var Utility = Utility;
+var Config = Config;
 // var forge = require('node-forge');
 var account = angular.module('accountService', []);
 // var baseUrl = 'https://saza.com.ng:8888/';
 var baseUrl = 'http://localhost:8888/';
+
+var server = "";
+
+if ( Config.General.production) {
+  StellarSDK.Network.usePublicNetwork();
+  server = new StellarSDK.Server(Config.Stellar.liveNetwork);
+
+}
+
+if ( !Config.General.production) {
+  StellarSDK.Network.useTestNetwork();
+  server = new StellarSDK.Server(Config.Stellar.testNetwork);
+
+}
+
+
 account.factory('Account', function($http, $rootScope) {
 
     return {
@@ -14,29 +31,52 @@ account.factory('Account', function($http, $rootScope) {
         create : function(userData) {
             // create stellar account
             var pair = StellarSDK.Keypair.random();
-            console.log(Utility);
+            console.log(userData);
+
             // save encrypted secret key and account Id in backend
-            // return account ID and secret key
-            //console.log(userData);
-            // return $http({
-            //     method: 'POST',
-            //     url: baseUrl+'createaccount',
-            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-            //                 'Authorization': 'JWT '+userData.token},
-            //     data: $.param(userData)
-            // });
+            var isValid = Utility.validatePassphrase(userData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+              var encryptedObj = Utility.encrypt(userData.tx_passphrase, pair.secret());
+              userData.account_id = pair.publicKey();
+              userData.encryptedObj = encryptedObj;
+              console.log(userData);
+              return $http({
+                  method: 'POST',
+                  url: baseUrl+'createaccount',
+                  headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                              'Authorization': 'JWT '+userData.token},
+                  data: $.param(userData)
+              });
+            } else{
+              return Utility.returnError(['Invalid passphrase']);
+            }
+
         },
 
         link : function(userData) {
-            //console.log(userData);
-            return $http({
-                method: 'POST',
-                url: baseUrl+'linkaccount',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+userData.token },
-                // headers: {'X-CSRF-TOKEN': CSRF_TOKEN},
-                data: $.param(userData)
-            });
+            console.log(userData);
+
+            // save encrypted secret key and account Id in backend
+            var isValid = Utility.validatePassphrase(userData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            var isValidKey = Utility.validateSeed(userData.seed);
+            if (isValid && isValidKey) {
+              //encrypt seed and send encrypted obj
+              var encryptedObj = Utility.encrypt(userData.tx_passphrase, userData.seed);
+              userData.account_id = isValidKey.publicKey();
+              userData.encryptedObj = encryptedObj;
+              console.log(userData);
+
+              return $http({
+                  method: 'POST',
+                  url: baseUrl+'linkaccount',
+                  headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                              'Authorization': 'JWT '+userData.token },
+                  // headers: {'X-CSRF-TOKEN': CSRF_TOKEN},
+                  data: $.param(userData)
+              });
+            }else{
+              return Utility.returnError(['Invalid passphrase or secret key']);
+            }
         },
 
         sendPayment : function(paymentData) {
@@ -109,25 +149,154 @@ account.factory('Account', function($http, $rootScope) {
         },
 
         changeTrust : function(trustData) {
+            console.log(trustData);
+            var messages = [];
+            // check if passphrase is valid,
+            var isValid = Utility.validatePassphrase(trustData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+                // create change trust tx
+              if (!StellarSDK.StrKey.isValidEd25519PublicKey(trustData.assetIssuer)) {
+                return Utility.returnError(['Invalid Asset Issuer']);
+              }
 
-            return $http({
-                method: 'POST',
-                url: baseUrl+'changetrust',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+trustData.token },
-                data: $.param(trustData)
-            });
+              return server.loadAccount(trustData.account_id)
+                .then(function(srcAcct) {
+
+                  var asset = new StellarSDK.Asset(trustData.assetCode, trustData.assetIssuer);
+                  var transaction = new StellarSDK.TransactionBuilder(srcAcct);
+                  var operationObj = {};
+                      operationObj.asset = asset;
+
+                  if (trustData.limit) {
+                    operationObj.limit = trustData.limit.toString();
+                  }
+
+                  transaction.addOperation(StellarSDK.Operation.changeTrust(operationObj));
+                  // get seed
+                  var seedObj = Utility.getSeedObj(trustData.account_id, $rootScope.currentUser.accounts);
+
+                  // build and sign transaction
+                  var builtTx = transaction.build();
+                  builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, trustData.tx_passphrase)));
+                  return server.submitTransaction(builtTx);
+
+                })
+                .catch(StellarSDK.NotFoundError, function(error) {
+                  // for load source account
+                  console.log(error);
+                  messages.push('Source Account is not active');
+                  throw new Error('SourceInactive');
+                })
+                .then(function(xdrResult) {
+                  messages.push('Trustline created successfully');
+                  return Utility.returnSuccess(messages);
+                })
+                .catch(function(error) {
+                  // for submit tx
+                  console.log(error);
+                  var errorMessages = Utility.extractError(error);
+                  errorMessages.forEach(function(m) {
+                    messages.push(m);
+                  });
+
+                  throw new Error('TxError');
+
+                })
+                .catch(function(error) {
+                  // catch all
+                  console.log(error);
+                  messages.push('Unable to complete change trust operation');
+                  return Utility.returnError(messages);
+                  // return res.status(400).send({status: false, content: {message: messages}});
+                });
+
+            } else{
+                return Utility.returnError(['Invalid passphrase']);
+            }
+
+            // return $http({
+            //     method: 'POST',
+            //     url: baseUrl+'changetrust',
+            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+            //                 'Authorization': 'JWT '+trustData.token },
+            //     data: $.param(trustData)
+            // });
         },
 
         allowTrust : function(trustData) {
 
-            return $http({
-                method: 'POST',
-                url: baseUrl+'allowtrust',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+trustData.token },
-                data: $.param(trustData)
-            });
+          console.log(trustData);
+            var messages = [];
+            // check if passphrase is valid,
+            var isValid = Utility.validatePassphrase(trustData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+                // create change trust tx
+              if (!StellarSDK.StrKey.isValidEd25519PublicKey(trustData.trustor)) {
+                return Utility.returnError(['Invalid Trustor']);
+              }
+              // check if source account is active
+              return server.loadAccount(trustData.account_id)
+                .then(function(srcAcct) {
+
+
+                  var transaction = new StellarSDK.TransactionBuilder(srcAcct);
+                  var operationObj = {};
+                  operationObj.trustor = trustData.trustor;
+                  operationObj.assetCode = trustData.assetCode;
+                  operationObj.authorize = trustData.authorize;
+
+                  transaction.addOperation(StellarSDK.Operation.changeTrust(operationObj));
+                  // get seed
+                  var seedObj = Utility.getSeedObj(trustData.account_id, $rootScope.currentUser.accounts);
+
+                  // build and sign transaction
+                  var builtTx = transaction.build();
+                  builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, trustData.tx_passphrase)));
+
+                  return server.submitTransaction(builtTx);
+
+                })
+                .catch(StellarSDK.NotFoundError, function(error) {
+                  // for load source account
+                  console.log(error);
+                  messages.push('Source Account is not active');
+                  throw new Error('SourceInactive');
+                })
+                .then(function(xdrResult) {
+                  messages.push('Allow Trust operation successful');
+                  return Utility.returnSuccess(messages);
+                })
+                .catch(function(error) {
+                  // for submit tx
+                  console.log(error);
+                  var errorMessages = Utility.extractError(error);
+                  errorMessages.forEach(function(m) {
+                    messages.push(m);
+                  });
+
+                  throw new Error('TxError');
+
+                })
+                .catch(function(error) {
+                  // catch all
+                  console.log(error);
+                  messages.push('Unable to complete allow trust operation');
+                  return Utility.returnError(messages);
+
+                });
+
+            } else{
+                return Utility.returnError(['Invalid passphrase']);
+            }
+
+
+            // return $http({
+            //     method: 'POST',
+            //     url: baseUrl+'allowtrust',
+            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+            //                 'Authorization': 'JWT '+trustData.token },
+            //     data: $.param(trustData)
+            // });
         },
 
         manageData : function(manageData) {
@@ -152,13 +321,99 @@ account.factory('Account', function($http, $rootScope) {
 
         manageOffer : function(offerData) {
 
-            return $http({
-                method: 'POST',
-                url: baseUrl+'manageoffer',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+offerData.token },
-                data: $.param(offerData)
-            });
+          console.log(offerData);
+            var messages = [];
+            var buyingAsset = Utility.generateAsset(offerData.buyingAssetType,offerData.buyingAssetCode, offerData.buyingAssetIssuer);
+            var sellingAsset = Utility.generateAsset(offerData.sellingAssetType,offerData.sellingAssetCode, offerData.sellingAssetIssuer);
+            // check if passphrase is valid,
+            var isValid = Utility.validatePassphrase(offerData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+
+
+              if (offerData.sellingAssetType > 0) {
+                if (!StellarSDK.StrKey.isValidEd25519PublicKey(offerData.sellingAssetIssuer) || !sellingAsset) {
+                  messages.push('Invalid Selling Asset. Code must be alphanumeric and Issuer must be a valid stellar account');
+                  return Utility.returnError(messages);
+                 }
+
+              }
+
+              if (req.body.buyingAssetType > 0) {
+                if (!StellarSDK.StrKey.isValidEd25519PublicKey(req.body.buyingAssetIssuer) || !buyingAsset) {
+                    messages.push('Invalid Buying Asset. Code must be alphanumeric and Issuer must be a valid stellar account');
+                    return Utility.returnError(messages);
+                }
+
+              }
+    
+              // check if source account is active
+              return server.loadAccount(offerData.account_id)
+                .then(function(srcAcct) {
+
+
+                  var transaction = new StellarSDK.TransactionBuilder(srcAcct);
+                  var operationObj = {};
+                  operationObj.selling = sellingAsset;
+                  operationObj.buying = buyingAsset;
+                  operationObj.amount = offerData.amount;
+                  operationObj.price = offerData.price;
+
+                  if (offerData.offerId) {
+                    operationObj.offerId = offerData.offerId;
+                  }
+
+                  transaction.addOperation(StellarSDK.Operation.manageOffer(operationObj));
+                  // get seed
+                  var seedObj = Utility.getSeedObj(trustData.account_id, $rootScope.currentUser.accounts);
+
+                  // build and sign transaction
+                  var builtTx = transaction.build();
+                  builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, offerData.tx_passphrase)));
+                  // console.log("BTX", builtTx.toEnvelope().toXDR().toString("base64"));
+                  return server.submitTransaction(builtTx);
+
+                })
+                .catch(StellarSDK.NotFoundError, function(error) {
+                  // for load source account
+                  console.log(error);
+                  messages.push('Source Account is not active');
+                  throw new Error('SourceInactive');
+                })
+                .then(function(xdrResult) {
+                  messages.push('Manage offer operation successful');
+                  return Utility.returnSuccess(messages);
+                })
+                .catch(function(error) {
+                  // for submit tx
+                  console.log(error);
+                  var errorMessages = Utility.extractError(error);
+                  errorMessages.forEach(function(m) {
+                    messages.push(m);
+                  });
+
+                  throw new Error('TxError');
+
+                })
+                .catch(function(error) {
+                  // catch all
+                  console.log(error);
+                  messages.push('Unable to complete manage offer operation');
+                  return Utility.returnError(messages);
+
+                });
+
+            } else{
+                return Utility.returnError(['Invalid passphrase']);
+            }
+
+
+            // return $http({
+            //     method: 'POST',
+            //     url: baseUrl+'manageoffer',
+            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+            //                 'Authorization': 'JWT '+offerData.token },
+            //     data: $.param(offerData)
+            // });
         },
 
         passiveOffer : function(offerData) {
@@ -312,8 +567,7 @@ account.factory('Account', function($http, $rootScope) {
                                     content: {
                                         message: ['Invalid passphrase']
                                     }
-                    };
-                    // resolve(errObj);
+                                  };
                     reject(errObj);
                 });
             }
