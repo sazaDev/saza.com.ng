@@ -146,7 +146,34 @@ var StellarSDK = StellarSdk;
     }
 
     return rtnError;
-  }
+  },
+  generateAsset: function(type,code,issuer) {
+    if (type === 'undefined') {
+      return false;
+    }
+
+    if (code === 'undefined') {
+      code = "";
+    }
+
+    if (issuer === 'undefined') {
+      issuer = "";
+    }
+
+    if (type == 0) {
+      return StellarSDK.Asset.native();
+    }else{
+      var asset = "";
+      try{
+        asset =  new StellarSDK.Asset(code, issuer);
+        return asset;
+      }
+      catch(error){
+        return false;
+      }
+
+    }
+  },
 
 
 };
