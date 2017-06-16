@@ -52,7 +52,7 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
     }
 
     Account.sendPayment($scope.paymentData)
-      .success(function(data) {
+      .then(function(data) {
 
         console.log("success",data);
         // show success message
@@ -62,7 +62,7 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
         $scope.paymentData = {};
         window.scrollTo(0, 0);
       })
-      .error(function(data) {
+      .catch(function(data) {
 
         console.log("error",data);
         $scope.statusMsg = {};

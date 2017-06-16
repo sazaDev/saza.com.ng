@@ -1,11 +1,11 @@
 var lumensWall = angular.module('lumensWall');
 
 lumensWall.controller('pathPaymentController', function($scope, $state, $http, $rootScope, Account) {
-  
+
   $scope.paymentData = {};
   $scope.statusMsg = false;
   $scope.userRegex = /^()[a-z0-9][^<,|>]+$/i;
-  
+
 
   $scope.init = function() {
     $scope.paymentData.id = $rootScope.currentUser.id;
@@ -13,9 +13,9 @@ lumensWall.controller('pathPaymentController', function($scope, $state, $http, $
     $scope.paymentData.token = $rootScope.currentUser.token;
     $scope.paymentData.sendAssetType = 0;
     $scope.paymentData.destAssetType = 0;
-    
+
   };
-  
+
   $scope.closeAlert = function() {
     $scope.statusMsg = {};
   };
@@ -25,9 +25,9 @@ lumensWall.controller('pathPaymentController', function($scope, $state, $http, $
     $scope.paymentData.email = $rootScope.currentUser.email;
     $scope.paymentData.token = $rootScope.currentUser.token;
     $scope.paymentData.account_id = $rootScope.currentUser.currentAccount;
-    
+
     if ($scope.paymentData.sendAssetType > 0) {
-      // check asset details 
+      // check asset details
       if (!$scope.paymentData.sendAssetCode || !$scope.paymentData.sendAssetIssuer) {
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
@@ -39,7 +39,7 @@ lumensWall.controller('pathPaymentController', function($scope, $state, $http, $
 
 
     if ($scope.paymentData.destAssetType > 0) {
-      // check asset details 
+      // check asset details
       if (!$scope.paymentData.destAssetCode || !$scope.paymentData.destAssetIssuer) {
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
@@ -50,7 +50,7 @@ lumensWall.controller('pathPaymentController', function($scope, $state, $http, $
     }
 
     Account.pathPayment($scope.paymentData)
-      .success(function(data) {
+      .then(function(data) {
 
         // console.log("success",data);
         // show success message
@@ -60,15 +60,15 @@ lumensWall.controller('pathPaymentController', function($scope, $state, $http, $
         $scope.paymentData = {};
         window.scrollTo(0, 0);
       })
-      .error(function(data) {
-        
+      .catch(function(data) {
+
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
         $scope.statusMsg.content = data.content.message;
         $scope.paymentData = {};
         window.scrollTo(0, 0);
 
-				
+
       });
   };
 
