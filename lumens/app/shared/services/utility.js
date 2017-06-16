@@ -181,6 +181,39 @@ var StellarSDK = StellarSdk;
     }
     return true;
   },
+  validatePaymentInput: function (destAcct, amount, memoText) {
+    try{
+      // check its a stellar address or account ID
+
+      if (destAcct.indexOf('*') < 0) {
+        // not stellar address
+        if (!StellarSDK.StrKey.isValidEd25519PublicKey(destAcct)) {
+          return {status: false, content: {message: ['Invalid Destination Address']}};
+        }
+      }else{
+        // stellar address
+      }
+
+
+
+
+      if (memoText.length > 28) {
+        return {status: false, content: {message: ['memo can only have 28 characters']}};
+      }
+
+      if (isNaN(amount)) {
+        return {status: false, content: {message: ['Please enter a valid amount']}};
+      }
+
+      return {status: true, content: {message: ['Input Validation successful']}};
+    }
+    catch(error){
+      // To Do
+      console.error("validatePaymentInput Error", error);
+      return {status: false, content: {message: ['Input Validation failed']}};
+
+    }
+  },
 
 
 };

@@ -81,13 +81,134 @@ account.factory('Account', function($http, $rootScope) {
 
         sendPayment : function(paymentData) {
 
-            return $http({
-                method: 'POST',
-                url: baseUrl+'sendpayment',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+paymentData.token },
-                data: $.param(paymentData)
-            });
+          console.log(paymentData);
+
+            var destValid = true; //boolean for checking if destAcct is Valid
+            var sourceValid = true; //boolean for checking if srcAcct is Valid
+            var rcvrAcct = "";
+            if(!paymentData.memoText){
+              paymentData.memoText = "";
+            }
+
+            var messages = [];
+            // checks in input formats are valid
+            var validateInput = Utility.validatePaymentInput(paymentData.destAcct, paymentData.amount, paymentData.memoText);
+
+            var asset = Utility.generateAsset(paymentData.assetType, paymentData.assetCode, paymentData.assetIssuer);
+
+            // check if passphrase is valid,
+            var isValid = Utility.validatePassphrase(paymentData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+
+            if (!validateInput.status || !asset) {
+              return Utility.returnError(validateInput.content.message);
+            } else{
+
+              // check if destAcct is stellar address or account ID
+              // load destAcct to see if it exists on Stellar
+
+              StellarSDK.FederationServer.resolve(paymentData.destAcct)
+              .catch(function(error) {
+                console.log("Error",error);
+              })
+              .then(function(acctDetails) {
+                console.log("acctDetails", acctDetails);
+                rcvrAcct = acctDetails;
+                // load dest account
+                return server.loadAccount(acctDetails.account_id);
+              })
+              .catch(StellarSDK.NotFoundError, function(error) {
+
+                messages.push('Destination Account not active');
+                messages.push('Attempt to create destination account');
+                // destAcct not found
+                if (asset.isNative()) {
+                  destValid = false;
+
+                }else{
+                  destValid = false;
+                  messages.push('Can not create destination account with custom asset');
+                  throw new Error('Invalid Destination and Custom Asset');
+                }
+                // continue to next then block
+              })
+              .then(function() {
+
+                // Load source account on stellar
+                return server.loadAccount(paymentData.account_id);
+              })
+              .catch(StellarSDK.NotFoundError, function(error) {
+
+                // unable to load source account
+                messages.push('Source Account not active');
+                throw new Error('SourceInactive');
+
+              })
+              .then(function(sender) {
+
+                // build a transaction based on if destination is valid or not.
+
+                var transaction = "";
+
+                if (destValid) {
+                  // send payment
+                  console.log("sending Payment");
+                  transaction = new StellarSDK.TransactionBuilder(sender)
+                                    .addOperation(StellarSDK.Operation.payment({
+                                      destination: rcvrAcct.account_id,
+                                      asset: asset,
+                                      amount: paymentData.amount
+                                    }))
+                                    .addMemo(StellarSDK.Memo.text(paymentData.memoText))
+                                    .build();
+
+                } else{
+                  // fund new account
+                  console.log("funding new account");
+                  transaction = new StellarSDK.TransactionBuilder(sender)
+                                    .addOperation(StellarSDK.Operation.createAccount({
+                                      destination: rcvrAcct.account_id,
+                                      startingBalance: paymentData.amount
+                                    }))
+                                    .addMemo(StellarSDK.Memo.text(paymentData.memoText))
+                                    .build();
+
+                }
+
+
+                // get seed
+                var seedObj = Utility.getSeedObj(paymentData.account_id, $rootScope.currentUser.accounts);
+
+                // sign transaction
+                transaction.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, paymentData.tx_passphrase)));
+
+                return server.submitTransaction(transaction);
+              })
+              .then(function(result) {
+                console.log('Success! Results:', result);
+                messages.push('Transaction Successful');
+                return Utility.returnSuccess(messages);
+              })
+              .catch(function(error) {
+                console.error('Something went wrong at the end\n', error);
+                messages.push('Transaction Failed');
+                return Utility.returnError(messages);
+              });
+            }
+
+
+            } else{
+                return Utility.returnError(['Invalid passphrase']);
+            }
+
+
+            // return $http({
+            //     method: 'POST',
+            //     url: baseUrl+'sendpayment',
+            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+            //                 'Authorization': 'JWT '+paymentData.token },
+            //     data: $.param(paymentData)
+            // });
         },
         emailTx : function(paymentData) {
 
@@ -300,14 +421,74 @@ account.factory('Account', function($http, $rootScope) {
         },
 
         manageData : function(manageData) {
+            var messages = [];
 
-            return $http({
-                method: 'POST',
-                url: baseUrl+'managedata',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+manageData.token },
-                data: $.param(manageData)
-            });
+            // check if passphrase is valid,
+            var isValid = Utility.validatePassphrase(manageData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+
+                return server.loadAccount(manageData.account_id)
+                        .then(function(srcAcct) {
+
+                          // Build Transaction
+                          var transaction = new StellarSDK.TransactionBuilder(srcAcct);
+                          var operationObj = {};
+                          operationObj.name = manageData.entryName;
+                          if (!manageData.entryValue) {
+                            operationObj.value = null;
+                          }else{
+                            operationObj.value = manageData.entryValue;
+                          }
+
+                          console.log("operationObj",operationObj);
+
+                          transaction.addOperation(StellarSDK.Operation.manageData(operationObj));
+
+                          // get seed
+                          var seedObj = Utility.getSeedObj(manageData.account_id, $rootScope.currentUser.accounts);
+
+                          // build and sign transaction
+                          var builtTx = transaction.build();
+                          builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, manageData.tx_passphrase)));
+
+                          return server.submitTransaction(builtTx);
+                        })
+                        .then(function(xdrResult) {
+
+                          messages.push('Manage data operation successful');
+                          return Utility.returnSuccess(messages);
+                        })
+                        .catch(function(error) {
+                          // for submit tx
+                          console.log(error);
+                          var errorMessages = Utility.extractError(error);
+                          errorMessages.forEach(function(m) {
+                            messages.push(m);
+                          });
+
+                          throw new Error('TxError');
+
+                        })
+                        .catch(function(error) {
+                          // catch all
+                          console.log(error);
+                          messages.push('Unable to complete manage data operation');
+                          return Utility.returnError(messages);
+
+                        });
+
+            } else{
+                return Utility.returnError(['Invalid passphrase']);
+            }
+
+
+            // return $http({
+            //     method: 'POST',
+            //     url: baseUrl+'managedata',
+            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+            //                 'Authorization': 'JWT '+manageData.token },
+            //     data: $.param(manageData)
+            // });
         },
         getOffers : function(token,account_id) {
 
@@ -667,17 +848,62 @@ account.factory('Account', function($http, $rootScope) {
 
         setUsername : function(userData) {
 
-            return $http({
-                method: 'POST',
-                url: baseUrl+'setusername',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+userData.token },
-                data: $.param(userData)
-            });
+
+          console.log(userData);
+            var messages = [];
+
+            // check if passphrase is valid,
+            var isValid = Utility.validatePassphrase(userData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+
+              // check if source account is active
+              return server.loadAccount(userData.account_id)
+                .then(function(srcAcct) {
+
+
+                  var transaction = new StellarSDK.TransactionBuilder(srcAcct);
+                  var operationObj = {};
+                  operationObj.inflationDest = Config.General.production ? Config.Stellar.inflationDest : Config.Stellar.testInflationDest;
+                  operationObj.homeDomain = Config.General.production ?  Config.Stellar.homeDomain : Config.Stellar.testHomeDomain;
+
+                  transaction.addOperation(StellarSDK.Operation.setOptions(operationObj));
+                  // get seed
+                  var seedObj = Utility.getSeedObj(userData.account_id, $rootScope.currentUser.accounts);
+
+                  // build and sign transaction
+                  var builtTx = transaction.build();
+                  builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, userData.tx_passphrase)));
+                   // console.log("BTX", builtTx.toEnvelope().toXDR().toString("base64"));
+                  //send build tx to server
+                  userData.builtTx = builtTx.toEnvelope().toXDR().toString("base64");
+
+                  console.log(userData);
+                  return $http({
+                      method: 'POST',
+                      url: baseUrl+'setusername',
+                      headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                  'Authorization': 'JWT '+userData.token },
+                      data: $.param(userData)
+                  });
+
+                })
+                .catch(StellarSDK.NotFoundError, function(error) {
+                  // for load source account
+                  console.log(error);
+                  messages.push('Source Account is not active');
+                  return Utility.returnError(messages);
+                });
+
+
+            } else{
+                return Utility.returnError(['Invalid passphrase']);
+            }
+
+
+            
         },
-
+        // DEPRECATED. DONT USE
         setInflation : function(userData) {
-
             return $http({
                 method: 'POST',
                 url: baseUrl+'setinflation',
@@ -688,14 +914,70 @@ account.factory('Account', function($http, $rootScope) {
         },
 
         mergeAccount : function(userData) {
+            var messages = [];
 
-            return $http({
-                method: 'POST',
-                url: baseUrl+'mergeaccount',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+userData.token },
-                data: $.param(userData)
-            });
+            // check if passphrase is valid,
+            var isValid = Utility.validatePassphrase(userData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+                if (!StellarSDK.StrKey.isValidEd25519PublicKey(userData.destAcct)) {
+                  messages.push('Destination must be a valid stellar account id');
+                  return Utility.returnError(messages);
+                }
+
+                return server.loadAccount(userData.account_id)
+                        .then(function(srcAcct) {
+
+                          // Build Transaction
+                          var transaction = new StellarSDK.TransactionBuilder(srcAcct);
+                          var operationObj = {};
+                          operationObj.destination = userData.destAcct;
+
+                          transaction.addOperation(StellarSDK.Operation.accountMerge(operationObj));
+
+                          // get seed
+                          var seedObj = Utility.getSeedObj(userData.account_id, $rootScope.currentUser.accounts);
+
+                          // build and sign transaction
+                          var builtTx = transaction.build();
+                          builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, userData.tx_passphrase)));
+
+                          return server.submitTransaction(builtTx);
+                        })
+                        .then(function(xdrResult) {
+
+                          messages.push('Stellar account merged with '+userData.destAcct);
+                          return Utility.returnSuccess(messages);
+                        })
+                        .catch(function(error) {
+                          // for submit tx
+                          console.log(error);
+                          var errorMessages = Utility.extractError(error);
+                          errorMessages.forEach(function(m) {
+                            messages.push(m);
+                          });
+
+                          throw new Error('TxError');
+
+                        })
+                        .catch(function(error) {
+                          // catch all
+                          console.log(error);
+                          messages.push('Unable to complete merge account operation');
+                          return Utility.returnError(messages);
+
+                        });
+
+            } else{
+                return Utility.returnError(['Invalid passphrase']);
+            }
+
+            // return $http({
+            //     method: 'POST',
+            //     url: baseUrl+'mergeaccount',
+            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+            //                 'Authorization': 'JWT '+userData.token },
+            //     data: $.param(userData)
+            // });
         },
         getTransactions : function(token,account_id) {
 

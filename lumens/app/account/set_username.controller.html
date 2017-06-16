@@ -1,5 +1,5 @@
 <div>
- <div class="page-title">                    
+ <div class="page-title">
         <h2><span class="fa fa-map-marker"></span> Set Stellar Address</h2>
 
 </div>
@@ -29,25 +29,35 @@
 
             </ul>
           </div>
-          <div class="panel-body">                                                                        
+          <div class="panel-body">
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Username</label>
-              <div class="col-md-6 col-xs-12">                                            
+              <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
                   <input type="text" class="form-control" name="username" ng-model="userData.username" placeholder="Username" required ng-pattern="userRegex"/><span class="input-group-addon"><span>*{{siteURL}}</span></span>
-                </div>  
+                </div>
                 <span class="text-danger" ng-show="usernameForm.username.$dirty && usernameForm.username.$invalid">
                   <small ng-show="usernameForm.username.$error.required">Username is required. </small>
                   <small ng-show="usernameForm.username.$invalid">Minimum 2 Characters.
                     The following characters are not allowed: <,*>.</small>
-                </span>                                          
+                </span>
                 <span class="help-block">Enter username for your Stellar Address</span>
                 <p ng-if="userData.username">Your Stellar Address will be: <span class="text-danger">{{userData.username}}*{{siteURL}}</span></p>
               </div>
             </div>
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Transaction Passphrase</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input type="password" class="form-control" name="tx_passphrase" ng-model="userData.tx_passphrase" required/>
+                </div>
+                <span class="help-block">Transaction passphrase</span>
 
+              </div>
+            </div>
 
 
           </div>
@@ -80,13 +90,13 @@ $("[class^=mb-control-]").on("click",function(){
     if(sound === 'fail')
       playAudio('fail');
 
-  }        
+  }
   return false;
 });
 $(".mb-control-close").on("click",function(){
  $(this).parents(".message-box").removeClass("open");
  return false;
-});    
+});
 /* END MESSAGE BOX */
 
-</script>	
+</script>
