@@ -228,13 +228,201 @@ account.factory('Account', function($http, $rootScope) {
         },
         emailTx : function(paymentData) {
 
-            return $http({
-                method: 'POST',
-                url: baseUrl+'emailtx',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+paymentData.token },
-                data: $.param(paymentData)
-            });
+          console.log(paymentData);
+
+            var destValid = true; //boolean for checking if destAcct is Valid
+            var sourceValid = true; //boolean for checking if srcAcct is Valid
+            var rcvrAcct = {};
+            var claimCode = Utility.randomString(6);
+            var emailFound = 0;
+            var destAcctActive = 0;
+            if(!paymentData.memoText){
+              paymentData.memoText = "";
+            }
+            // get seed
+            var seedObj = Utility.getSeedObj(paymentData.account_id, $rootScope.currentUser.accounts);
+
+
+            var messages = [];
+            // checks in input formats are valid
+            // var validateInput = Utility.validatePaymentInput(paymentData.destAcct, paymentData.amount, paymentData.memoText);
+
+            var asset = Utility.generateAsset(paymentData.assetType, paymentData.assetCode, paymentData.assetIssuer);
+
+            // check if passphrase is valid,
+            var isValid = Utility.validatePassphrase(paymentData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+
+            if (!asset) {
+              return Utility.returnError(['Invalid Input: Asset is not defined']);
+            } else{
+
+              var queryStr = req.body.destAcct+"*"+Config.Stellar.homeDomain;
+
+              // find email via saza federation
+              StellarSDK.FederationServer.resolve(queryStr)
+              .catch(function(error) {
+                console.log("Error",error);
+                // var errorMessages = Utility.extractError(error);
+                // errorMessages.forEach(function(m) {
+                //   messages.push(m);
+                // });
+                // throw new Error('AccountNotFound');
+
+                // Account not found continue to then block
+              })
+              .then(function(acctDetails) {
+
+                if (acctDetails) {
+                  rcvrAcct = acctDetails;
+                  emailFound = 1;
+                } else{
+                  console.log("not found creating pair\n");
+                  var pair = StellarSDK.Keypair.random();
+                  rcvrAcct.account_id = pair.publicKey();
+                  rcvrAcct.seed = pair.secret();
+                  emailFound = 0;
+                }
+
+
+                // load dest account
+                return server.loadAccount(rcvrAcct.account_id);
+              })
+              .catch(StellarSDK.NotFoundError, function(error) {
+
+                messages.push('Destination Account not active');
+                messages.push('Attempt to create destination account');
+                destAcctActive = 0;
+
+                // continue to next then block
+              })
+              .then(function(receiver) {
+                console.log("receiver: ", receiver);
+                if (receiver) {
+                  console.log("its active oo");
+                  destAcctActive = 1;
+
+                }
+                // load source acct
+                return server.loadAccount(paymentData.account_id);
+              })
+              .catch(StellarSDK.NotFoundError, function(error) {
+
+                // unable to load source account
+                messages.push('Source Account not active');
+                console.error('Something went wrong! The source account does not exist!');
+                throw new Error('SourceInactive');
+
+              })
+              .then(function(sender) {
+
+                // build a transaction based on if email was found or not
+
+                var transaction = "";
+
+                if (emailFound) {
+                  // send payment
+                  console.log("Sending Payment");
+                  if (destAcctActive == 1) {
+                    transaction = new StellarSDK.TransactionBuilder(sender)
+                                    .addOperation(StellarSDK.Operation.payment({
+                                      destination: rcvrAcct.account_id,
+                                      asset: asset,
+                                      amount: paymentData.amount.toString()
+                                    }))
+                                    .addMemo(StellarSDK.Memo.text(paymentData.memoText))
+                                    .build();  
+                  }
+                  if (destAcctActive === 0) {
+                    transaction = new StellarSDK.TransactionBuilder(sender)
+                                      .addOperation(StellarSDK.Operation.createAccount({
+                                        destination: rcvrAcct.account_id,
+                                        startingBalance: paymentData.toString()
+                                      }))
+                                      .addMemo(StellarSDK.Memo.text(paymentData.memoText))
+                                      .build();  
+                  }
+
+                  // sign transaction
+                  transaction.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, paymentData.tx_passphrase)));
+
+
+                } else{
+                  // fund new account and add signer
+                  console.log("funding new account");
+                  var operationObj = {};
+                  operationObj.signer = {};
+                  operationObj.signer.ed25519PublicKey = paymentData.account_id;
+                  operationObj.signer.weight = 1;
+                  operationObj.source = rcvrAcct.account_id;
+
+                  transaction = new StellarSDK.TransactionBuilder(sender)
+                                    .addOperation(StellarSDK.Operation.createAccount({
+                                      destination: rcvrAcct.account_id,
+                                      startingBalance: paymentData.amount.toString()
+                                    }))
+                                    .addOperation(StellarSDK.Operation.setOptions(operationObj))
+                                    .addMemo(StellarSDK.Memo.text(paymentData.memoText))
+                                    .build();
+                  // sign transaction
+
+
+                  transaction.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, paymentData.tx_passphrase)));
+                  transaction.sign(StellarSDK.Keypair.fromSecret(rcvrAcct.seed));
+                }
+
+                  // submit transaction to network
+                return server.submitTransaction(transaction);
+              })
+              .then(function(result) {
+                console.log('Success! Results:', result);
+                messages.push('Transaction Successful');
+                // return Utility.returnSuccess(messages);
+                paymentData.emailFound = emailFound;
+                paymentData.rcvrAcct = rcvrAcct;
+                if (emailFound === 0) {
+                  // set claimCode
+                  paymentData.claim_code = claimCode;
+
+                  // encrypt seed
+                  paymentData.rcvrAcct.seedObj = Utility.encrypt(claimCode, paymentData.rcvrAcct.seed);
+                }
+
+                // send to server for notification
+                // consider submitting signed XDR in server
+                return $http({
+                    method: 'POST',
+                    url: baseUrl+'emailtx',
+                    headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                'Authorization': 'JWT '+paymentData.token },
+                    data: $.param(paymentData)
+                });
+
+              })
+              .catch(function(error) {
+                  // for submit tx
+                  console.log(error);
+                  var errorMessages = Utility.extractError(error);
+                  errorMessages.forEach(function(m) {
+                    messages.push(m);
+                  });
+
+                  throw new Error('TxError');
+
+              })
+              .catch(function(error) {
+                console.error('Something went wrong at the end\n', error);
+                messages.push('Transaction Failed');
+                return Utility.returnError(messages);
+              });
+            }
+
+
+            } else{
+                return Utility.returnError(['Invalid passphrase']);
+            }
+
+
         },
         getClaims : function(token,account_id,id) {
 
