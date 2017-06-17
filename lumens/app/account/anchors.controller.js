@@ -12,6 +12,8 @@ lumensWall.controller('anchorsController', function($scope, $state, $http, $root
     $scope.statusMsg = {};
   };
 
+
+
   $scope.addAnchor = function() {
     $scope.anchorData.id = $rootScope.currentUser.id;
     $scope.anchorData.email = $rootScope.currentUser.email;

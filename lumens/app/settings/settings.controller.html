@@ -19,6 +19,7 @@
           <li class="active"><a href="#tab1" data-toggle="tab" aria-expanded="false"><i class="fa fa-list"></i> Account Details</a></li>
           <li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false"><i class="fa fa-key"></i> Change Passphrase</a></li>
           <li class=""><a href="#tab3" data-toggle="tab" aria-expanded="true"><i class="fa fa-lock"></i> Change Password</a></li>
+          <li class=""><a href="#tab4" data-toggle="tab" aria-expanded="true"><i class="fa fa-lock"></i> 2FA for Transactions</a></li>
         </ul>
         <div class="panel-body tab-content">
           <div class="tab-pane  active" id="tab1">
@@ -30,13 +31,25 @@
                 </button>
               </span>
               <br>
-            <h2 class="header-side">Seed</h2>
+            <h2 class="header-side">Secret Key</h2>
               <span>{{seed}}</span>
               <span>
-                <button ng-click="toggleSeedView()" class="btn btn-default">
+                <!-- <button class="btn btn-default">
                   <i  class="fa fa-eye"></i>
-                </button>
+                </button> -->
               </span>
+              <div class="form-group">
+                <div class="">
+                  <div class="input-group">
+                    <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                    <input type="password" class="form-control" name="tx_passphrase" ng-model="userData.tx_passphrase" placeholder="Enter Transaction passphrase" required/>
+                  </div>
+                </div>
+              </div>
+              <button ng-click="toggleSeedView()" class="btn btn-primary">
+                   Show Secret
+              </button>
+
               <br>
             <h2 class="header-side">Set Username</h2>
 
@@ -125,6 +138,35 @@
             </div>
 
           </div>
+
+          <!-- Tab 4 -->
+          <div class="tab-pane" id="tab4">
+            <div class="row">
+              <div ng-if="!currentUser.tfa_enabled">
+                <h2 class="header-side">Enable 2FA</h2>
+                <button class="btn btn-success btn-lg" ng-click="enable2fa()">Enable</button>
+              </div>
+              <div ng-if="currentUser.tfa_enabled">
+                <h2 class="header-side">Disable 2FA</h2>
+                <form method="post" ng-submit="disable2fa()" name="disable2faForm">
+                   <div class="form-group">
+                      <label>Password</label>
+                      <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="password" ng-model="2faData.password" placeholder="Enter New Password" required>
+                    </div>
+                    <div class="form-group">
+                      <label>2FA token</label>
+                      <input type="number" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="2fa_token" ng-model="2faData.2fa_token" placeholder="Enter 2FA Token" required="">
+                    </div>
+                    <button class="btn btn-danger pull-right" ng-disabled="disable2faForm.$error.required || disable2faForm.$error.$invalid">Disable</button>
+                </form>
+
+              </div>
+
+
+            </div>
+
+          </div>
+
 
           <div class="tab-pane" id="tab44">
             <h2 class="header-side">Emails</h2>

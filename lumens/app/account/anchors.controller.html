@@ -1,5 +1,5 @@
 <div>
- <div class="page-title">                    
+ <div class="page-title">
         <h2><span class="fa fa-dot-circle-o"></span> Anchors</h2>
 
 </div>
@@ -15,40 +15,52 @@
     <div class="col-md-6">
 
         <p>
-          
+
           To add an anchor just enter the domain name. E.g <em>saza.com.ng</em>
-          
-        </p>  
-        <p class="text-default"><i class="fa fa-info"></i> Note that by addidng an anchor this way, you automaically trust this anchor and will be able to hold all its assets. You can hold single assets using the <a ui-sref="changetrust">change trust</a> function</p>    
+
+        </p>
+        <p class="text-default"><i class="fa fa-info"></i> Note that by addidng an anchor this way, you automaically trust this anchor and will be able to hold all its assets. You can hold single assets using the <a ui-sref="changetrust">change trust</a> function</p>
         <div class="panel panel-colorful">
-          
+
           <div class="panel-body">
 
             <form class="form-horizontal" name="anchorsForm" method="POST" ng-submit="addAnchor()">
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Anchor URL</label>
-              <div class="col-md-6 col-xs-12">                                            
+              <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
                   <input type="text" class="form-control" name="anchorURL" ng-model="anchorData.anchorURL" placeholder="Anchor URL" required/>
-                </div>                                            
+                </div>
                 <span class="help-block">Enter The URL of your anchor. e.g example.com</span>
               </div>
             </div>
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Transaction Passphrase</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input type="password" class="form-control" name="tx_passphrase" ng-model="anchorData.tx_passphrase" required/>
+                </div>
+                <span class="help-block">Transaction passphrase</span>
+
+              </div>
+            </div>
+
             <button class="btn btn-success pull-right" ng-disabled="anchorsForm.$error.required || anchorsForm.$error.$invalid">Add Anchor</button>
-            </form>      
+            </form>
           </div>
-         
+
           <div class="panel-footer">
-            
+
           </div>
         </div>
-      
+
 
     </div>
 
     <div class="col-md-6">
-      
+
       <div class="panel panel-colorful">
         <div class="panel-heading">
           Known Stellar Anchors
@@ -74,14 +86,14 @@
             <li class="list-group-item"><a href="https://moni.com/.well-known/stellar.toml" target="_blank">moni.com</a><span class="badge">EUR</span></li>
 
           </ul>
-               
+
         </div>
-       
+
         <div class="panel-footer">
-          
+
         </div>
       </div>
-      
+
 
     </div>
 
@@ -105,13 +117,13 @@
 //     if(sound === 'fail')
 //       playAudio('fail');
 
-//   }        
+//   }
 //   return false;
 // });
 // $(".mb-control-close").on("click",function(){
 //  $(this).parents(".message-box").removeClass("open");
 //  return false;
-// });    
+// });
 /* END MESSAGE BOX */
 
-</script>	
+</script>

@@ -6,18 +6,18 @@ lumensWall.controller('settingsController', function($scope, $state, $http, $roo
   $scope.userData = {};
   $scope.deleteData = {};
 	$scope.statusMsg = null;
-	$scope.seed = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+	$scope.seed = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
 	$scope.tempSeed = "";
 	$scope.showSeed = false;
 	$scope.init = function() {
 		// load the seed here but dont display yet
-    Account.getSeed($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
-      .success(function(data) {
-        $scope.tempSeed = data.content.message;
-      })
-      .error(function(data) {
+    // Account.getSeed($rootScope.currentUser.token, $rootScope.currentUser.currentAccount)
+    //   .success(function(data) {
+    //     $scope.tempSeed = data.content.message;
+    //   })
+    //   .error(function(data) {
 
-      });
+    //   });
 
 	};
 
@@ -146,14 +146,52 @@ lumensWall.controller('settingsController', function($scope, $state, $http, $roo
 
 	$scope.toggleSeedView = function() {
 
-		if (!$scope.showSeed) {
-			$scope.seed = $scope.tempSeed;
-			$scope.showSeed = true;
-		}else{
-			$scope.seed = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
-			$scope.showSeed = false;
-		}
+    $scope.userData.account_id = $rootScope.currentUser.currentAccount;
+
+    Account.getSeed($scope.userData)
+      .then(function(data) {
+        console.log(data);
+        $scope.tempSeed = data.content.message[0];
+        $scope.seed = $scope.tempSeed;
+        $scope.$apply();
+
+      })
+      .catch(function(data) {
+        console.log(data);
+      });
+
+
+		// if (!$scope.showSeed) {
+    //     
+
+      
+
+
+		// 	$scope.seed = $scope.tempSeed;
+		// 	$scope.showSeed = true;
+		// }else{
+		// 	$scope.seed = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+		// 	$scope.showSeed = false;
+		// }
 
 	};
+
+  $scope.enable2fa = function() {
+    $scope.userData.token = $rootScope.currentUser.token;
+    $scope.userData.id = $rootScope.currentUser.id;
+
+    Account.enable2fa($scope.userData)
+    .then(function(resp) {
+      console.log(resp);
+
+    })
+    .catch(function(data) {
+      console.log(data);
+
+
+    });
+
+
+  };
 
 });

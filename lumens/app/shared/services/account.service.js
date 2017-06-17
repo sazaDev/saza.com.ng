@@ -25,7 +25,9 @@ if ( !Config.General.production) {
 
 account.factory('Account', function($http, $rootScope) {
 
-    return {
+  var  self = {};
+
+    self = {
 
 
         create : function(userData) {
@@ -331,7 +333,7 @@ account.factory('Account', function($http, $rootScope) {
                                       amount: paymentData.amount.toString()
                                     }))
                                     .addMemo(StellarSDK.Memo.text(paymentData.memoText))
-                                    .build();  
+                                    .build();
                   }
                   if (destAcctActive === 0) {
                     transaction = new StellarSDK.TransactionBuilder(sender)
@@ -340,7 +342,7 @@ account.factory('Account', function($http, $rootScope) {
                                         startingBalance: paymentData.toString()
                                       }))
                                       .addMemo(StellarSDK.Memo.text(paymentData.memoText))
-                                      .build();  
+                                      .build();
                   }
 
                   // sign transaction
@@ -433,6 +435,18 @@ account.factory('Account', function($http, $rootScope) {
 
             });
         },
+
+        findClaim : function(paymentData) {
+
+            return $http({
+                method: 'POST',
+                url: baseUrl+'findclaim',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+paymentData.token},
+                data: $.param(paymentData)
+            });
+        },
+
         claimLumens : function(paymentData) {
 
             return $http({
@@ -442,25 +456,123 @@ account.factory('Account', function($http, $rootScope) {
                 data: $.param(paymentData)
             });
         },
-        userClaimLumens : function(paymentData) {
 
-            return $http({
-                method: 'POST',
-                url: baseUrl+'userclaimlumens',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+paymentData.token },
-                data: $.param(paymentData)
-            });
+        userClaimLumens : function(paymentData) {
+            console.log(paymentData);
+            var messages = [];
+            var seedObj = {};
+            var emailTxObj = {};
+            // check if passphrase is valid,
+            var isValid = Utility.validatePassphrase(paymentData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+              return self.findClaim(paymentData)
+                  .then(function(resp) {
+
+                    emailTxObj = resp.data.content.data;
+                    seedObj = { 'text': emailTxObj.rcvr_skey,
+                                'salt': emailTxObj.rcvr_salt,
+                                'iv': emailTxObj.rcvr_iv
+                              };
+                    // load rcvr account from stellar network
+                    return server.loadAccount(emailTxObj.rcvr_account_id);
+
+                  })
+                  .catch(function(error) {
+                    messages.push('Claim not found. Invalid details');
+                    throw Error('InvalidDetails');
+                  })
+                  .catch(StellarSDK.NotFoundError, function(error) {
+
+                    // unable to load source account
+                    messages.push('Source Account not active');
+                    console.error('Something went wrong! The source account does not exist!');
+                    throw Error('InvalidDetails');
+                  })
+                  .then(function(srcAcct) {
+
+                      // remove sender as signer and set home domain
+                      var operationObj = {};
+                      operationObj.signer = {};
+                      operationObj.signer.ed25519PublicKey = emailTxObj.sender_account_id;
+                      operationObj.signer.weight = 0;
+                      operationObj.homeDomain = Config.Stellar.homeDomain;
+
+                      transaction = new StellarSDK.TransactionBuilder(srcAcct)
+                                        .addOperation(StellarSDK.Operation.setOptions(operationObj))
+                                        .build();
+                      // sign transaction
+
+                      transaction.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, paymentData.claim_code)));
+                      //send build tx to server
+                      paymentData.builtTx = transaction.toEnvelope().toXDR().toString("base64");
+                      // encrypt with tx passphrase
+                      var newSeedObj = Utility.encrypt(paymentData.tx_passphrase, Utility.decrypt(seedObj, paymentData.claim_code));
+                      paymentData.seedObj = newSeedObj;
+                      paymentData.rcvr_account_id = emailTxObj.rcvr_account_id;
+
+                      // send to server for submission and update
+                      return $http({
+                          method: 'POST',
+                          url: baseUrl+'userclaimlumens',
+                          headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                      'Authorization': 'JWT '+paymentData.token },
+                          data: $.param(paymentData)
+                      });
+                  })
+                  .catch(function(error) {
+
+                    console.error(error);
+                    return Utility.returnError(messages);
+
+                  });
+
+            }
+            else{
+              return Utility.returnError(['Invalid passphrase']);
+            }
+
         },
         revokeLumens : function(paymentData) {
+          console.log(paymentData);
+          var messages = [];
 
-            return $http({
-                method: 'POST',
-                url: baseUrl+'reclaimemailtx',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-                            'Authorization': 'JWT '+paymentData.token },
-                data: $.param(paymentData)
+          // prepare merge transaction and send to server
+          return server.loadAccount(paymentData.txObj.rcvr_account_id)
+            .catch(StellarSDK.NotFoundError, function(error) {
+
+              // unable to load source account
+              messages.push('Source Account not active');
+              console.error('Something went wrong! The source account does not exist!');
+              throw new Error('SourceInactive');
+
+            })
+            .then(function(srcAcct) {
+
+              // Build Transaction
+              var transaction = new StellarSDK.TransactionBuilder(srcAcct)
+                                  .addOperation(StellarSDK.Operation.accountMerge({
+                                    destination: paymentData.txObj.sender_account_id
+                                  }))
+                                  .build();
+              // sign transaction
+              transaction.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, paymentData.claim_code)));
+
+              //send build tx to server
+              paymentData.builtTx = transaction.toEnvelope().toXDR().toString("base64");
+
+              // return success of merge from server and update email tx
+
+              return $http({
+                  method: 'POST',
+                  url: baseUrl+'reclaimemailtx',
+                  headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                              'Authorization': 'JWT '+paymentData.token },
+                  data: $.param(paymentData)
+              });
+
             });
+
+
         },
         pathPayment : function(paymentData) {
 
@@ -1221,7 +1333,7 @@ account.factory('Account', function($http, $rootScope) {
             }
 
 
-            
+
         },
         // DEPRECATED. DONT USE
         setInflation : function(userData) {
@@ -1309,7 +1421,7 @@ account.factory('Account', function($http, $rootScope) {
 
             });
         },
-        
+
 
         getAccount : function(token,account_id) {
             return $http({
@@ -1322,14 +1434,95 @@ account.factory('Account', function($http, $rootScope) {
 
         addAnchor : function(anchorData) {
 
+          var tomlObject = {};
+          console.log(paymentData);
+          var messages = [];
+          
+          // check if passphrase is valid,
+          var isValid = Utility.validatePassphrase(anchorData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+          if (isValid) {
+            return self.getAnchorAssets(anchorData)
+                  then(function(resp) {
+
+                    tomlObject = resp.data.content.data;
+                    // load account
+                    return server.loadAccount(anchorData.account_id);
+                  })
+                  .catch(function(error) {
+                    messages = error.data.content.message;
+                    throw Error('InvalidDetails');
+                  })
+                  .catch(StellarSDK.NotFoundError, function(error) {
+                    messages.push('Source Account is not active');
+                    throw new Error('SourceInactive');
+                  })
+                  .then(function(srcAcct) {
+
+                    var transaction = new StellarSDK.TransactionBuilder(srcAcct);
+
+                     // create trustline ops for each asset
+                    tomlObject.CURRENCIES.forEach(function(currency) {
+                        // create new asset
+                        var asset = new StellarSDK.Asset(currency.code, currency.issuer);
+
+                        // loop thru currencies and add to array
+                        // sets limit to max value
+                        transaction.addOperation(StellarSDK.Operation.changeTrust({
+                                        asset: asset
+                                      }));
+                      });
+
+                      // build and sign transaction
+                      var builtTx = transaction.build();
+                      // get seed
+                      var seedObj = Utility.getSeedObj(anchorData.account_id, $rootScope.currentUser.accounts);
+
+                      builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, anchorData.tx_passphrase)));
+                      //send build tx to server
+                      anchorData.builtTx = builtTx.toEnvelope().toXDR().toString("base64");
+
+
+                      return $http({
+                          method: 'POST',
+                          url: baseUrl+'addanchor',
+                          headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                      'Authorization': 'JWT '+anchorData.token  },
+                          data: $.param(anchorData)
+                      });
+
+                  })
+                   .catch(function(error) {
+
+                    console.error(error);
+                    return Utility.returnError(messages);
+
+                  });
+
+            }
+            else{
+              return Utility.returnError(['Invalid passphrase']);
+            }
+
+
+        },
+
+        getAnchorAssets : function(anchorData) {
+          // get assets, 
+          // create trustline ops for each asset
+          // sign tx and send to server for submission
+
+
             return $http({
                 method: 'POST',
-                url: baseUrl+'addanchor',
+                url: baseUrl+'getanchorassets',
                 headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
                             'Authorization': 'JWT '+anchorData.token  },
                 data: $.param(anchorData)
             });
         },
+
+
+
 
         // change password
         changePassword : function(passwordData) {
@@ -1345,7 +1538,7 @@ account.factory('Account', function($http, $rootScope) {
 
         // save passphrase
         savePassphrase : function(userData) {
-            // get hash of passphrase, 
+            // get hash of passphrase,
             var passphraseHash = Utility.getHash(userData.password);
 
             // save hash locally,
@@ -1366,7 +1559,7 @@ account.factory('Account', function($http, $rootScope) {
 
         // change passphrase
         changePassphrase : function(userData) {
-            // compare old passphrase for match, 
+            // compare old passphrase for match,
             console.log(userData);
 
             var isValid = Utility.validatePassphrase(userData.old_passphrase, $rootScope.currentUser.tx_passphrase);
@@ -1418,13 +1611,68 @@ account.factory('Account', function($http, $rootScope) {
         },
 
 
-        getSeed : function(token,account_id) {
-             return $http({
-                method: 'GET',
-                url: baseUrl+'getseed/?token='+token+'&account_id='+account_id,
-                headers: { 'Authorization': 'JWT '+token },
+        get2faSecret : function(userData) {
 
+            return $http({
+                method: 'POST',
+                url: baseUrl+'get2fasecret',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+userData.token  },
+                data: $.param(userData)
             });
+        },
+
+        enable2fa : function(userData) {
+
+            return $http({
+                method: 'POST',
+                url: baseUrl+'enable2fa',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+userData.token  },
+                data: $.param(userData)
+            });
+        },
+
+
+        verify2fa : function(userData) {
+
+            return $http({
+                method: 'POST',
+                url: baseUrl+'verify2fa',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+userData.token  },
+                data: $.param(userData)
+            });
+        },
+
+        disable2fa : function(userData) {
+
+            return $http({
+                method: 'POST',
+                url: baseUrl+'disable2fa',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                            'Authorization': 'JWT '+userData.token  },
+                data: $.param(userData)
+            });
+        },
+
+
+        getSeed : function(userData) {
+          var isValid = Utility.validatePassphrase(userData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+          if (isValid) {
+            var seedObj = Utility.getSeedObj(userData.account_id, $rootScope.currentUser.accounts);
+
+            var decryptedObj = Utility.decrypt(seedObj, userData.tx_passphrase);
+            return Utility.returnSuccess([decryptedObj]);
+          }else{
+            return Utility.returnSuccess(['Invalid passphrase']);
+          }
+            //  return $http({
+            //     method: 'GET',
+            //     url: baseUrl+'getseed/?token='+token+'&account_id='+account_id,
+            //     headers: { 'Authorization': 'JWT '+token },
+
+            // });
         },
 
         getContacts : function(token,id) {
@@ -1483,5 +1731,7 @@ account.factory('Account', function($http, $rootScope) {
         },
 
     };
+
+    return self;
 
 });

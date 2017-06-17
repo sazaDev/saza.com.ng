@@ -31,7 +31,7 @@ lumensWall.controller('reclaimEmailTxController', function($scope, $state, $http
     $scope.userData.id = $rootScope.currentUser.id;
     $scope.userData.token = $rootScope.currentUser.token;
     $scope.userData.account_id = $rootScope.currentUser.currentAccount;
-    $scope.userData.txid = tx.id;
+    $scope.userData.txObj = tx;
 
     Account.revokeLumens($scope.userData)
     .success(function(data) {
@@ -55,7 +55,7 @@ lumensWall.controller('reclaimEmailTxController', function($scope, $state, $http
 
   $scope.getStatus = function (status) {
     if (status === 0) {
-      return "Uclaimed";
+      return "Unclaimed";
     }
 
     if (status == 1) {

@@ -28,7 +28,7 @@ lumensWall.controller('userClaimLumensController', function($scope, $state, $htt
 
 
     Account.userClaimLumens($scope.userData)
-      .success(function(data) {
+      .then(function(data) {
 
         console.log("success",data);
         // show success message
@@ -56,8 +56,8 @@ lumensWall.controller('userClaimLumensController', function($scope, $state, $htt
         $state.go('dashboard', {}, {reload: true});
         
       })
-      .error(function(data) {
-        
+      .catch(function(data) {
+        console.log("error",data);
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
         $scope.statusMsg.content = data.content.message;
