@@ -144,18 +144,37 @@
             <div class="row">
               <div ng-if="!currentUser.tfa_enabled">
                 <h2 class="header-side">Enable 2FA</h2>
-                <button class="btn btn-success btn-lg" ng-click="enable2fa()">Enable</button>
+
+
+                <div ng-if="show_qr">
+                  <h5>Enter the OTP Secret below or scan the QR code in your TOTP app, e.g. Google Authenticator. Enter the code shown in the app and click on "Activate"</h5>
+
+                  <p>OTP Secret: {{otpSecretKey}}</p>
+
+                  <img src="{{otpUrl}}">
+
+                  <div class="form-group">
+
+                    <input type="text" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="otpToken" ng-model="userData.otpToken" placeholder="Enter Token" required>
+                  </div>
+
+                  <button class="btn btn-success pull-right" ng-click="enable2fa(otpSecretKey)">Activate</button>
+                </div>
+
+                <div ng-if="!show_qr">
+                  <button class="btn btn-success btn-lg" ng-click="get2faSecret()">Enable</button>
+                </div>
               </div>
               <div ng-if="currentUser.tfa_enabled">
                 <h2 class="header-side">Disable 2FA</h2>
                 <form method="post" ng-submit="disable2fa()" name="disable2faForm">
                    <div class="form-group">
                       <label>Password</label>
-                      <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="password" ng-model="2faData.password" placeholder="Enter New Password" required>
+                      <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="password" ng-model="tfaData.password" placeholder="Enter Your Password" required>
                     </div>
                     <div class="form-group">
                       <label>2FA token</label>
-                      <input type="number" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="2fa_token" ng-model="2faData.2fa_token" placeholder="Enter 2FA Token" required="">
+                      <input type="text" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="otpToken" ng-model="tfaData.otpToken" placeholder="Enter Token" required="">
                     </div>
                     <button class="btn btn-danger pull-right" ng-disabled="disable2faForm.$error.required || disable2faForm.$error.$invalid">Disable</button>
                 </form>
