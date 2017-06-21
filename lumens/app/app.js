@@ -182,6 +182,23 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
         requireLogin: true
       }
     })
+    .state('createasset',{
+      url: '/create-asset',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/create_asset.controller.html',
+          controller: 'createAssetController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
+
     .state('sendpayment',{
       url: '/send_payment',
       views: {

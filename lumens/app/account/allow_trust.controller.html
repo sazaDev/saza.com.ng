@@ -69,12 +69,27 @@
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-key"></span></span>
-                  <input class="form-control" type="assword" name="tx_passphrase" ng-model="trustData.tx_passphrase" required/>
+                  <input class="form-control" type="password" name="tx_passphrase" ng-model="trustData.tx_passphrase" required/>
 
                 </div>
                 <span class="help-block">Transaction passphrase</span>
               </div>
             </div>
+
+            <div class="form-group" ng-if="currentUser.tfa_enabled">
+              <label class="col-md-3 col-xs-12 control-label">OTP Token</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="otpToken" ng-model="trustData.otpToken"/>
+
+                </div>
+                <span class="help-block">Token needed for 2FA</span>
+              </div>
+            </div>
+
+
+
 
           </div>
           <div class="panel-footer">

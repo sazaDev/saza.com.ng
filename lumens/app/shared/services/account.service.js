@@ -81,6 +81,113 @@ account.factory('Account', function($http, $rootScope) {
             }
         },
 
+        getAccount : function(token,account_id) {
+            return $http({
+                method: 'GET',
+                url: baseUrl+'getaccount/?token='+token+'&account_id='+account_id,
+                headers: { 'Authorization': 'JWT '+token },
+
+            });
+        },
+
+        createAsset : function(paymentData) {
+          // check if passphrase is valid
+          // check if dist/issuer are valid
+          // create trustline between dist and issuer
+          // send amount of asset to be created to dist
+          // sign transaction
+          // send xdr to server for submission
+
+          console.log(paymentData);
+            var messages = [];
+            var issuerAcct = "";
+            var baseAcct = "";
+
+            var asset = Utility.generateAsset(paymentData.assetType, paymentData.assetCode, paymentData.issuer);
+
+            // check if passphrase is valid,
+            var isValid = Utility.validatePassphrase(paymentData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+
+            if (!asset) {
+              return Utility.returnError(['Invalid Asset']);
+            } else{
+
+              // check if issuer and dest are valid
+              // load issuer account
+              return server.loadAccount(paymentData.issuer)
+                .catch(StellarSDK.NotFoundError, function(error) {
+
+                messages.push('Issuer Account not active');
+                throw new Error('InvalidIssuer');
+
+                })
+                .then(function(issuer) {
+                  issuerAcct = issuer;
+                  // Load base account on stellar
+                  return server.loadAccount(paymentData.baseAcct);
+                })
+                .catch(StellarSDK.NotFoundError, function(error) {
+
+                messages.push('Distributing Account not active');
+                throw new Error('InvalidIssuer');
+
+                })
+                .then(function(base) {
+                  baseAcct = base;
+
+                  var transaction = new StellarSDK.TransactionBuilder(baseAcct);
+                  var operationObj = {};
+                      operationObj.asset = asset;
+
+                  transaction.addOperation(StellarSDK.Operation.changeTrust(operationObj));
+
+                  // send asset to dist
+                  operationObj = {};
+                  operationObj.destination = paymentData.baseAcct;
+                  operationObj.asset = asset;
+                  operationObj.amount = paymentData.amount.toString();
+                  operationObj.source = paymentData.issuer;
+
+                  transaction.addOperation(StellarSDK.Operation.payment(operationObj));
+
+                  // get seed
+                  var issuerSeed = Utility.getSeedObj(paymentData.issuer, $rootScope.currentUser.accounts);
+                  var baseSeed = Utility.getSeedObj(paymentData.baseAcct, $rootScope.currentUser.accounts);
+
+                  // build and sign transaction
+                  var builtTx = transaction.build();
+                  builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(issuerSeed, paymentData.tx_passphrase)));
+                  builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(baseSeed, paymentData.tx_passphrase)));
+
+                  //send build tx to server
+                  paymentData.builtTx = builtTx.toEnvelope().toXDR().toString("base64");
+
+                  return $http({
+                      method: 'POST',
+                      url: baseUrl+'createasset',
+                      headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                  'Authorization': 'JWT '+paymentData.token },
+                      data: $.param(paymentData)
+                  });
+
+                })
+                .catch(function(error) {
+
+                    console.error(error);
+                    return Utility.returnError(messages);
+
+                });
+
+            }
+
+
+            } else{
+                return Utility.returnError(['Invalid passphrase']);
+            }
+        },
+
+
         sendPayment : function(paymentData) {
 
           console.log(paymentData);
@@ -189,24 +296,35 @@ account.factory('Account', function($http, $rootScope) {
                 // sign transaction
                 transaction.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, paymentData.tx_passphrase)));
 
-                return server.submitTransaction(transaction);
-              })
-              .then(function(result) {
-                console.log('Success! Results:', result);
-                messages.push('Transaction Successful');
-                return Utility.returnSuccess(messages);
-              })
-              .catch(function(error) {
-                  // for submit tx
-                  console.log(error);
-                  var errorMessages = Utility.extractError(error);
-                  errorMessages.forEach(function(m) {
-                    messages.push(m);
-                  });
+                //send build tx to server
+                paymentData.builtTx = transaction.toEnvelope().toXDR().toString("base64");
 
-                  throw new Error('TxError');
+
+                return $http({
+                    method: 'POST',
+                    url: baseUrl+'sendpayment',
+                    headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                'Authorization': 'JWT '+paymentData.token },
+                    data: $.param(paymentData)
+                });
 
               })
+              // .then(function(result) {
+              //   console.log('Success! Results:', result);
+              //   messages.push('Transaction Successful');
+              //   return Utility.returnSuccess(messages);
+              // })
+              // .catch(function(error) {
+              //     // for submit tx
+              //     console.log(error);
+              //     var errorMessages = Utility.extractError(error);
+              //     errorMessages.forEach(function(m) {
+              //       messages.push(m);
+              //     });
+
+              //     throw new Error('TxError');
+
+              // })
               .catch(function(error) {
                 console.error('Something went wrong at the end\n', error);
                 messages.push('Transaction Failed');
@@ -220,14 +338,8 @@ account.factory('Account', function($http, $rootScope) {
             }
 
 
-            // return $http({
-            //     method: 'POST',
-            //     url: baseUrl+'sendpayment',
-            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-            //                 'Authorization': 'JWT '+paymentData.token },
-            //     data: $.param(paymentData)
-            // });
         },
+
         emailTx : function(paymentData) {
 
           console.log(paymentData);
@@ -265,12 +377,6 @@ account.factory('Account', function($http, $rootScope) {
               StellarSDK.FederationServer.resolve(queryStr)
               .catch(function(error) {
                 console.log("Error",error);
-                // var errorMessages = Utility.extractError(error);
-                // errorMessages.forEach(function(m) {
-                //   messages.push(m);
-                // });
-                // throw new Error('AccountNotFound');
-
                 // Account not found continue to then block
               })
               .then(function(acctDetails) {
@@ -373,13 +479,8 @@ account.factory('Account', function($http, $rootScope) {
                   transaction.sign(StellarSDK.Keypair.fromSecret(rcvrAcct.seed));
                 }
 
-                  // submit transaction to network
-                return server.submitTransaction(transaction);
-              })
-              .then(function(result) {
-                console.log('Success! Results:', result);
-                messages.push('Transaction Successful');
-                // return Utility.returnSuccess(messages);
+                //send build tx to server
+                paymentData.builtTx = transaction.toEnvelope().toXDR().toString("base64");
                 paymentData.emailFound = emailFound;
                 paymentData.rcvrAcct = rcvrAcct;
                 if (emailFound === 0) {
@@ -389,9 +490,6 @@ account.factory('Account', function($http, $rootScope) {
                   // encrypt seed
                   paymentData.rcvrAcct.seedObj = Utility.encrypt(claimCode, paymentData.rcvrAcct.seed);
                 }
-
-                // send to server for notification
-                // consider submitting signed XDR in server
                 return $http({
                     method: 'POST',
                     url: baseUrl+'emailtx',
@@ -400,16 +498,6 @@ account.factory('Account', function($http, $rootScope) {
                     data: $.param(paymentData)
                 });
 
-              })
-              .catch(function(error) {
-                  // for submit tx
-                  console.log(error);
-                  var errorMessages = Utility.extractError(error);
-                  errorMessages.forEach(function(m) {
-                    messages.push(m);
-                  });
-
-                  throw new Error('TxError');
 
               })
               .catch(function(error) {
@@ -428,7 +516,7 @@ account.factory('Account', function($http, $rootScope) {
         },
         getClaims : function(token,account_id,id) {
 
-             return $http({
+            return $http({
                 method: 'GET',
                 url: baseUrl+'getclaims/?token='+token+'&account_id='+account_id+'&id='+id,
                 headers: { 'Authorization': 'JWT '+token },
@@ -443,16 +531,6 @@ account.factory('Account', function($http, $rootScope) {
                 url: baseUrl+'findclaim',
                 headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
                             'Authorization': 'JWT '+paymentData.token},
-                data: $.param(paymentData)
-            });
-        },
-
-        claimLumens : function(paymentData) {
-
-            return $http({
-                method: 'POST',
-                url: baseUrl+'claimemailtx',
-                headers: { 'Content-Type' : 'application/x-www-form-urlencoded'},
                 data: $.param(paymentData)
             });
         },
@@ -532,6 +610,7 @@ account.factory('Account', function($http, $rootScope) {
             }
 
         },
+
         revokeLumens : function(paymentData) {
           console.log(paymentData);
           var messages = [];
@@ -554,6 +633,10 @@ account.factory('Account', function($http, $rootScope) {
                                     destination: paymentData.txObj.sender_account_id
                                   }))
                                   .build();
+
+              // get seed
+              var seedObj = Utility.getSeedObj(paymentData.account_id, $rootScope.currentUser.accounts);
+
               // sign transaction
               transaction.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, paymentData.claim_code)));
 
@@ -574,6 +657,17 @@ account.factory('Account', function($http, $rootScope) {
 
 
         },
+        // Deprecated do not use
+        claimLumens : function(paymentData) {
+
+            return $http({
+                method: 'POST',
+                url: baseUrl+'claimemailtx',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded'},
+                data: $.param(paymentData)
+            });
+        },
+
         pathPayment : function(paymentData) {
 
           console.log(paymentData);
@@ -659,26 +753,34 @@ account.factory('Account', function($http, $rootScope) {
                   // build and sign transaction
                   var builtTx = transaction.build();
                   builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, paymentData.tx_passphrase)));
+                  paymentData.builtTx = builtTx.toEnvelope().toXDR().toString("base64");
 
-                  return server.submitTransaction(builtTx);
+                  return $http({
+                      method: 'POST',
+                      url: baseUrl+'pathpayment',
+                      headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                  'Authorization': 'JWT '+paymentData.token },
+                      data: $.param(paymentData)
+                  });
 
-                })
-                .then(function(result) {
-                  console.log('Success! Results:', result);
-                  messages.push('Transaction Successful');
-                  return Utility.returnSuccess(messages);
-                })
-                .catch(function(error) {
-                    // for submit tx
-                    console.log(error);
-                    var errorMessages = Utility.extractError(error);
-                    errorMessages.forEach(function(m) {
-                      messages.push(m);
-                    });
-
-                    throw new Error('TxError');
 
                 })
+                // .then(function(result) {
+                //   console.log('Success! Results:', result);
+                //   messages.push('Transaction Successful');
+                //   return Utility.returnSuccess(messages);
+                // })
+                // .catch(function(error) {
+                //     // for submit tx
+                //     console.log(error);
+                //     var errorMessages = Utility.extractError(error);
+                //     errorMessages.forEach(function(m) {
+                //       messages.push(m);
+                //     });
+
+                //     throw new Error('TxError');
+
+                // })
                 .catch(function(error) {
                   console.error('Something went wrong at the end\n', error);
                   messages.push('Transaction Failed');
@@ -693,13 +795,6 @@ account.factory('Account', function($http, $rootScope) {
 
 
 
-            // return $http({
-            //     method: 'POST',
-            //     url: baseUrl+'pathpayment',
-            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-            //                 'Authorization': 'JWT '+paymentData.token },
-            //     data: $.param(paymentData)
-            // });
         },
 
         changeTrust : function(trustData) {
@@ -714,6 +809,12 @@ account.factory('Account', function($http, $rootScope) {
               }
 
               return server.loadAccount(trustData.account_id)
+                .catch(StellarSDK.NotFoundError, function(error) {
+                  // for load source account
+                  console.log(error);
+                  messages.push('Source Account is not active');
+                  throw new Error('SourceInactive');
+                })
                 .then(function(srcAcct) {
 
                   var asset = new StellarSDK.Asset(trustData.assetCode, trustData.assetIssuer);
@@ -732,30 +833,31 @@ account.factory('Account', function($http, $rootScope) {
                   // build and sign transaction
                   var builtTx = transaction.build();
                   builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, trustData.tx_passphrase)));
-                  return server.submitTransaction(builtTx);
-
-                })
-                .catch(StellarSDK.NotFoundError, function(error) {
-                  // for load source account
-                  console.log(error);
-                  messages.push('Source Account is not active');
-                  throw new Error('SourceInactive');
-                })
-                .then(function(xdrResult) {
-                  messages.push('Trustline created successfully');
-                  return Utility.returnSuccess(messages);
-                })
-                .catch(function(error) {
-                  // for submit tx
-                  console.log(error);
-                  var errorMessages = Utility.extractError(error);
-                  errorMessages.forEach(function(m) {
-                    messages.push(m);
+                  trustData.builtTx = builtTx.toEnvelope().toXDR().toString("base64");
+                  return $http({
+                      method: 'POST',
+                      url: baseUrl+'changetrust',
+                      headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                  'Authorization': 'JWT '+trustData.token },
+                      data: $.param(trustData)
                   });
 
-                  throw new Error('TxError');
-
                 })
+                // .then(function(xdrResult) {
+                //   messages.push('Trustline created successfully');
+                //   return Utility.returnSuccess(messages);
+                // })
+                // .catch(function(error) {
+                //   // for submit tx
+                //   console.log(error);
+                //   var errorMessages = Utility.extractError(error);
+                //   errorMessages.forEach(function(m) {
+                //     messages.push(m);
+                //   });
+
+                //   throw new Error('TxError');
+
+                // })
                 .catch(function(error) {
                   // catch all
                   console.log(error);
@@ -768,13 +870,7 @@ account.factory('Account', function($http, $rootScope) {
                 return Utility.returnError(['Invalid passphrase']);
             }
 
-            // return $http({
-            //     method: 'POST',
-            //     url: baseUrl+'changetrust',
-            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-            //                 'Authorization': 'JWT '+trustData.token },
-            //     data: $.param(trustData)
-            // });
+
         },
 
         allowTrust : function(trustData) {
@@ -790,6 +886,12 @@ account.factory('Account', function($http, $rootScope) {
               }
               // check if source account is active
               return server.loadAccount(trustData.account_id)
+                .catch(StellarSDK.NotFoundError, function(error) {
+                  // for load source account
+                  console.log(error);
+                  messages.push('Source Account is not active');
+                  throw new Error('SourceInactive');
+                })
                 .then(function(srcAcct) {
 
 
@@ -807,30 +909,32 @@ account.factory('Account', function($http, $rootScope) {
                   var builtTx = transaction.build();
                   builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, trustData.tx_passphrase)));
 
-                  return server.submitTransaction(builtTx);
+                  trustData.builtTx = builtTx.toEnvelope().toXDR().toString("base64");
 
-                })
-                .catch(StellarSDK.NotFoundError, function(error) {
-                  // for load source account
-                  console.log(error);
-                  messages.push('Source Account is not active');
-                  throw new Error('SourceInactive');
-                })
-                .then(function(xdrResult) {
-                  messages.push('Allow Trust operation successful');
-                  return Utility.returnSuccess(messages);
-                })
-                .catch(function(error) {
-                  // for submit tx
-                  console.log(error);
-                  var errorMessages = Utility.extractError(error);
-                  errorMessages.forEach(function(m) {
-                    messages.push(m);
+                  return $http({
+                      method: 'POST',
+                      url: baseUrl+'allowtrust',
+                      headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                  'Authorization': 'JWT '+trustData.token },
+                      data: $.param(trustData)
                   });
 
-                  throw new Error('TxError');
-
                 })
+                // .then(function(xdrResult) {
+                //   messages.push('Allow Trust operation successful');
+                //   return Utility.returnSuccess(messages);
+                // })
+                // .catch(function(error) {
+                //   // for submit tx
+                //   console.log(error);
+                //   var errorMessages = Utility.extractError(error);
+                //   errorMessages.forEach(function(m) {
+                //     messages.push(m);
+                //   });
+
+                //   throw new Error('TxError');
+
+                // })
                 .catch(function(error) {
                   // catch all
                   console.log(error);
@@ -844,88 +948,11 @@ account.factory('Account', function($http, $rootScope) {
             }
 
 
-            // return $http({
-            //     method: 'POST',
-            //     url: baseUrl+'allowtrust',
-            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-            //                 'Authorization': 'JWT '+trustData.token },
-            //     data: $.param(trustData)
-            // });
         },
 
-        manageData : function(manageData) {
-            var messages = [];
-
-            // check if passphrase is valid,
-            var isValid = Utility.validatePassphrase(manageData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
-            if (isValid) {
-
-                return server.loadAccount(manageData.account_id)
-                        .then(function(srcAcct) {
-
-                          // Build Transaction
-                          var transaction = new StellarSDK.TransactionBuilder(srcAcct);
-                          var operationObj = {};
-                          operationObj.name = manageData.entryName;
-                          if (!manageData.entryValue) {
-                            operationObj.value = null;
-                          }else{
-                            operationObj.value = manageData.entryValue;
-                          }
-
-                          console.log("operationObj",operationObj);
-
-                          transaction.addOperation(StellarSDK.Operation.manageData(operationObj));
-
-                          // get seed
-                          var seedObj = Utility.getSeedObj(manageData.account_id, $rootScope.currentUser.accounts);
-
-                          // build and sign transaction
-                          var builtTx = transaction.build();
-                          builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, manageData.tx_passphrase)));
-
-                          return server.submitTransaction(builtTx);
-                        })
-                        .then(function(xdrResult) {
-
-                          messages.push('Manage data operation successful');
-                          return Utility.returnSuccess(messages);
-                        })
-                        .catch(function(error) {
-                          // for submit tx
-                          console.log(error);
-                          var errorMessages = Utility.extractError(error);
-                          errorMessages.forEach(function(m) {
-                            messages.push(m);
-                          });
-
-                          throw new Error('TxError');
-
-                        })
-                        .catch(function(error) {
-                          // catch all
-                          console.log(error);
-                          messages.push('Unable to complete manage data operation');
-                          return Utility.returnError(messages);
-
-                        });
-
-            } else{
-                return Utility.returnError(['Invalid passphrase']);
-            }
-
-
-            // return $http({
-            //     method: 'POST',
-            //     url: baseUrl+'managedata',
-            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-            //                 'Authorization': 'JWT '+manageData.token },
-            //     data: $.param(manageData)
-            // });
-        },
         getOffers : function(token,account_id) {
 
-             return $http({
+            return $http({
                 method: 'GET',
                 url: baseUrl+'getoffers/?token='+token+'&account_id='+account_id,
                 headers: { 'Authorization': 'JWT '+token },
@@ -962,6 +989,12 @@ account.factory('Account', function($http, $rootScope) {
 
               // check if source account is active
               return server.loadAccount(offerData.account_id)
+                .catch(StellarSDK.NotFoundError, function(error) {
+                  // for load source account
+                  console.log(error);
+                  messages.push('Source Account is not active');
+                  throw new Error('SourceInactive');
+                })
                 .then(function(srcAcct) {
 
 
@@ -983,31 +1016,34 @@ account.factory('Account', function($http, $rootScope) {
                   // build and sign transaction
                   var builtTx = transaction.build();
                   builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, offerData.tx_passphrase)));
-                  // console.log("BTX", builtTx.toEnvelope().toXDR().toString("base64"));
-                  return server.submitTransaction(builtTx);
 
-                })
-                .catch(StellarSDK.NotFoundError, function(error) {
-                  // for load source account
-                  console.log(error);
-                  messages.push('Source Account is not active');
-                  throw new Error('SourceInactive');
-                })
-                .then(function(xdrResult) {
-                  messages.push('Manage offer operation successful');
-                  return Utility.returnSuccess(messages);
-                })
-                .catch(function(error) {
-                  // for submit tx
-                  console.log(error);
-                  var errorMessages = Utility.extractError(error);
-                  errorMessages.forEach(function(m) {
-                    messages.push(m);
+                  offerData.builtTx = builtTx.toEnvelope().toXDR().toString("base64");
+
+                  return $http({
+                      method: 'POST',
+                      url: baseUrl+'manageoffer',
+                      headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                  'Authorization': 'JWT '+offerData.token },
+                      data: $.param(offerData)
                   });
 
-                  throw new Error('TxError');
 
                 })
+                // .then(function(xdrResult) {
+                //   messages.push('Manage offer operation successful');
+                //   return Utility.returnSuccess(messages);
+                // })
+                // .catch(function(error) {
+                //   // for submit tx
+                //   console.log(error);
+                //   var errorMessages = Utility.extractError(error);
+                //   errorMessages.forEach(function(m) {
+                //     messages.push(m);
+                //   });
+
+                //   throw new Error('TxError');
+
+                // })
                 .catch(function(error) {
                   // catch all
                   console.log(error);
@@ -1021,13 +1057,6 @@ account.factory('Account', function($http, $rootScope) {
             }
 
 
-            // return $http({
-            //     method: 'POST',
-            //     url: baseUrl+'manageoffer',
-            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-            //                 'Authorization': 'JWT '+offerData.token },
-            //     data: $.param(offerData)
-            // });
         },
 
         passiveOffer : function(offerData) {
@@ -1059,6 +1088,12 @@ account.factory('Account', function($http, $rootScope) {
 
               // check if source account is active
               return server.loadAccount(offerData.account_id)
+                .catch(StellarSDK.NotFoundError, function(error) {
+                  // for load source account
+                  console.log(error);
+                  messages.push('Source Account is not active');
+                  throw new Error('SourceInactive');
+                })
                 .then(function(srcAcct) {
 
 
@@ -1076,31 +1111,32 @@ account.factory('Account', function($http, $rootScope) {
                   // build and sign transaction
                   var builtTx = transaction.build();
                   builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, offerData.tx_passphrase)));
-                  // console.log("BTX", builtTx.toEnvelope().toXDR().toString("base64"));
-                  return server.submitTransaction(builtTx);
+                  offerData.builtTx = builtTx.toEnvelope().toXDR().toString("base64");
 
-                })
-                .catch(StellarSDK.NotFoundError, function(error) {
-                  // for load source account
-                  console.log(error);
-                  messages.push('Source Account is not active');
-                  throw new Error('SourceInactive');
-                })
-                .then(function(xdrResult) {
-                  messages.push('Create passive offer operation successful');
-                  return Utility.returnSuccess(messages);
-                })
-                .catch(function(error) {
-                  // for submit tx
-                  console.log(error);
-                  var errorMessages = Utility.extractError(error);
-                  errorMessages.forEach(function(m) {
-                    messages.push(m);
+                  return $http({
+                      method: 'POST',
+                      url: baseUrl+'passiveoffer',
+                      headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                  'Authorization': 'JWT '+offerData.token },
+                      data: $.param(offerData)
                   });
 
-                  throw new Error('TxError');
-
                 })
+                // .then(function(xdrResult) {
+                //   messages.push('Create passive offer operation successful');
+                //   return Utility.returnSuccess(messages);
+                // })
+                // .catch(function(error) {
+                //   // for submit tx
+                //   console.log(error);
+                //   var errorMessages = Utility.extractError(error);
+                //   errorMessages.forEach(function(m) {
+                //     messages.push(m);
+                //   });
+
+                //   throw new Error('TxError');
+
+                // })
                 .catch(function(error) {
                   // catch all
                   console.log(error);
@@ -1114,13 +1150,6 @@ account.factory('Account', function($http, $rootScope) {
             }
 
 
-            // return $http({
-            //     method: 'POST',
-            //     url: baseUrl+'passiveoffer',
-            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-            //                 'Authorization': 'JWT '+offerData.token },
-            //     data: $.param(offerData)
-            // });
         },
 
         setOptions : function(userData) {
@@ -1133,6 +1162,12 @@ account.factory('Account', function($http, $rootScope) {
 
               // check if source account is active
               return server.loadAccount(userData.account_id)
+                      .catch(StellarSDK.NotFoundError, function(error) {
+                        // for load source account
+                        messages.push('Source Account is not active');
+                        throw new Error('SourceInactive');
+                      })
+
                       .then(function(srcAcct) {
 
                         var transaction = new StellarSDK.TransactionBuilder(srcAcct);
@@ -1230,32 +1265,33 @@ account.factory('Account', function($http, $rootScope) {
                           var builtTx = transaction.build();
                           builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, userData.tx_passphrase)));
 
-                          // console.log("BTX", builtTx.toEnvelope().toXDR().toString("base64"));
-                          return server.submitTransaction(builtTx);
+                          userData.builtTx = builtTx.toEnvelope().toXDR().toString("base64");
+                          return $http({
+                              method: 'POST',
+                              url: baseUrl+'setoptions',
+                              headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                          'Authorization': 'JWT '+userData.token },
+                              data: $.param(userData)
+                          });
                         }
 
                       })
-                      .catch(StellarSDK.NotFoundError, function(error) {
-                        // for load source account
-                        messages.push('Source Account is not active');
-                        throw new Error('SourceInactive');
-                      })
-                      .then(function(xdrResult) {
-                        messages.push('Set Options operation successful');
-                        return Utility.returnSuccess(messages);
+                      // .then(function(xdrResult) {
+                      //   messages.push('Set Options operation successful');
+                      //   return Utility.returnSuccess(messages);
 
-                      })
-                      .catch(function(error) {
-                        // for submit tx
-                        console.log("error", error);
-                        var errorMessages = Utility.extractError(error);
-                        errorMessages.forEach(function(m) {
-                          messages.push(m);
-                        });
+                      // })
+                      // .catch(function(error) {
+                      //   // for submit tx
+                      //   console.log("error", error);
+                      //   var errorMessages = Utility.extractError(error);
+                      //   errorMessages.forEach(function(m) {
+                      //     messages.push(m);
+                      //   });
 
-                        throw new Error('TxError');
+                      //   throw new Error('TxError');
 
-                      })
+                      // })
                       .catch(function(error) {
                         // catch all
                         console.log("error", error);
@@ -1268,13 +1304,7 @@ account.factory('Account', function($http, $rootScope) {
             }
 
 
-            // return $http({
-            //     method: 'POST',
-            //     url: baseUrl+'setoptions',
-            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-            //                 'Authorization': 'JWT '+userData.token },
-            //     data: $.param(userData)
-            // });
+
 
         },
 
@@ -1358,6 +1388,11 @@ account.factory('Account', function($http, $rootScope) {
                 }
 
                 return server.loadAccount(userData.account_id)
+                        .catch(StellarSDK.NotFoundError, function(error) {
+                          // for load source account
+                          messages.push('Source Account is not active');
+                          throw new Error('SourceInactive');
+                        })
                         .then(function(srcAcct) {
 
                           // Build Transaction
@@ -1373,25 +1408,35 @@ account.factory('Account', function($http, $rootScope) {
                           // build and sign transaction
                           var builtTx = transaction.build();
                           builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, userData.tx_passphrase)));
+                          userData.builtTx = builtTx.toEnvelope().toXDR().toString("base64");
 
-                          return server.submitTransaction(builtTx);
-                        })
-                        .then(function(xdrResult) {
-
-                          messages.push('Stellar account merged with '+userData.destAcct);
-                          return Utility.returnSuccess(messages);
-                        })
-                        .catch(function(error) {
-                          // for submit tx
-                          console.log(error);
-                          var errorMessages = Utility.extractError(error);
-                          errorMessages.forEach(function(m) {
-                            messages.push(m);
+                          return $http({
+                              method: 'POST',
+                              url: baseUrl+'mergeaccount',
+                              headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                          'Authorization': 'JWT '+userData.token },
+                              data: $.param(userData)
                           });
 
-                          throw new Error('TxError');
+
 
                         })
+                        // .then(function(xdrResult) {
+
+                        //   messages.push('Stellar account merged with '+userData.destAcct);
+                        //   return Utility.returnSuccess(messages);
+                        // })
+                        // .catch(function(error) {
+                        //   // for submit tx
+                        //   console.log(error);
+                        //   var errorMessages = Utility.extractError(error);
+                        //   errorMessages.forEach(function(m) {
+                        //     messages.push(m);
+                        //   });
+
+                        //   throw new Error('TxError');
+
+                        // })
                         .catch(function(error) {
                           // catch all
                           console.log(error);
@@ -1404,17 +1449,91 @@ account.factory('Account', function($http, $rootScope) {
                 return Utility.returnError(['Invalid passphrase']);
             }
 
-            // return $http({
-            //     method: 'POST',
-            //     url: baseUrl+'mergeaccount',
-            //     headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
-            //                 'Authorization': 'JWT '+userData.token },
-            //     data: $.param(userData)
-            // });
+
         },
+
+        manageData : function(manageData) {
+            var messages = [];
+
+            // check if passphrase is valid,
+            var isValid = Utility.validatePassphrase(manageData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            if (isValid) {
+
+                return server.loadAccount(manageData.account_id)
+                        .catch(StellarSDK.NotFoundError, function(error) {
+                          // for load source account
+                          messages.push('Source Account is not active');
+                          throw new Error('SourceInactive');
+                        })
+                        .then(function(srcAcct) {
+
+                          // Build Transaction
+                          var transaction = new StellarSDK.TransactionBuilder(srcAcct);
+                          var operationObj = {};
+                          operationObj.name = manageData.entryName;
+                          if (!manageData.entryValue) {
+                            operationObj.value = null;
+                          }else{
+                            operationObj.value = manageData.entryValue;
+                          }
+
+                          console.log("operationObj",operationObj);
+
+                          transaction.addOperation(StellarSDK.Operation.manageData(operationObj));
+
+                          // get seed
+                          var seedObj = Utility.getSeedObj(manageData.account_id, $rootScope.currentUser.accounts);
+
+                          // build and sign transaction
+                          var builtTx = transaction.build();
+                          builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, manageData.tx_passphrase)));
+                          
+                          manageData.builtTx = builtTx.toEnvelope().toXDR().toString("base64");
+                          
+                          return $http({
+                              method: 'POST',
+                              url: baseUrl+'managedata',
+                              headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                                          'Authorization': 'JWT '+manageData.token },
+                              data: $.param(manageData)
+                          });
+
+                        })
+                        // .then(function(xdrResult) {
+
+                        //   messages.push('Manage data operation successful');
+                        //   return Utility.returnSuccess(messages);
+                        // })
+                        // .catch(function(error) {
+                        //   // for submit tx
+                        //   console.log(error);
+                        //   var errorMessages = Utility.extractError(error);
+                        //   errorMessages.forEach(function(m) {
+                        //     messages.push(m);
+                        //   });
+
+                        //   throw new Error('TxError');
+
+                        // })
+                        .catch(function(error) {
+                          // catch all
+                          console.log(error);
+                          messages.push('Unable to complete manage data operation');
+                          return Utility.returnError(messages);
+
+                        });
+
+            } else{
+                return Utility.returnError(['Invalid passphrase']);
+            }
+
+
+            
+        },
+
         getTransactions : function(token,account_id) {
 
-             return $http({
+            return $http({
                 method: 'GET',
                 url: baseUrl+'gettransactions/?token='+token+'&account_id='+account_id,
                 headers: { 'Authorization': 'JWT '+token },
@@ -1423,14 +1542,7 @@ account.factory('Account', function($http, $rootScope) {
         },
 
 
-        getAccount : function(token,account_id) {
-            return $http({
-                method: 'GET',
-                url: baseUrl+'getaccount/?token='+token+'&account_id='+account_id,
-                headers: { 'Authorization': 'JWT '+token },
 
-            });
-        },
 
         addAnchor : function(anchorData) {
 
@@ -1442,7 +1554,7 @@ account.factory('Account', function($http, $rootScope) {
           var isValid = Utility.validatePassphrase(anchorData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
           if (isValid) {
             return self.getAnchorAssets(anchorData)
-                  then(function(resp) {
+                  .then(function(resp) {
 
                     tomlObject = resp.data.content.data;
                     // load account
@@ -1573,6 +1685,8 @@ account.factory('Account', function($http, $rootScope) {
                 userData.password = "";//remove password
                 userData.passwordHash = passphraseHash;
 
+                // To do rencrypt all seeds and send to server to be saved
+
                 // save hash in server
                 return $http({
                     method: 'POST',
@@ -1677,7 +1791,7 @@ account.factory('Account', function($http, $rootScope) {
 
         getContacts : function(token,id) {
 
-             return $http({
+            return $http({
                 method: 'GET',
                 url: baseUrl+'getcontacts/?token='+token+'&id='+id,
                 headers: { 'Authorization': 'JWT '+token },
@@ -1718,15 +1832,12 @@ account.factory('Account', function($http, $rootScope) {
              return $http({
                 method: 'GET',
                 url: 'https://api.cryptonator.com/api/ticker/xlm-usd',
-
-
-            });
+              });
         },
         getBTC : function(token) {
-             return $http({
+            return $http({
                 method: 'GET',
                 url: 'https://api.cryptonator.com/api/ticker/xlm-btc',
-
             });
         },
 

@@ -1,9 +1,9 @@
 <div>
  <div class="page-title">
-        <h2><span class="fa fa-money"></span> Send Payment</h2>
+        <h2><span class="fa fa-briefcase"></span> Create Asset</h2>
 
 </div>
-	<div class="row" ng-controller="sendPaymentController" ng-init="init()">
+	<div class="row" ng-controller="createAssetController" ng-init="init()">
     <div class="col-md-8 col-md-offset-2">
       <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
       <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
@@ -12,7 +12,7 @@
       </li>
 
     </div>
-      <form class="form-horizontal" name="paymentForm" method="POST" ng-submit="sendPayment()">
+      <form class="form-horizontal" name="assetForm" method="POST" ng-submit="createAsset()">
         <div class="panel panel-colorful">
           <div class="panel-heading">
             <!-- <h3 class="panel-title"><strong>Send</strong> Payment</h3> -->
@@ -21,91 +21,88 @@
             </ul>
           </div>
           <div class="panel-body">
-            <p class="text-info"><i class="fa fa-info-circle"></i> For each payment, Stellar charges a base fee of 100 Stroops = 0.00001 XLM distributed via inflation through the stellar network</p>
+            <p class="text-info"><i class="fa fa-info-circle"></i>
+              Issuing and Distribution accounts must be active and have a balance of at least 30XLM
+            </p>
           </div>
           <div class="panel-body">
 
-            <div class="form-group" ng-if="contacts.length > 0">
-              <label class="col-md-3 col-xs-12 control-label">Select Contact</label>
+            <div class="form-group" ng-if="currentUser.accounts">
+              <label class="col-md-3 col-xs-12 control-label">Issuing Account</label>
               <div class="col-md-6 col-xs-12">
-                <select class="form-control ng-cloak" ng-model="paymentData.contact" ng-change="contactChange(paymentData.contact)">
+                <select class="form-control ng-cloak" ng-model="assetData.issuer" ng-change="contactChange()">
 
-                  <option ng-repeat="x in contacts" value="{{x.account_id}}">{{x.name}}</option>
+                  <option ng-repeat="x in currentUser.accounts" value="{{x.account_id}}">{{x.fed_name || x.account_id}}</option>
                 </select>
-                <span class="help-block">Select a user from your address book or enter an Account Id below</span>
+                <!-- <span class="help-block">Select a user from your address book or enter an Account Id below</span> -->
 
               </div>
             </div>
-            <div class="form-group" ng-if="contacts.length == 0">
-              <label class="col-md-3 col-xs-12 control-label">Select Contact</label>
+
+            <div class="form-group" ng-if="currentUser.accounts">
+              <label class="col-md-3 col-xs-12 control-label">Distributing Account</label>
               <div class="col-md-6 col-xs-12">
-                <p>No Contacts Saved. <a ui-sref="contacts">Add a contact to your Address Book</a></p>
-                <span class="help-block">Select a user from your address book or enter an Account Id below</span>
+                <select class="form-control ng-cloak" ng-model="assetData.baseAcct" ng-change="contactChange()">
+
+                  <option ng-repeat="x in currentUser.accounts" value="{{x.account_id}}">{{x.fed_name || x.account_id}}</option>
+                </select>
+                <!-- <span class="help-block">Select a user from your address book or enter an Account Id below</span> -->
 
               </div>
             </div>
-
-            <div class="form-group">
-              <label class="col-md-3 col-xs-12 control-label">Destination Account</label>
+            <div class="form-group" ng-if="currentUser.accounts.length == 0">
+              <label class="col-md-3 col-xs-12 control-label">No Accounts Found</label>
               <div class="col-md-6 col-xs-12">
-                <div class="input-group">
-                  <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
-                  <input type="text" class="form-control" name="destAcct" ng-model="paymentData.destAcct" required ng-pattern="userRegex"/>
-                </div>
-                <span class="help-block">Account ID  or Stellar Address of the recepient</span>
-                <span class="text-danger" ng-show="paymentForm.destAcct.$dirty && paymentForm.destAcct.$invalid">
-                  <small ng-show="paymentForm.destAcct.$error.required">Destination Account is required. </small>
-                  <small ng-show="paymentForm.destAcct.$invalid">
-                    The following characters are not allowed: <,|>.</small>
-                </span>
+                <p><a ui-sref="addaccount">Add an account</a></p>
               </div>
             </div>
+
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Amount</label>
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-money"></span></span>
-                  <input type="number" min="0" class="form-control" name="amount" ng-model="paymentData.amount" required/>
+                  <input type="number" min="0" class="form-control" name="amount" ng-model="assetData.amount" required/>
                 </div>
-                <span class="help-block">Amount to send</span>
+                <span class="help-block">Amount of assets to be created</span>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Asset Type</label>
 
-                <label class="switch switch-small">
+                <!-- <label class="switch switch-small">
                     Lumens(XLM) <br>
-                    <input type="radio" ng-model="paymentData.assetType" checked="true" ng-value="0">
+                    <input type="radio" ng-model="assetData.assetType" checked="true" ng-value="0">
                     <span></span>
-                </label>
+                </label> -->
 
                 <label class="switch switch-small">
                     Alphanumeric 4 <br>
-                    <input type="radio" ng-model="paymentData.assetType" ng-value="4">
+                    <input type="radio" ng-model="assetData.assetType" ng-value="4">
                     <span></span>
                 </label>
                 <label class="switch switch-small">
                     Alphanumeric 12 <br>
-                    <input type="radio" ng-model="paymentData.assetType" ng-value="12">
+                    <input type="radio" ng-model="assetData.assetType" ng-value="12">
                     <span></span>
                 </label>
 
 
             </div>
 
-            <div class="form-group" ng-show="isCustomAsset(paymentData.assetType)">
+            <div class="form-group" ng-show="isCustomAsset(assetData.assetType)">
               <label class="col-md-3 col-xs-12 control-label">Asset Code</label>
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-key"></span></span>
-                  <input class="form-control" type="text" name="assetCode" ng-model="paymentData.assetCode" maxlength="{{paymentData.assetType}}"/>
+                  <input class="form-control" type="text" name="assetCode" ng-model="assetData.assetCode" maxlength="{{assetData.assetType}}"/>
 
                 </div>
                 <span class="help-block">Asset Alphanumeric Code; Eg: USD, EUR, XLM</span>
               </div>
             </div>
-            <div class="form-group" ng-show="isCustomAsset(paymentData.assetType)">
+            <!-- <div class="form-group" ng-show="isCustomAsset(paymentData.assetType)">
               <label class="col-md-3 col-xs-12 control-label">Asset Issuer</label>
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
@@ -115,18 +112,8 @@
                 </div>
                 <span class="help-block">Stellar Account ID of the Asset Issuer</span>
               </div>
-            </div>
+            </div> -->
 
-            <div class="form-group">
-              <label class="col-md-3 col-xs-12 control-label">Memo</label>
-              <div class="col-md-6 col-xs-12">
-                <div class="input-group">
-                  <span class="input-group-addon"><span class="fa fa-edit"></span></span>
-                  <input type="text" class="form-control" name="memoText" ng-model="paymentData.memoText" ng-maxlength="28"/>
-                </div>
-                <span class="help-block">Short description: Max 28 characters</span>
-              </div>
-            </div>
 
             <!-- <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Password</label>
@@ -144,7 +131,7 @@
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-key"></span></span>
-                  <input type="password" class="form-control" name="tx_passphrase" ng-model="paymentData.tx_passphrase" required/>
+                  <input type="password" class="form-control" name="tx_passphrase" ng-model="assetData.tx_passphrase" required/>
                 </div>
                 <span class="help-block">Transaction passphrase</span>
 
@@ -164,16 +151,17 @@
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-key"></span></span>
-                  <input class="form-control" type="text" name="otpToken" ng-model="paymentData.otpToken"/>
+                  <input class="form-control" type="text" name="otpToken" ng-model="assetData.otpToken"/>
 
                 </div>
                 <span class="help-block">Token needed for 2FA</span>
               </div>
             </div>
 
+
           </div>
           <div class="panel-footer">
-            <button class="btn btn-success pull-right" ng-disabled="paymentForm.$error.required || paymentForm.$invalid">Submit</button>
+            <button class="btn btn-success pull-right" ng-disabled="assetForm.$error.required || assetForm.$invalid">Submit</button>
           </div>
         </div>
       </form>
@@ -185,29 +173,3 @@
   </div>
 
 </div>
-<script type="text/javascript">
-
-/* MESSAGE BOX */
-$("[class^=mb-control-]").on("click",function(){
-  var box = $($(this).data("box"));
-  if(box.length > 0){
-    box.toggleClass("open");
-
-    var sound = box.data("sound");
-
-    if(sound === 'alert')
-      playAudio('alert');
-
-    if(sound === 'fail')
-      playAudio('fail');
-
-  }
-  return false;
-});
-$(".mb-control-close").on("click",function(){
- $(this).parents(".message-box").removeClass("open");
- return false;
-});
-/* END MESSAGE BOX */
-
-</script>

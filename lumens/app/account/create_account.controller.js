@@ -53,11 +53,12 @@ lumensWall.controller('createAccountController', function($scope, $state, $http,
       $scope.statusMsg.type = 'alert-danger';
       if (resp.content) {
         $scope.statusMsg.content = resp.content.message;
+        $scope.$apply();
       } else{
         $scope.statusMsg.content = resp.data.content.message;
       }
 
-      $scope.$apply();
+
 
     });
   };
@@ -103,11 +104,12 @@ lumensWall.controller('createAccountController', function($scope, $state, $http,
       $scope.statusMsg.type = 'alert-danger';
       if (resp.content) {
         $scope.statusMsg.content = resp.content.message;
+        $scope.$apply();
       } else{
         $scope.statusMsg.content = resp.data.content.message;
       }
 
-      $scope.$apply();
+
       $scope.linkData = {};
 
     });

@@ -101,6 +101,17 @@
                     <label>Enter Old Passphrase</label>
                     <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="old_passphrase" ng-model="userData.old_passphrase" placeholder="Enter Old Passphrase" required="">
                   </div>
+                  <div class="form-group" ng-if="currentUser.tfa_enabled">
+                    <label>OTP Token</label>
+                    <div class="col-md-6 col-xs-12">
+                      <div class="input-group">
+                        <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                        <input class="form-control" type="text" name="otpToken" ng-model="userData.otpToken"/>
+
+                      </div>
+                      <span class="help-block">Token needed for 2FA</span>
+                    </div>
+                  </div>
                   <button class="btn btn-success pull-right" ng-disabled="changePassphraseForm.$error.required || changePassphraseForm.$error.$invalid || changePassphraseForm.password_confirmation.$error.passwordVerify">Change Password</button>
               </form>
 
@@ -131,6 +142,17 @@
                   <div class="form-group">
                     <label>Enter Old Password</label>
                     <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="old_password" ng-model="passwordData.old_password" placeholder="Enter Old Password" required="">
+                  </div>
+                  <div class="form-group" ng-if="currentUser.tfa_enabled">
+                    <label>OTP Token</label>
+                    <div class="col-md-6 col-xs-12">
+                      <div class="input-group">
+                        <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                        <input class="form-control" type="text" name="otpToken" ng-model="userData.otpToken"/>
+
+                      </div>
+                      <span class="help-block">Token needed for 2FA</span>
+                    </div>
                   </div>
                   <button class="btn btn-success pull-right" ng-disabled="changePasswordForm.$error.required || changePasswordForm.$error.$invalid || changePasswordForm.password_confirmation.$error.passwordVerify">Change Password</button>
               </form>
