@@ -91,7 +91,7 @@
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-money"></span></span>
-                  <input type="number" min="0" class="form-control" name="sendMax" ng-model="paymentData.sendMax" required/>
+                  <input type="number" min="0" step="0.000001" class="form-control" name="sendMax" ng-model="paymentData.sendMax" required/>
                 </div>
                 <span class="help-block">The maximum amount of sendAsset to send.</span>
               </div>
@@ -149,7 +149,7 @@
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-money"></span></span>
-                  <input type="number" min="0" class="form-control" name="destAmount" ng-model="paymentData.destAmount" required/>
+                  <input type="number" min="0" step="0.000001" class="form-control" name="destAmount" ng-model="paymentData.destAmount" required/>
                 </div>
                 <span class="help-block">The amount the destination will receive.</span>
               </div>

@@ -23,23 +23,27 @@ lumensWall.controller('mergeAccountController', function($scope, $state, $http, 
     $scope.userData.account_id = $rootScope.currentUser.currentAccount;
 
     Account.mergeAccount($scope.userData)
-    .then(function(data) {
+    .then(function(resp) {
 
-      // console.log(data);
+      console.log(resp);
 
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert-success';
-      $scope.statusMsg.content = data.content.message;
+      $scope.statusMsg.content = resp.data.content.message;
+      window.scrollTo(0, 0);
 
     })
-    .catch(function(data) {
-      // console.log(data);
+    .catch(function(resp) {
+      console.log(resp);
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert-danger';
-      $scope.statusMsg.content = data.content.message;
-      $scope.$apply();
-        // $scope.trustData = {};
-        window.scrollTo(0, 0);
+      if (resp.content) {
+        $scope.statusMsg.content = resp.content.message;
+        $scope.$apply();
+      } else{
+        $scope.statusMsg.content = resp.data.content.message;
+      }
+      window.scrollTo(0, 0);
 
     });
   };

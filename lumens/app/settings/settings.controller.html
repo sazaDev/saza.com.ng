@@ -103,14 +103,8 @@
                   </div>
                   <div class="form-group" ng-if="currentUser.tfa_enabled">
                     <label>OTP Token</label>
-                    <div class="col-md-6 col-xs-12">
-                      <div class="input-group">
-                        <span class="input-group-addon"><span class="fa fa-key"></span></span>
-                        <input class="form-control" type="text" name="otpToken" ng-model="userData.otpToken"/>
+                    <input class="form-control" type="text" name="otpToken" ng-model="userData.otpToken" placeholder="Enter Token"/>
 
-                      </div>
-                      <span class="help-block">Token needed for 2FA</span>
-                    </div>
                   </div>
                   <button class="btn btn-success pull-right" ng-disabled="changePassphraseForm.$error.required || changePassphraseForm.$error.$invalid || changePassphraseForm.password_confirmation.$error.passwordVerify">Change Password</button>
               </form>
@@ -145,14 +139,8 @@
                   </div>
                   <div class="form-group" ng-if="currentUser.tfa_enabled">
                     <label>OTP Token</label>
-                    <div class="col-md-6 col-xs-12">
-                      <div class="input-group">
-                        <span class="input-group-addon"><span class="fa fa-key"></span></span>
-                        <input class="form-control" type="text" name="otpToken" ng-model="userData.otpToken"/>
+                    <input class="form-control" type="text" name="otpToken" ng-model="userData.otpToken" placeholder="Enter Token"/>
 
-                      </div>
-                      <span class="help-block">Token needed for 2FA</span>
-                    </div>
                   </div>
                   <button class="btn btn-success pull-right" ng-disabled="changePasswordForm.$error.required || changePasswordForm.$error.$invalid || changePasswordForm.password_confirmation.$error.passwordVerify">Change Password</button>
               </form>

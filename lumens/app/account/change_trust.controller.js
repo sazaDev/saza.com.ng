@@ -43,11 +43,11 @@ lumensWall.controller('changeTrustController', function($scope, $state, $http, $
     Account.changeTrust($scope.trustData)
       .then(function(data) {
 
-        // console.log("success",data);
+        console.log("success",data);
         // show success message
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-success';
-        $scope.statusMsg.content = data.content.message;
+        $scope.statusMsg.content = data.data.content.message;
         $scope.trustData = {};
         window.scrollTo(0, 0);
         //
@@ -56,16 +56,18 @@ lumensWall.controller('changeTrustController', function($scope, $state, $http, $
 
       })
       .catch(function(resp) {
+        console.log("error",resp);
 
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
         if (resp.content) {
           $scope.statusMsg.content = resp.content.message;
+          $scope.$apply();
         } else{
           $scope.statusMsg.content = resp.data.content.message;
         }
 
-        $scope.$apply();
+        
         // $scope.trustData = {};
         window.scrollTo(0, 0);
 

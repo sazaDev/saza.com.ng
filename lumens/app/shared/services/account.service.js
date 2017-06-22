@@ -216,7 +216,7 @@ account.factory('Account', function($http, $rootScope) {
               // check if destAcct is stellar address or account ID
               // load destAcct to see if it exists on Stellar
 
-              StellarSDK.FederationServer.resolve(paymentData.destAcct)
+            return  StellarSDK.FederationServer.resolve(paymentData.destAcct)
               .catch(function(error) {
                 console.log("Error",error);
                 var errorMessages = Utility.extractError(error);
@@ -271,7 +271,7 @@ account.factory('Account', function($http, $rootScope) {
                                     .addOperation(StellarSDK.Operation.payment({
                                       destination: rcvrAcct.account_id,
                                       asset: asset,
-                                      amount: paymentData.amount
+                                      amount: paymentData.amount.toString()
                                     }))
                                     .addMemo(StellarSDK.Memo.text(paymentData.memoText))
                                     .build();
@@ -282,7 +282,7 @@ account.factory('Account', function($http, $rootScope) {
                   transaction = new StellarSDK.TransactionBuilder(sender)
                                     .addOperation(StellarSDK.Operation.createAccount({
                                       destination: rcvrAcct.account_id,
-                                      startingBalance: paymentData.amount
+                                      startingBalance: paymentData.amount.toString()
                                     }))
                                     .addMemo(StellarSDK.Memo.text(paymentData.memoText))
                                     .build();
@@ -371,10 +371,10 @@ account.factory('Account', function($http, $rootScope) {
               return Utility.returnError(['Invalid Input: Asset is not defined']);
             } else{
 
-              var queryStr = req.body.destAcct+"*"+Config.Stellar.homeDomain;
+              var queryStr = paymentData.destAcct+"*"+Config.Stellar.homeDomain;
 
               // find email via saza federation
-              StellarSDK.FederationServer.resolve(queryStr)
+              return StellarSDK.FederationServer.resolve(queryStr)
               .catch(function(error) {
                 console.log("Error",error);
                 // Account not found continue to then block
@@ -387,22 +387,16 @@ account.factory('Account', function($http, $rootScope) {
                 } else{
                   console.log("not found creating pair\n");
                   var pair = StellarSDK.Keypair.random();
+
                   rcvrAcct.account_id = pair.publicKey();
                   rcvrAcct.seed = pair.secret();
                   emailFound = 0;
                 }
 
+                console.log(rcvrAcct);
 
                 // load dest account
-                return server.loadAccount(rcvrAcct.account_id);
-              })
-              .catch(StellarSDK.NotFoundError, function(error) {
-
-                messages.push('Destination Account not active');
-                messages.push('Attempt to create destination account');
-                destAcctActive = 0;
-
-                // continue to next then block
+                return server.loadAccount('GCVNC7MZV3Z3SNUMYIJGSQS3IMNHIF7FZC2HGL5FDBKPDUATXBTVQNDJ');
               })
               .then(function(receiver) {
                 console.log("receiver: ", receiver);
@@ -415,12 +409,12 @@ account.factory('Account', function($http, $rootScope) {
                 return server.loadAccount(paymentData.account_id);
               })
               .catch(StellarSDK.NotFoundError, function(error) {
+                console.log(error);
+                messages.push('Destination Account not active');
+                messages.push('Attempt to create destination account');
+                destAcctActive = 0;
 
-                // unable to load source account
-                messages.push('Source Account not active');
-                console.error('Something went wrong! The source account does not exist!');
-                throw new Error('SourceInactive');
-
+                // continue to next then block
               })
               .then(function(sender) {
 
@@ -445,7 +439,7 @@ account.factory('Account', function($http, $rootScope) {
                     transaction = new StellarSDK.TransactionBuilder(sender)
                                       .addOperation(StellarSDK.Operation.createAccount({
                                         destination: rcvrAcct.account_id,
-                                        startingBalance: paymentData.toString()
+                                        startingBalance: paymentData.amount.toString()
                                       }))
                                       .addMemo(StellarSDK.Memo.text(paymentData.memoText))
                                       .build();
@@ -498,6 +492,14 @@ account.factory('Account', function($http, $rootScope) {
                     data: $.param(paymentData)
                 });
 
+
+              })
+              .catch(StellarSDK.NotFoundError, function(error) {
+                console.log(error);
+                // unable to load source account
+                messages.push('Source Account not active');
+                console.error('Something went wrong! The source account does not exist!');
+                throw new Error('SourceInactive');
 
               })
               .catch(function(error) {
@@ -598,6 +600,16 @@ account.factory('Account', function($http, $rootScope) {
                       });
                   })
                   .catch(function(error) {
+                      // for submit tx
+                      console.log(error);
+                      var errorMessages = Utility.extractError(error);
+                      errorMessages.forEach(function(m) {
+                        messages.push(m);
+                      });
+                      throw new Error('TxError');
+
+                  })
+                  .catch(function(error) {
 
                     console.error(error);
                     return Utility.returnError(messages);
@@ -635,10 +647,13 @@ account.factory('Account', function($http, $rootScope) {
                                   .build();
 
               // get seed
-              var seedObj = Utility.getSeedObj(paymentData.account_id, $rootScope.currentUser.accounts);
+              var seedObj = { 'text': paymentData.txObj.rcvr_skey,
+                              'salt': paymentData.txObj.rcvr_salt,
+                              'iv': paymentData.txObj.rcvr_iv
+                            };
 
               // sign transaction
-              transaction.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, paymentData.claim_code)));
+              transaction.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, paymentData.txObj.claim_code)));
 
               //send build tx to server
               paymentData.builtTx = transaction.toEnvelope().toXDR().toString("base64");
@@ -765,22 +780,17 @@ account.factory('Account', function($http, $rootScope) {
 
 
                 })
-                // .then(function(result) {
-                //   console.log('Success! Results:', result);
-                //   messages.push('Transaction Successful');
-                //   return Utility.returnSuccess(messages);
-                // })
-                // .catch(function(error) {
-                //     // for submit tx
-                //     console.log(error);
-                //     var errorMessages = Utility.extractError(error);
-                //     errorMessages.forEach(function(m) {
-                //       messages.push(m);
-                //     });
+                .catch(function(error) {
+                    // for submit tx
+                    console.log(error);
+                    var errorMessages = Utility.extractError(error);
+                    errorMessages.forEach(function(m) {
+                      messages.push(m);
+                    });
 
-                //     throw new Error('TxError');
+                    throw new Error('TxError');
 
-                // })
+                })
                 .catch(function(error) {
                   console.error('Something went wrong at the end\n', error);
                   messages.push('Transaction Failed');
@@ -822,9 +832,11 @@ account.factory('Account', function($http, $rootScope) {
                   var operationObj = {};
                       operationObj.asset = asset;
 
-                  if (trustData.limit) {
+                  if (trustData.limit !== null && (typeof(trustData.limit) !== 'undefined')) {
+
                     operationObj.limit = trustData.limit.toString();
                   }
+
 
                   transaction.addOperation(StellarSDK.Operation.changeTrust(operationObj));
                   // get seed
@@ -843,21 +855,17 @@ account.factory('Account', function($http, $rootScope) {
                   });
 
                 })
-                // .then(function(xdrResult) {
-                //   messages.push('Trustline created successfully');
-                //   return Utility.returnSuccess(messages);
-                // })
-                // .catch(function(error) {
-                //   // for submit tx
-                //   console.log(error);
-                //   var errorMessages = Utility.extractError(error);
-                //   errorMessages.forEach(function(m) {
-                //     messages.push(m);
-                //   });
+                .catch(function(error) {
+                  // for submit tx
+                  console.log(error);
+                  var errorMessages = Utility.extractError(error);
+                  errorMessages.forEach(function(m) {
+                    messages.push(m);
+                  });
 
-                //   throw new Error('TxError');
+                  throw new Error('TxError');
 
-                // })
+                })
                 .catch(function(error) {
                   // catch all
                   console.log(error);
@@ -901,7 +909,7 @@ account.factory('Account', function($http, $rootScope) {
                   operationObj.assetCode = trustData.assetCode;
                   operationObj.authorize = trustData.authorize;
 
-                  transaction.addOperation(StellarSDK.Operation.changeTrust(operationObj));
+                  transaction.addOperation(StellarSDK.Operation.allowTrust(operationObj));
                   // get seed
                   var seedObj = Utility.getSeedObj(trustData.account_id, $rootScope.currentUser.accounts);
 
@@ -920,21 +928,17 @@ account.factory('Account', function($http, $rootScope) {
                   });
 
                 })
-                // .then(function(xdrResult) {
-                //   messages.push('Allow Trust operation successful');
-                //   return Utility.returnSuccess(messages);
-                // })
-                // .catch(function(error) {
-                //   // for submit tx
-                //   console.log(error);
-                //   var errorMessages = Utility.extractError(error);
-                //   errorMessages.forEach(function(m) {
-                //     messages.push(m);
-                //   });
+                .catch(function(error) {
+                  // for submit tx
+                  console.log(error);
+                  var errorMessages = Utility.extractError(error);
+                  errorMessages.forEach(function(m) {
+                    messages.push(m);
+                  });
 
-                //   throw new Error('TxError');
+                  throw new Error('TxError');
 
-                // })
+                })
                 .catch(function(error) {
                   // catch all
                   console.log(error);
@@ -1002,7 +1006,7 @@ account.factory('Account', function($http, $rootScope) {
                   var operationObj = {};
                   operationObj.selling = sellingAsset;
                   operationObj.buying = buyingAsset;
-                  operationObj.amount = offerData.amount;
+                  operationObj.amount = offerData.amount.toString();
                   operationObj.price = offerData.price;
 
                   if (offerData.offerId) {
@@ -1011,7 +1015,7 @@ account.factory('Account', function($http, $rootScope) {
 
                   transaction.addOperation(StellarSDK.Operation.manageOffer(operationObj));
                   // get seed
-                  var seedObj = Utility.getSeedObj(trustData.account_id, $rootScope.currentUser.accounts);
+                  var seedObj = Utility.getSeedObj(offerData.account_id, $rootScope.currentUser.accounts);
 
                   // build and sign transaction
                   var builtTx = transaction.build();
@@ -1029,21 +1033,17 @@ account.factory('Account', function($http, $rootScope) {
 
 
                 })
-                // .then(function(xdrResult) {
-                //   messages.push('Manage offer operation successful');
-                //   return Utility.returnSuccess(messages);
-                // })
-                // .catch(function(error) {
-                //   // for submit tx
-                //   console.log(error);
-                //   var errorMessages = Utility.extractError(error);
-                //   errorMessages.forEach(function(m) {
-                //     messages.push(m);
-                //   });
+                .catch(function(error) {
+                  // for submit tx
+                  console.log(error);
+                  var errorMessages = Utility.extractError(error);
+                  errorMessages.forEach(function(m) {
+                    messages.push(m);
+                  });
 
-                //   throw new Error('TxError');
+                  throw new Error('TxError');
 
-                // })
+                })
                 .catch(function(error) {
                   // catch all
                   console.log(error);
@@ -1101,12 +1101,12 @@ account.factory('Account', function($http, $rootScope) {
                   var operationObj = {};
                   operationObj.selling = sellingAsset;
                   operationObj.buying = buyingAsset;
-                  operationObj.amount = offerData.amount;
+                  operationObj.amount = offerData.amount.toString();
                   operationObj.price = offerData.price;
 
                   transaction.addOperation(StellarSDK.Operation.createPassiveOffer(operationObj));
                   // get seed
-                  var seedObj = Utility.getSeedObj(trustData.account_id, $rootScope.currentUser.accounts);
+                  var seedObj = Utility.getSeedObj(offerData.account_id, $rootScope.currentUser.accounts);
 
                   // build and sign transaction
                   var builtTx = transaction.build();
@@ -1122,21 +1122,17 @@ account.factory('Account', function($http, $rootScope) {
                   });
 
                 })
-                // .then(function(xdrResult) {
-                //   messages.push('Create passive offer operation successful');
-                //   return Utility.returnSuccess(messages);
-                // })
-                // .catch(function(error) {
-                //   // for submit tx
-                //   console.log(error);
-                //   var errorMessages = Utility.extractError(error);
-                //   errorMessages.forEach(function(m) {
-                //     messages.push(m);
-                //   });
+                .catch(function(error) {
+                  // for submit tx
+                  console.log(error);
+                  var errorMessages = Utility.extractError(error);
+                  errorMessages.forEach(function(m) {
+                    messages.push(m);
+                  });
 
-                //   throw new Error('TxError');
+                  throw new Error('TxError');
 
-                // })
+                })
                 .catch(function(error) {
                   // catch all
                   console.log(error);
@@ -1157,7 +1153,7 @@ account.factory('Account', function($http, $rootScope) {
             var messages = [];
 
             // check if passphrase is valid,
-            var isValid = Utility.validatePassphrase(offerData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
+            var isValid = Utility.validatePassphrase(userData.tx_passphrase, $rootScope.currentUser.tx_passphrase);
             if (isValid) {
 
               // check if source account is active
@@ -1259,7 +1255,7 @@ account.factory('Account', function($http, $rootScope) {
                           transaction.addOperation(StellarSDK.Operation.setOptions(operationObj));
 
                           // get seed
-                          var seedObj = Utility.getSeedObj(trustData.account_id, $rootScope.currentUser.accounts);
+                          var seedObj = Utility.getSeedObj(userData.account_id, $rootScope.currentUser.accounts);
 
                           // build and sign transaction
                           var builtTx = transaction.build();
@@ -1421,22 +1417,17 @@ account.factory('Account', function($http, $rootScope) {
 
 
                         })
-                        // .then(function(xdrResult) {
+                        .catch(function(error) {
+                          // for submit tx
+                          console.log(error);
+                          var errorMessages = Utility.extractError(error);
+                          errorMessages.forEach(function(m) {
+                            messages.push(m);
+                          });
 
-                        //   messages.push('Stellar account merged with '+userData.destAcct);
-                        //   return Utility.returnSuccess(messages);
-                        // })
-                        // .catch(function(error) {
-                        //   // for submit tx
-                        //   console.log(error);
-                        //   var errorMessages = Utility.extractError(error);
-                        //   errorMessages.forEach(function(m) {
-                        //     messages.push(m);
-                        //   });
+                          throw new Error('TxError');
 
-                        //   throw new Error('TxError');
-
-                        // })
+                        })
                         .catch(function(error) {
                           // catch all
                           console.log(error);
@@ -1487,9 +1478,9 @@ account.factory('Account', function($http, $rootScope) {
                           // build and sign transaction
                           var builtTx = transaction.build();
                           builtTx.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, manageData.tx_passphrase)));
-                          
+
                           manageData.builtTx = builtTx.toEnvelope().toXDR().toString("base64");
-                          
+
                           return $http({
                               method: 'POST',
                               url: baseUrl+'managedata',
@@ -1499,22 +1490,17 @@ account.factory('Account', function($http, $rootScope) {
                           });
 
                         })
-                        // .then(function(xdrResult) {
+                        .catch(function(error) {
+                          // for submit tx
+                          console.log(error);
+                          var errorMessages = Utility.extractError(error);
+                          errorMessages.forEach(function(m) {
+                            messages.push(m);
+                          });
 
-                        //   messages.push('Manage data operation successful');
-                        //   return Utility.returnSuccess(messages);
-                        // })
-                        // .catch(function(error) {
-                        //   // for submit tx
-                        //   console.log(error);
-                        //   var errorMessages = Utility.extractError(error);
-                        //   errorMessages.forEach(function(m) {
-                        //     messages.push(m);
-                        //   });
+                          throw new Error('TxError');
 
-                        //   throw new Error('TxError');
-
-                        // })
+                        })
                         .catch(function(error) {
                           // catch all
                           console.log(error);
@@ -1547,7 +1533,7 @@ account.factory('Account', function($http, $rootScope) {
         addAnchor : function(anchorData) {
 
           var tomlObject = {};
-          console.log(paymentData);
+          console.log(anchorData);
           var messages = [];
           
           // check if passphrase is valid,
@@ -1557,6 +1543,7 @@ account.factory('Account', function($http, $rootScope) {
                   .then(function(resp) {
 
                     tomlObject = resp.data.content.data;
+                    console.log(tomlObject);
                     // load account
                     return server.loadAccount(anchorData.account_id);
                   })
@@ -1575,6 +1562,7 @@ account.factory('Account', function($http, $rootScope) {
                      // create trustline ops for each asset
                     tomlObject.CURRENCIES.forEach(function(currency) {
                         // create new asset
+                        console.log("currency", currency);
                         var asset = new StellarSDK.Asset(currency.code, currency.issuer);
 
                         // loop thru currencies and add to array
@@ -1603,7 +1591,17 @@ account.factory('Account', function($http, $rootScope) {
                       });
 
                   })
-                   .catch(function(error) {
+                  .catch(function(error) {
+                      // for submit tx
+                      console.log(error);
+                      var errorMessages = Utility.extractError(error);
+                      errorMessages.forEach(function(m) {
+                        messages.push(m);
+                      });
+                      throw new Error('TxError');
+
+                  })
+                  .catch(function(error) {
 
                     console.error(error);
                     return Utility.returnError(messages);
@@ -1648,25 +1646,72 @@ account.factory('Account', function($http, $rootScope) {
             });
         },
 
-        // save passphrase
-        savePassphrase : function(userData) {
-            // get hash of passphrase,
-            var passphraseHash = Utility.getHash(userData.password);
 
-            // save hash locally,
-            $rootScope.currentUser.passphraseHash = passphraseHash;
+        changeEncryption : function(userData) {
 
-            userData.password = "";//remove password
-            userData.passwordHash = passphraseHash;
-
-            // save hash in server
             return $http({
                 method: 'POST',
-                url: baseUrl+'savepassphrase',
+                url: baseUrl+'changeencryption',
                 headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
                             'Authorization': 'JWT '+userData.token  },
                 data: $.param(userData)
             });
+        },
+
+        // save passphrase
+        savePassphrase : function(userData) {
+
+
+          return self.changeEncryption(userData)
+            .then(function(resp) {
+              var seedArray = resp.data.content.seedArray;
+
+              // encrypt with passphrase
+              for (var i = 0; i < seedArray.length; i++) {
+                var encryptedObj = Utility.encrypt(userData.tx_passphrase, seedArray[i].seed);
+                seedArray[i].encryptedObj = encryptedObj;
+                seedArray[i].seed = "";//remove seed
+              }
+
+              userData.seedArray = seedArray;
+
+              // get hash of passphrase,
+              var passphraseHash = Utility.getHash(userData.password);
+
+              // save hash locally,
+              $rootScope.currentUser.passphraseHash = passphraseHash;
+
+              userData.password = "";//remove password
+              userData.passwordHash = passphraseHash;
+
+              // save hash in server
+              return $http({
+                  method: 'POST',
+                  url: baseUrl+'savepassphrase',
+                  headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                              'Authorization': 'JWT '+userData.token  },
+                  data: $.param(userData)
+              });
+
+            })
+            .catch(function(error) {
+                // for submit tx
+                console.log(error);
+                var errorMessages = Utility.extractError(error);
+                errorMessages.forEach(function(m) {
+                  messages.push(m);
+                });
+                throw new Error('TxError');
+
+            })
+            .catch(function(error) {
+
+              console.error(error);
+              return Utility.returnError(messages);
+
+            });
+
+
         },
 
         // change passphrase
@@ -1677,6 +1722,8 @@ account.factory('Account', function($http, $rootScope) {
             var isValid = Utility.validatePassphrase(userData.old_passphrase, $rootScope.currentUser.tx_passphrase);
             console.log("isValid: ", isValid);
             if (isValid) {
+
+
                 var passphraseHash = Utility.getHash(userData.passphrase);
 
                 // save hash locally,
@@ -1686,6 +1733,24 @@ account.factory('Account', function($http, $rootScope) {
                 userData.passwordHash = passphraseHash;
 
                 // To do rencrypt all seeds and send to server to be saved
+                for (var i = 0; i < $rootScope.currentUser.accounts.length; i++) {
+
+                  var encryptedObj = {
+                      'text': $rootScope.currentUser.accounts[i].skey,
+                      'salt': $rootScope.currentUser.accounts[i].salt,
+                      'iv': $rootScope.currentUser.accounts[i].iv
+                  };
+
+                  var decryptedSeed = Utility.decrypt(encryptedObj, userData.old_passphrase);
+
+                  var tempObj = Utility.encrypt(userData.passphrase, decryptedSeed);
+
+                  $rootScope.currentUser.accounts[i].skey = tempObj.text;
+                  $rootScope.currentUser.accounts[i].salt = tempObj.salt;
+                  $rootScope.currentUser.accounts[i].iv = tempObj.iv;
+                }
+
+                userData.accountsArray = $rootScope.currentUser.accounts;
 
                 // save hash in server
                 return $http({
@@ -1698,14 +1763,7 @@ account.factory('Account', function($http, $rootScope) {
 
 
             } else{
-                return new Promise(function(resolve, reject) {
-                    var errObj = {
-                                    content: {
-                                        message: ['Invalid passphrase']
-                                    }
-                                  };
-                    reject(errObj);
-                });
+              return Utility.returnError(['Invalid passphrase']);
             }
 
 

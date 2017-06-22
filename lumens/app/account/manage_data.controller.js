@@ -27,25 +27,29 @@ lumensWall.controller('manageDataController', function($scope, $state, $http, $r
 
 
     Account.manageData($scope.manageData)
-      .then(function(data) {
+      .then(function(resp) {
 
-        console.log("success",data);
+        console.log("success",resp);
         // show success message
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-success';
-        $scope.statusMsg.content = data.content.message;
+        $scope.statusMsg.content = resp.data.content.message;
         $scope.manageData = {};
         window.scrollTo(0, 0);
         $scope.$apply();
         
       })
-      .catch(function(data) {
+      .catch(function(resp) {
+        console.log("error",resp);
 
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
-        $scope.statusMsg.content = data.content.message;
-        $scope.manageData = {};
-        $scope.$apply();
+        if (resp.content) {
+          $scope.statusMsg.content = resp.content.message;
+          $scope.$apply();
+        } else{
+          $scope.statusMsg.content = resp.data.content.message;
+        }
 
         window.scrollTo(0, 0);
 

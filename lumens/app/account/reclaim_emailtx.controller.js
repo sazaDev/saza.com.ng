@@ -34,17 +34,24 @@ lumensWall.controller('reclaimEmailTxController', function($scope, $state, $http
     $scope.userData.txObj = tx;
 
     Account.revokeLumens($scope.userData)
-    .success(function(data) {
+    .then(function(resp) {
+      console.log("success",resp);
 
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert-success';
-      $scope.statusMsg.content = data.content.message;
+      $scope.statusMsg.content = resp.data.content.message;
       window.scrollTo(0, 0);
     })
-    .error(function(data) {
+    .catch(function(resp) {
+      console.log("error",resp);
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
-        $scope.statusMsg.content = data.content.message;
+        if (resp.content) {
+          $scope.statusMsg.content = resp.content.message;
+          $scope.$apply();
+        } else{
+          $scope.statusMsg.content = resp.data.content.message;
+        }
 
         window.scrollTo(0, 0);
 

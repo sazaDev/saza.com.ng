@@ -31,7 +31,7 @@ lumensWall.controller('setOptionsController', function($scope, $state, $http, $r
 
     if ($scope.userData.signerKey || $scope.userData.signerWeight || $scope.userData.signerType) {
       // check asset details
-      if (!$scope.userData.signerKey || !$scope.userData.signerWeight) {
+      if (!$scope.userData.signerKey || (typeof($scope.userData.signerWeight) === 'undefined') || $scope.userData.signerWeight === null ) {
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
         $scope.statusMsg.content = ['Signer key and weight pair required'];
@@ -41,24 +41,28 @@ lumensWall.controller('setOptionsController', function($scope, $state, $http, $r
     }
 
     Account.setOptions($scope.userData)
-      .success(function(data) {
+      .then(function(resp) {
 
-        console.log("success",data);
+        console.log("success",resp);
         // show success message
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-success';
-        $scope.statusMsg.content = data.content.message;
+        $scope.statusMsg.content = resp.data.content.message;
         $scope.userData = {};
         window.scrollTo(0, 0);
 
       })
-      .error(function(data) {
+      .catch(function(resp) {
 
-        console.log("error",data);
+        console.log("error",resp);
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
-        $scope.statusMsg.content = data.content.message;
-        $scope.userData = {};
+        if (resp.content) {
+          $scope.statusMsg.content = resp.content.message;
+          $scope.$apply();
+        } else{
+          $scope.statusMsg.content = resp.data.content.message;
+        }
         window.scrollTo(0, 0);
 
 

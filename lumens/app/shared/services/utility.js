@@ -90,11 +90,11 @@ var StellarSDK = StellarSdk;
 
   returnSuccess: function(messages) {
     return new Promise(function(resolve, reject) {
-                    var successObj = {status: true, 
+                    var successObj = {status: true,
                                       content: {
-                                        message: messages 
+                                        message: messages
                                       }
-                                    }
+                                    };
                     resolve(successObj);
                 });
   },
@@ -142,6 +142,14 @@ var StellarSDK = StellarSdk;
           });
         }
 
+      }
+    }
+
+    if(error.data){
+      if (error.data.content) {
+        error.data.content.message.forEach(function(ops) {
+            rtnError.push(ops);
+          });
       }
     }
 
@@ -213,6 +221,14 @@ var StellarSDK = StellarSdk;
       return {status: false, content: {message: ['Input Validation failed']}};
 
     }
+  },
+  randomString: function(length) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for(var i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
   },
 
 

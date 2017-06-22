@@ -53,23 +53,27 @@ lumensWall.controller('passiveOfferController', function($scope, $state, $http, 
 
 
     Account.passiveOffer($scope.offerData)
-      .success(function(data) {
+      .then(function(resp) {
 
-        console.log("success",data);
+        console.log("success",resp);
         // show success message
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-success';
-        $scope.statusMsg.content = data.content.message;
+        $scope.statusMsg.content = resp.data.content.message;
         $scope.offerData = {};
         window.scrollTo(0, 0);
         $scope.getOffers();
       })
-      .error(function(data) {
-        console.log("error",data);
+      .catch(function(resp) {
+        console.log("error",resp);
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
-        $scope.statusMsg.content = data.content.message;
-        $scope.offerData = {};
+        if (resp.content) {
+          $scope.statusMsg.content = resp.content.message;
+          $scope.$apply();
+        } else{
+          $scope.statusMsg.content = resp.data.content.message;
+        }
         window.scrollTo(0, 0);
 
 

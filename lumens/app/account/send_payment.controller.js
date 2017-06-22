@@ -52,23 +52,29 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
     }
 
     Account.sendPayment($scope.paymentData)
-      .then(function(data) {
+      .then(function(resp) {
 
-        console.log("success",data);
+        console.log("success",resp);
         // show success message
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-success';
-        $scope.statusMsg.content = data.content.message;
+        $scope.statusMsg.content = resp.data.content.message;
         $scope.paymentData = {};
         window.scrollTo(0, 0);
       })
-      .catch(function(data) {
+      .catch(function(resp) {
 
-        console.log("error",data);
+        console.log("error",resp);
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
-        $scope.statusMsg.content = data.content.message;
-        $scope.paymentData = {};
+        if (resp.content) {
+        $scope.statusMsg.content = resp.content.message;
+        $scope.$apply();
+        } else{
+          $scope.statusMsg.content = resp.data.content.message;
+        }
+
+        // $scope.paymentData = {};
         window.scrollTo(0, 0);
 
 
