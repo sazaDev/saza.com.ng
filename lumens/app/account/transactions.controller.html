@@ -4,7 +4,7 @@
 <div ng-controller="transactionsController" ng-init="init()"  class="row ng-cloak" ng-cloak>
   <div class="col-md-12" ng-hide="showDetail">
     <!-- START DEFAULT DATATABLE -->
-    <div class="panel panel-colorful">
+    <div class="panel panel-colorful" ng-if="records.length > 0">
       <div class="panel-heading">
         <h3 class="panel-title">Transactions</h3>
         <!-- <ul class="panel-controls">
@@ -33,6 +33,14 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+    <div class="panel panel-colorful" ng-if="records.length == 0">
+      <div class="panel-heading">
+        <h3 class="panel-title">Transactions</h3>
+      </div>
+      <div class="panel-body">
+        <h4>No transactions found</h4>
       </div>
     </div>
     <!-- END DEFAULT DATATABLE -->
