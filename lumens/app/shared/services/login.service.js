@@ -19,6 +19,17 @@ login.factory('Login', function($http) {
             });
         },
 
+        tfaLogin : function(userData) {
+            //console.log(userData);
+            return $http({
+                method: 'POST',
+                url: baseUrl+'tfalogin',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                              'Authorization': 'JWT '+userData.token},
+                data: $.param(userData)
+            });
+        },
+
         socialLogin : function(type) {
             return $http.get(baseUrl+'auth/'+type);
         },

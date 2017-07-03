@@ -98,6 +98,18 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
         requireLogin: false
       }
     })
+    .state('tfalogin',{
+      url: '/2fa-auth',
+      views: {
+        'pgContainer': {
+          templateUrl: 'app/login/tfa.controller.html',
+          controller: 'tfaController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
     .state('resetpassword',{
       url: '/reset-password/:token',
       views: {
