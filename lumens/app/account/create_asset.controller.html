@@ -102,30 +102,79 @@
                 <span class="help-block">Asset Alphanumeric Code; Eg: USD, EUR, XLM</span>
               </div>
             </div>
-            <!-- <div class="form-group" ng-show="isCustomAsset(paymentData.assetType)">
-              <label class="col-md-3 col-xs-12 control-label">Asset Issuer</label>
+
+
+            <!-- <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Website</label>
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
-                  <span class="input-group-addon"><span class="fa fa-user"></span></span>
-                  <input class="form-control" type="text" name="assetIssuer" ng-model="paymentData.assetIssuer"/>
-
+                  <span class="input-group-addon"><span class="fa fa-link"></span></span>
+                  <input type="url" class="form-control" name="website" ng-model="assetData.website" />
                 </div>
-                <span class="help-block">Stellar Account ID of the Asset Issuer</span>
+                <span class="help-block">Please enter web url with that has further description about your asset</span>
               </div>
             </div> -->
 
 
-            <!-- <div class="form-group">
-              <label class="col-md-3 col-xs-12 control-label">Password</label>
-              <div class="col-md-6 col-xs-12">
-                <div class="input-group">
-                  <span class="input-group-addon"><span class="fa fa-unlock-alt"></span></span>
-                  <input type="password" class="form-control" name="password" ng-model="paymentData.password" required/>
-                </div>
-                <span class="help-block">Please enter your Saza account password to verify operation</span>
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Require Authorisation</label>
+              <div class="col-md-9 col-xs-12">
+                <label class="switch switch-small">
+                    <input type="checkbox" ng-model="assetData.requireAuth" checked="true" ng-value="1">
+                    <span></span>
+                </label>
+                <span class="help-block">Requires the issuing account to give other accounts permission before they can hold the issuing account’s credit.</span>
               </div>
             </div>
-            -->
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Authorisation Revocable</label>
+              <div class="col-md-9 col-xs-12">
+                <label class="switch switch-small">
+                    <input type="checkbox" ng-model="assetData.revokeAuth" checked="true" ng-value="1">
+                    <span></span>
+                </label>
+                <span class="help-block">Allows the issuing account to revoke its credit held by other accounts.</span>
+              </div>
+            </div>
+
+
+           <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Distribute on Stellar Decentralised Exchange</label>
+              <div class="col-md-9 col-xs-12">
+                <label class="switch switch-small">
+                    <input type="checkbox" ng-model="assetData.distType" checked="true" ng-value="1">
+                    <span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group" ng-show="isDEX(assetData.distType)">
+              <label class="col-md-3 col-xs-12 control-label">Amount to sell</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="number" name="distAmount" ng-model="assetData.distAmount" step="0.0000001" />
+
+                </div>
+                <span class="help-block">Amount of assets to distribute</span>
+              </div>
+            </div>
+
+            <div class="form-group" ng-show="isDEX(assetData.distType)">
+              <label class="col-md-3 col-xs-12 control-label">Price per Asset</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="distPrice" ng-model="assetData.distPrice" step="0.0000001"/>
+
+                </div>
+                <span class="help-block">Price of {{assetData.assetCode || 'Asset' }} to XLM:  
+                  1{{assetData.assetCode || 'Asset' }} = {{assetData.distPrice || '1.00' }}XLM</span>
+              </div>
+            </div>
+
+
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Transaction Passphrase</label>
               <div class="col-md-6 col-xs-12">
@@ -139,13 +188,6 @@
             </div>
 
 
-            <!-- <div class="form-group">
-              <label class="col-md-3 col-xs-12 control-label">Checkbox</label>
-              <div class="col-md-6 col-xs-12">
-                <label class="check"><input type="checkbox" class="icheckbox" checked="checked"/> Checkbox title</label>
-                <span class="help-block">Checkbox sample, easy to use</span>
-              </div>
-            </div> -->
             <div class="form-group" ng-if="currentUser.tfa_enabled">
               <label class="col-md-3 col-xs-12 control-label">OTP Token</label>
               <div class="col-md-6 col-xs-12">

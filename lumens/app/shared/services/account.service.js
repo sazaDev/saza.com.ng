@@ -102,6 +102,7 @@ account.factory('Account', function($http, $rootScope) {
             var messages = [];
             var issuerAcct = "";
             var baseAcct = "";
+            var setFlags = 0;
 
             var asset = Utility.generateAsset(paymentData.assetType, paymentData.assetCode, paymentData.issuer);
 
@@ -111,6 +112,8 @@ account.factory('Account', function($http, $rootScope) {
 
             if (!asset) {
               return Utility.returnError(['Invalid Asset']);
+            } else if (paymentData.issuer === paymentData.baseAcct) {
+              return Utility.returnError(['Issuing and Distributing accounts can not be the same']);
             } else{
 
               // check if issuer and dest are valid
@@ -135,12 +138,39 @@ account.factory('Account', function($http, $rootScope) {
                 })
                 .then(function(base) {
                   baseAcct = base;
-
-                  var transaction = new StellarSDK.TransactionBuilder(baseAcct);
                   var operationObj = {};
-                      operationObj.asset = asset;
+                  // create transaction builder
+                  var transaction = new StellarSDK.TransactionBuilder(baseAcct);
 
+                  if (paymentData.requireAuth) {
+                    setFlags += 1;
+                  }
+
+                  if (paymentData.revokeAuth) {
+                    setFlags += 2;
+                  }
+                  // set flag options
+                  if (setFlags > 0) {
+                    operationObj.setFlags = setFlags;
+                    operationObj.source = paymentData.issuer;
+                    transaction.addOperation(StellarSDK.Operation.setOptions(operationObj));
+                  }
+
+                  // change trust
+                  operationObj = {};
+                  operationObj.asset = asset;
+                  operationObj.source = paymentData.baseAcct;
                   transaction.addOperation(StellarSDK.Operation.changeTrust(operationObj));
+
+                  // allow trust
+                  if (setFlags > 0) {
+                    operationObj = {};
+                    operationObj.trustor = paymentData.baseAcct;
+                    operationObj.assetCode = paymentData.assetCode;
+                    operationObj.authorize = true;
+                    operationObj.source = paymentData.issuer;
+                    transaction.addOperation(StellarSDK.Operation.allowTrust(operationObj));
+                  }
 
                   // send asset to dist
                   operationObj = {};
@@ -148,8 +178,19 @@ account.factory('Account', function($http, $rootScope) {
                   operationObj.asset = asset;
                   operationObj.amount = paymentData.amount.toString();
                   operationObj.source = paymentData.issuer;
-
                   transaction.addOperation(StellarSDK.Operation.payment(operationObj));
+
+                  // place offer on stellar DEX
+                  if (paymentData.distType) {
+                    operationObj = {};
+                    operationObj.selling = asset;
+                    operationObj.buying = StellarSDK.Asset.native();
+                    operationObj.amount = paymentData.distAmount.toString();
+                    operationObj.price = paymentData.distPrice;
+                    operationObj.source = paymentData.baseAcct;
+                    transaction.addOperation(StellarSDK.Operation.manageOffer(operationObj));
+                  }
+
 
                   // get seed
                   var issuerSeed = Utility.getSeedObj(paymentData.issuer, $rootScope.currentUser.accounts);
@@ -170,6 +211,17 @@ account.factory('Account', function($http, $rootScope) {
                                   'Authorization': 'JWT '+paymentData.token },
                       data: $.param(paymentData)
                   });
+
+                })
+                .catch(function(error) {
+                  // for submit tx
+                  console.log(error);
+                  var errorMessages = Utility.extractError(error);
+                  errorMessages.forEach(function(m) {
+                    messages.push(m);
+                  });
+
+                  throw new Error('TxError');
 
                 })
                 .catch(function(error) {
@@ -314,17 +366,17 @@ account.factory('Account', function($http, $rootScope) {
               //   messages.push('Transaction Successful');
               //   return Utility.returnSuccess(messages);
               // })
-              // .catch(function(error) {
-              //     // for submit tx
-              //     console.log(error);
-              //     var errorMessages = Utility.extractError(error);
-              //     errorMessages.forEach(function(m) {
-              //       messages.push(m);
-              //     });
+              .catch(function(error) {
+                  // for submit tx
+                  console.log(error);
+                  var errorMessages = Utility.extractError(error);
+                  errorMessages.forEach(function(m) {
+                    messages.push(m);
+                  });
 
-              //     throw new Error('TxError');
+                  throw new Error('TxError');
 
-              // })
+              })
               .catch(function(error) {
                 console.error('Something went wrong at the end\n', error);
                 messages.push('Transaction Failed');
@@ -1660,11 +1712,12 @@ account.factory('Account', function($http, $rootScope) {
 
         // save passphrase
         savePassphrase : function(userData) {
-
+          var messages = [];
 
           return self.changeEncryption(userData)
             .then(function(resp) {
-              var seedArray = resp.data.content.seedArray;
+              console.log(resp);
+              var seedArray = resp.data.content.data;
 
               // encrypt with passphrase
               for (var i = 0; i < seedArray.length; i++) {

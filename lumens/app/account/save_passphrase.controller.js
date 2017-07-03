@@ -22,17 +22,18 @@ console.log($rootScope.currentUser);
 
   $scope.changePassword = function() {
     Account.savePassphrase($scope.userData)
-    .success(function(data) {
+    .then(function(resp) {
 
-      data.content.data.authenticated = true;
+      console.log(resp);
+      resp.data.content.data.authenticated = true;
 
       // set the currently active account
-      if (data.content.data.accounts.length > 0) {
-        data.content.data.currentAccount = data.content.data.accounts[0].account_id;
-        data.content.data.currentUsername = data.content.data.accounts[0].fed_name;
+      if (resp.data.content.data.accounts.length > 0) {
+        resp.data.content.data.currentAccount = resp.data.content.data.accounts[0].account_id;
+        resp.data.content.data.currentUsername = resp.data.content.data.accounts[0].fed_name;
       }
 
-      var user = data.content.data;
+      var user = resp.data.content.data;
 
       User.set(user);
 
@@ -41,14 +42,20 @@ console.log($rootScope.currentUser);
       console.log("currentUser", User.get());
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert-success';
-      $scope.statusMsg.content = data.content.message;
+      $scope.statusMsg.content = resp.data.content.message;
+
 
     })
-    .error(function(data) {
+    .catch(function(data) {
       console.log(data);
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert-danger';
-      $scope.statusMsg.content = data.content.message;
+      if (data.content) {
+        $scope.statusMsg.content = data.content.message;
+      } else{
+        $scope.statusMsg.content = data.data.content.message;
+      }
+      $scope.$apply();
 
     });
   };

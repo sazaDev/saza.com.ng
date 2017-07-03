@@ -74,7 +74,7 @@ lumensWall.controller('createAssetController', function($scope, $state, $http, $
           $scope.statusMsg.content = data.data.content.message;
         }
 
-        $scope.assetData = {};
+        // $scope.assetData = {};
         window.scrollTo(0, 0);
 
 
@@ -89,6 +89,15 @@ lumensWall.controller('createAssetController', function($scope, $state, $http, $
       return false;
     }
   };
+
+  $scope.isDEX = function(type) {
+    if (type) {
+      return true;
+    } else{
+      return false;
+    }
+  };
+
 
   $scope.contactChange = function(id) {
     console.log(id);
