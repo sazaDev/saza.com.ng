@@ -1,5 +1,5 @@
 var lumensWall = angular.module('lumensWall');
-
+var Config = Config;
 lumensWall.controller('registerController', function($scope, $state, $http, $window, $interval, randomString, $rootScope, Login, User) {
 
 	$scope.userData = {};
@@ -31,7 +31,7 @@ lumensWall.controller('registerController', function($scope, $state, $http, $win
 
 	$scope.socialLogin = function(type) {
 
-		var url = 'http://localhost:8888/auth/'+type,
+		var url = Config.General.baseUrl+'auth/'+type,
         width = 800,
         height = 600,
         top = (window.outerHeight - height) / 2,
@@ -45,7 +45,7 @@ lumensWall.controller('registerController', function($scope, $state, $http, $win
 
       var origin = event.origin || event.originalEvent.origin;
         // IMPORTANT: Check the origin of the data!
-      if (origin === 'https://saza.com.ng:8888') {
+      if (origin+"/" === Config.General.baseUrl) {
             // The data has been sent from your site
 
             // The data sent with postMessage is stored in event.data
@@ -58,7 +58,7 @@ lumensWall.controller('registerController', function($scope, $state, $http, $win
   					User.set(user);
   					localStorage.setItem('user', JSON.stringify(user));
   					popup.close();
-            if (data.user.tfa_enabled == 1) {
+            if (user.tfa_enabled == 1) {
               $state.go('tfalogin');
             } else{
               $state.go('dashboard');

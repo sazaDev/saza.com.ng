@@ -1,8 +1,8 @@
 // Login Service
-
+var Config = Config;
 var login = angular.module('loginService', []);
 // var baseUrl = 'https://saza.com.ng:8888/';
-var baseUrl = 'http://localhost:8888/';
+var baseUrl = Config.General.baseUrl;
 login.factory('Login', function($http) {
 
     return {

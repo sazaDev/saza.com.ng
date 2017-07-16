@@ -1,5 +1,6 @@
 var lumensWall = angular.module('lumensWall');
-
+var Config = Config;
+console.log(Config);
 lumensWall.controller('loginController', function($scope, $state, $window, $interval, $http, $rootScope, Login, User) {
 	$scope.responseData = {};
 	// $window.$scope = $scope;//set popup window scope to controller scope
@@ -21,17 +22,7 @@ lumensWall.controller('loginController', function($scope, $state, $window, $inte
 					data.user.currentUsername = data.user.accounts[0].fed_name;
 				}
 
-				// var user = JSON.stringify(data.user);
-
-				// Set the stringified user data into local storage
-        // localStorage.setItem('user', user);
-        // $rootScope.authenticated = true;
-
-        // Putting the user's data on $rootScope allows
-        // us to access it anywhere across the app
-        // $rootScope.currentUser = data.user;
         User.set(data.user);
-        // console.log("currentUser", User.get());
 
         var user = JSON.stringify(data.user);
 
@@ -60,7 +51,7 @@ lumensWall.controller('loginController', function($scope, $state, $window, $inte
 
 	$scope.socialLogin = function(type) {
 
-		var url = 'http://localhost:8888/auth/'+type,
+		var url = Config.General.baseUrl+'auth/'+type,
         width = 800,
         height = 600,
         top = (window.outerHeight - height) / 2,
@@ -76,8 +67,8 @@ lumensWall.controller('loginController', function($scope, $state, $window, $inte
       var origin = event.origin || event.originalEvent.origin;
         // IMPORTANT: Check the origin of the data!
       // var serverUrl = 'https://saza.com.ng:8888';
-      var serverUrl = 'http://localhost:8888';
-      if (origin ===  serverUrl) {
+      var serverUrl = Config.General.baseUrl;
+      if (origin+"/" ===  serverUrl) {
           // The data has been sent from your site
 
           // The data sent with postMessage is stored in event.data
@@ -90,7 +81,7 @@ lumensWall.controller('loginController', function($scope, $state, $window, $inte
 					User.set(user);
 					localStorage.setItem('user', JSON.stringify(user));
 					popup.close();
-          if (data.user.tfa_enabled == 1) {
+          if (user.tfa_enabled == 1) {
             $state.go('tfalogin');
           } else{
             $state.go('dashboard');

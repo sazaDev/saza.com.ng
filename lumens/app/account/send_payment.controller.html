@@ -28,11 +28,15 @@
             <div class="form-group" ng-if="contacts.length > 0">
               <label class="col-md-3 col-xs-12 control-label">Select Contact</label>
               <div class="col-md-6 col-xs-12">
-                <select class="form-control ng-cloak" ng-model="paymentData.contact" ng-change="contactChange(paymentData.contact)">
-
+                <input class="form-control ng-cloak" type="text" ng-model="paymentData.contact" list="contactList" ng-change="contactChange(paymentData.contact)">
+                <datalist id="contactList" >
                   <option ng-repeat="x in contacts" value="{{x.account_id}}">{{x.name}}</option>
-                </select>
-                <span class="help-block">Select a user from your address book or enter an Account Id below</span>
+                </datalist>
+                <span class="help-block">Select a user from your address book or enter an Account Id below</span> 
+
+                <!-- <select class="form-control ng-cloak" ng-model="paymentData.contact" ng-change="contactChange(paymentData.contact)">
+                  <option ng-repeat="x in contacts" value="{{x.account_id}}">{{x.name}}</option>
+                </select>-->
 
               </div>
             </div>

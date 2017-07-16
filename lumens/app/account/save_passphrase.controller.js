@@ -3,10 +3,10 @@ var lumensWall = angular.module('lumensWall');
 lumensWall.controller('savePassphraseController', function($scope, $state, $http, $rootScope, Account, User) {
 
 console.log($rootScope.currentUser);
- // if ($rootScope.currentUser.need_password == 0) {
- //          // event.preventDefault();
- //              $state.go('dashboard');
- //   }
+ if ($rootScope.currentUser.need_password === 0) {
+          // event.preventDefault();
+              $state.go('dashboard');
+   }
 
   $scope.userData = {};
   $scope.linkData = {};
@@ -43,7 +43,7 @@ console.log($rootScope.currentUser);
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert-success';
       $scope.statusMsg.content = resp.data.content.message;
-
+      $state.go('savepassphrase', {}, {reload: true});
 
     })
     .catch(function(data) {

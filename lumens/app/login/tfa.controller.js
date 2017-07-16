@@ -10,6 +10,7 @@ lumensWall.controller('tfaController', function($scope, $state, $window, $interv
 
 	$scope.loginUser = function() {
     $scope.userData.token = $rootScope.currentUser.token;
+    $scope.userData.id = $rootScope.currentUser.id;
 		Login.tfaLogin($scope.userData)
 			.success(function(data) {
 

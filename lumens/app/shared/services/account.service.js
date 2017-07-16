@@ -6,20 +6,18 @@ var Config = Config;
 // var forge = require('node-forge');
 var account = angular.module('accountService', []);
 // var baseUrl = 'https://saza.com.ng:8888/';
-var baseUrl = 'http://localhost:8888/';
+var baseUrl = Config.General.baseUrl;
 
 var server = "";
 
-if ( Config.General.production) {
+if ( Config.General.production === 'live') {
   StellarSDK.Network.usePublicNetwork();
   server = new StellarSDK.Server(Config.Stellar.liveNetwork);
 
-}
-
-if ( !Config.General.production) {
+}else
+{
   StellarSDK.Network.useTestNetwork();
   server = new StellarSDK.Server(Config.Stellar.testNetwork);
-
 }
 
 
@@ -1713,15 +1711,17 @@ account.factory('Account', function($http, $rootScope) {
         // save passphrase
         savePassphrase : function(userData) {
           var messages = [];
-
+          console.log(userData);
           return self.changeEncryption(userData)
             .then(function(resp) {
               console.log(resp);
               var seedArray = resp.data.content.data;
 
+              console.log(seedArray);
+
               // encrypt with passphrase
               for (var i = 0; i < seedArray.length; i++) {
-                var encryptedObj = Utility.encrypt(userData.tx_passphrase, seedArray[i].seed);
+                var encryptedObj = Utility.encrypt(userData.password, seedArray[i].seed);
                 seedArray[i].encryptedObj = encryptedObj;
                 seedArray[i].seed = "";//remove seed
               }
@@ -1768,6 +1768,7 @@ account.factory('Account', function($http, $rootScope) {
         },
 
         // change passphrase
+        // // Deprecated do not use
         changePassphrase : function(userData) {
             // compare old passphrase for match,
             console.log(userData);

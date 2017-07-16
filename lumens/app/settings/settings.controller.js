@@ -53,47 +53,47 @@ lumensWall.controller('settingsController', function($scope, $state, $http, $roo
 
 	};
 
-  $scope.changePassphrase = function() {
+  // $scope.changePassphrase = function() {
 
-    $scope.userData.token = $rootScope.currentUser.token;
-    $scope.userData.id = $rootScope.currentUser.id;
-    Account.changePassphrase($scope.userData)
-    .then(function(resp) {
-      console.log(resp);
-      resp.data.content.data.authenticated = true;
+  //   $scope.userData.token = $rootScope.currentUser.token;
+  //   $scope.userData.id = $rootScope.currentUser.id;
+  //   Account.changePassphrase($scope.userData)
+  //   .then(function(resp) {
+  //     console.log(resp);
+  //     resp.data.content.data.authenticated = true;
 
-      // set the currently active account
-      if (resp.data.content.data.accounts.length > 0) {
-        resp.data.content.data.currentAccount = resp.data.content.data.accounts[0].account_id;
-        resp.data.content.data.currentUsername = resp.data.content.data.accounts[0].fed_name;
-      }
+  //     // set the currently active account
+  //     if (resp.data.content.data.accounts.length > 0) {
+  //       resp.data.content.data.currentAccount = resp.data.content.data.accounts[0].account_id;
+  //       resp.data.content.data.currentUsername = resp.data.content.data.accounts[0].fed_name;
+  //     }
 
-      var user = resp.data.content.data;
+  //     var user = resp.data.content.data;
 
-      User.set(user);
+  //     User.set(user);
 
-      // Set the stringified user data into local storage
-      localStorage.setItem('user', JSON.stringify(user));
-      console.log("currentUser", User.get());
-      $scope.statusMsg = {};
-      $scope.statusMsg.type = 'alert-success';
-      $scope.statusMsg.content = resp.data.content.message;
+  //     // Set the stringified user data into local storage
+  //     localStorage.setItem('user', JSON.stringify(user));
+  //     console.log("currentUser", User.get());
+  //     $scope.statusMsg = {};
+  //     $scope.statusMsg.type = 'alert-success';
+  //     $scope.statusMsg.content = resp.data.content.message;
 
-    })
-    .catch(function(data) {
-      console.log(data);
-      $scope.statusMsg = {};
-      $scope.statusMsg.type = 'alert-danger';
-      if (data.content) {
-        $scope.statusMsg.content = data.content.message;
-      } else{
-        $scope.statusMsg.content = data.data.content.message;
-      }
-      $scope.$apply();
+  //   })
+  //   .catch(function(data) {
+  //     console.log(data);
+  //     $scope.statusMsg = {};
+  //     $scope.statusMsg.type = 'alert-danger';
+  //     if (data.content) {
+  //       $scope.statusMsg.content = data.content.message;
+  //     } else{
+  //       $scope.statusMsg.content = data.data.content.message;
+  //     }
+  //     $scope.$apply();
 
 
-    });
-  };
+  //   });
+  // };
 
   $scope.deleteAccount = function() {
 
