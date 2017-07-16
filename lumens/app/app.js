@@ -6,7 +6,6 @@ var app = angular.module('lumensWall',
                           'angular-loading-bar',
                           'ngclipboard',
                           'angularRandomString',
-
                           'ngPassword',
                           'loginService',
                           'accountService',
@@ -99,6 +98,18 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
         requireLogin: false
       }
     })
+    .state('tfalogin',{
+      url: '/2fa-auth',
+      views: {
+        'pgContainer': {
+          templateUrl: 'app/login/tfa.controller.html',
+          controller: 'tfaController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
     .state('resetpassword',{
       url: '/reset-password/:token',
       views: {
@@ -183,6 +194,23 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
         requireLogin: true
       }
     })
+    .state('createasset',{
+      url: '/create-asset',
+      views: {
+        'sideBar' : {
+          templateUrl: 'app/shared/menu/sidemenu.controller.html',
+          controller: 'sideBarController'
+        },
+        'pgContent': {
+          templateUrl: 'app/account/create_asset.controller.html',
+          controller: 'createAssetController'
+        }
+      },
+      data:{
+        requireLogin: true
+      }
+    })
+
     .state('sendpayment',{
       url: '/send_payment',
       views: {

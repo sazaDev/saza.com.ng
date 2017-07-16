@@ -1,7 +1,7 @@
 var lumensWall = angular.module('lumensWall');
 
 lumensWall.controller('anchorsController', function($scope, $state, $http, $rootScope, Account) {
-  
+
   $scope.anchorData = {};
   $scope.statusMsg = {};
   $scope.init = function() {
@@ -12,6 +12,8 @@ lumensWall.controller('anchorsController', function($scope, $state, $http, $root
     $scope.statusMsg = {};
   };
 
+
+
   $scope.addAnchor = function() {
     $scope.anchorData.id = $rootScope.currentUser.id;
     $scope.anchorData.email = $rootScope.currentUser.email;
@@ -19,24 +21,29 @@ lumensWall.controller('anchorsController', function($scope, $state, $http, $root
     $scope.anchorData.account_id = $rootScope.currentUser.currentAccount;
 
     Account.addAnchor($scope.anchorData)
-    .success(function(data) {
-  
-      // console.log(data);
-      
+    .then(function(resp) {
+
+      console.log(resp);
+
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert alert-success';
-      $scope.statusMsg.content = data.content.message;
+      $scope.statusMsg.content = resp.data.content.message;
 
-      // angular.element('.mb-control-success').triggerHandler('click');
-                
+
+
 
     })
-    .error(function(data) {
-      // console.log(data);
+    .catch(function(resp) {
+      console.log(resp);
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert alert-danger';
-      $scope.statusMsg.content = data.content.message;
-      // angular.element('.mb-control-error').triggerHandler('click');
+      if (resp.content) {
+          $scope.statusMsg.content = resp.content.message;
+          $scope.$apply();
+        } else{
+          $scope.statusMsg.content = resp.data.content.message;
+        }
+
     });
   };
 

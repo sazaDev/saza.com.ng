@@ -56,6 +56,9 @@
       <form class="form-horizontal" name="trustForm" method="POST" ng-submit="changeTrust()">
         <div class="panel panel-colorful">
           <div class="panel-heading">
+            <div class="panel-title-box">
+              <h3>Create new trustlines</h3>
+            </div>
 
             <ul class="panel-controls">
             </ul>
@@ -109,9 +112,31 @@
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-money"></span></span>
-                  <input type="text" class="form-control" name="limit" ng-model="trustData.limit"/>
+                  <input type="number" class="form-control" name="limit" ng-model="trustData.limit"/>
                 </div>
                 <span class="help-block">Leave empty to default to the max int64. Set to 0 to remove the trust line.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Transaction Passphrase</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input type="password" class="form-control" name="tx_passphrase" ng-model="trustData.tx_passphrase"/>
+                </div>
+                <span class="help-block">Transaction passphrase</span>
+
+              </div>
+            </div>
+            <div class="form-group" ng-if="currentUser.tfa_enabled">
+              <label class="col-md-3 col-xs-12 control-label">OTP Token</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="otpToken" ng-model="trustData.otpToken"/>
+
+                </div>
+                <span class="help-block">Token needed for 2FA</span>
               </div>
             </div>
 

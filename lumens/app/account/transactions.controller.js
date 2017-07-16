@@ -7,10 +7,11 @@ lumensWall.controller('transactionsController', function($scope, $state, $http, 
   $scope.tempUser = {};
   $scope.showDetail = false;
   $scope.txItem = {};
+  $scope.dtOptions = "";
 
   $scope.init = function() {
     $scope.getTransactions();
-    $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('aaSorting', [[0, 'desc']]);
+
   };
 
 
@@ -22,6 +23,7 @@ lumensWall.controller('transactionsController', function($scope, $state, $http, 
       // console.log("data", data);
       $scope.records = data.content.data;
       console.log($scope.records);
+      $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('aaSorting', [[0, 'desc']]);
     })
     .error(function(data) {
        console.log("Error", data);

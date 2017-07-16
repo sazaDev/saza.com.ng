@@ -1,0 +1,217 @@
+<div>
+ <div class="page-title">
+        <h2><span class="fa fa-briefcase"></span> Create Asset</h2>
+
+</div>
+	<div class="row" ng-controller="createAssetController" ng-init="init()">
+    <div class="col-md-8 col-md-offset-2">
+      <div ng-if="statusMsg" class="alert ng-class:statusMsg.type" role="alert">
+      <button type="button" ng-click="closeAlert()" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+      <li ng-repeat="x in statusMsg.content track by $index">
+      {{x}}
+      </li>
+
+    </div>
+      <form class="form-horizontal" name="assetForm" method="POST" ng-submit="createAsset()">
+        <div class="panel panel-colorful">
+          <div class="panel-heading">
+            <!-- <h3 class="panel-title"><strong>Send</strong> Payment</h3> -->
+            <ul class="panel-controls">
+              <!-- <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li> -->
+            </ul>
+          </div>
+          <div class="panel-body">
+            <p class="text-info"><i class="fa fa-info-circle"></i>
+              Issuing and Distribution accounts must be active and have a balance of at least 30XLM
+            </p>
+          </div>
+          <div class="panel-body">
+
+            <div class="form-group" ng-if="currentUser.accounts">
+              <label class="col-md-3 col-xs-12 control-label">Issuing Account</label>
+              <div class="col-md-6 col-xs-12">
+                <select class="form-control ng-cloak" ng-model="assetData.issuer" ng-change="contactChange()">
+
+                  <option ng-repeat="x in currentUser.accounts" value="{{x.account_id}}">{{x.fed_name || x.account_id}}</option>
+                </select>
+                <!-- <span class="help-block">Select a user from your address book or enter an Account Id below</span> -->
+
+              </div>
+            </div>
+
+            <div class="form-group" ng-if="currentUser.accounts">
+              <label class="col-md-3 col-xs-12 control-label">Distributing Account</label>
+              <div class="col-md-6 col-xs-12">
+                <select class="form-control ng-cloak" ng-model="assetData.baseAcct" ng-change="contactChange()">
+
+                  <option ng-repeat="x in currentUser.accounts" value="{{x.account_id}}">{{x.fed_name || x.account_id}}</option>
+                </select>
+                <!-- <span class="help-block">Select a user from your address book or enter an Account Id below</span> -->
+
+              </div>
+            </div>
+            <div class="form-group" ng-if="currentUser.accounts.length == 0">
+              <label class="col-md-3 col-xs-12 control-label">No Accounts Found</label>
+              <div class="col-md-6 col-xs-12">
+                <p><a ui-sref="addaccount">Add an account</a></p>
+              </div>
+            </div>
+
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Amount</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-money"></span></span>
+                  <input type="number" min="0" class="form-control" name="amount" ng-model="assetData.amount" required/>
+                </div>
+                <span class="help-block">Amount of assets to be created</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Asset Type</label>
+
+                <!-- <label class="switch switch-small">
+                    Lumens(XLM) <br>
+                    <input type="radio" ng-model="assetData.assetType" checked="true" ng-value="0">
+                    <span></span>
+                </label> -->
+
+                <label class="switch switch-small">
+                    Alphanumeric 4 <br>
+                    <input type="radio" ng-model="assetData.assetType" ng-value="4">
+                    <span></span>
+                </label>
+                <label class="switch switch-small">
+                    Alphanumeric 12 <br>
+                    <input type="radio" ng-model="assetData.assetType" ng-value="12">
+                    <span></span>
+                </label>
+
+
+            </div>
+
+            <div class="form-group" ng-show="isCustomAsset(assetData.assetType)">
+              <label class="col-md-3 col-xs-12 control-label">Asset Code</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="assetCode" ng-model="assetData.assetCode" maxlength="{{assetData.assetType}}"/>
+
+                </div>
+                <span class="help-block">Asset Alphanumeric Code; Eg: USD, EUR, XLM</span>
+              </div>
+            </div>
+
+
+            <!-- <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Website</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-link"></span></span>
+                  <input type="url" class="form-control" name="website" ng-model="assetData.website" />
+                </div>
+                <span class="help-block">Please enter web url with that has further description about your asset</span>
+              </div>
+            </div> -->
+
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Require Authorisation</label>
+              <div class="col-md-9 col-xs-12">
+                <label class="switch switch-small">
+                    <input type="checkbox" ng-model="assetData.requireAuth" checked="true" ng-value="1">
+                    <span></span>
+                </label>
+                <span class="help-block">Requires the issuing account to give other accounts permission before they can hold the issuing account’s credit.</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Authorisation Revocable</label>
+              <div class="col-md-9 col-xs-12">
+                <label class="switch switch-small">
+                    <input type="checkbox" ng-model="assetData.revokeAuth" checked="true" ng-value="1">
+                    <span></span>
+                </label>
+                <span class="help-block">Allows the issuing account to revoke its credit held by other accounts.</span>
+              </div>
+            </div>
+
+
+           <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Distribute on Stellar Decentralised Exchange</label>
+              <div class="col-md-9 col-xs-12">
+                <label class="switch switch-small">
+                    <input type="checkbox" ng-model="assetData.distType" checked="true" ng-value="1">
+                    <span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group" ng-show="isDEX(assetData.distType)">
+              <label class="col-md-3 col-xs-12 control-label">Amount to sell</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="number" name="distAmount" ng-model="assetData.distAmount" step="0.0000001" />
+
+                </div>
+                <span class="help-block">Amount of assets to distribute</span>
+              </div>
+            </div>
+
+            <div class="form-group" ng-show="isDEX(assetData.distType)">
+              <label class="col-md-3 col-xs-12 control-label">Price per Asset</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="distPrice" ng-model="assetData.distPrice" step="0.0000001"/>
+
+                </div>
+                <span class="help-block">Price of {{assetData.assetCode || 'Asset' }} to XLM:  
+                  1{{assetData.assetCode || 'Asset' }} = {{assetData.distPrice || '1.00' }}XLM</span>
+              </div>
+            </div>
+
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Transaction Passphrase</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input type="password" class="form-control" name="tx_passphrase" ng-model="assetData.tx_passphrase" required/>
+                </div>
+                <span class="help-block">Transaction passphrase</span>
+
+              </div>
+            </div>
+
+
+            <div class="form-group" ng-if="currentUser.tfa_enabled">
+              <label class="col-md-3 col-xs-12 control-label">OTP Token</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="otpToken" ng-model="assetData.otpToken"/>
+
+                </div>
+                <span class="help-block">Token needed for 2FA</span>
+              </div>
+            </div>
+
+
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-success pull-right" ng-disabled="assetForm.$error.required || assetForm.$invalid">Submit</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+
+
+  </div>
+
+</div>

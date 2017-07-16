@@ -1,5 +1,5 @@
 <div>
- <div class="page-title">                    
+ <div class="page-title">
         <h2><span class="fa fa-dot-circle-o"></span> Merge Account</h2>
 
 </div>
@@ -14,7 +14,7 @@
      </div>
       <form class="form-horizontal" name="mergeForm" method="POST" ng-submit="mergeAccount()">
         <div class="panel panel-colorful">
-          
+
           <div class="panel-body alert alert-danger">
             <p>
               <h4>Note: </h4>
@@ -28,27 +28,39 @@
 
             </ul>
           </div>
-          <div class="panel-body">                                                                        
+          <div class="panel-body">
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Destination Account</label>
-              <div class="col-md-6 col-xs-12">                                            
+              <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
                   <input type="text" class="form-control" name="destAcct" ng-model="userData.destAcct" placeholder="Username" required/>
-                </div>                                            
+                </div>
                 <span class="help-block">Enter destination account where all your XLM balance will be sent.</span>
               </div>
             </div>
 
-            <div class="form-group">                                        
-              <label class="col-md-3 col-xs-12 control-label">Password</label>
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Transaction Passphrase</label>
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
-                  <span class="input-group-addon"><span class="fa fa-unlock-alt"></span></span>
-                  <input type="password" class="form-control" name="password" ng-model="userData.password" required/>
-                </div>            
-                <span class="help-block">Please enter your Saza account password to verify operation</span>
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input type="password" class="form-control" name="tx_passphrase" ng-model="userData.tx_passphrase" required/>
+                </div>
+                <span class="help-block">Transaction passphrase</span>
+
+              </div>
+            </div>
+            <div class="form-group" ng-if="currentUser.tfa_enabled">
+              <label class="col-md-3 col-xs-12 control-label">OTP Token</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="otpToken" ng-model="userData.otpToken"/>
+
+                </div>
+                <span class="help-block">Token needed for 2FA</span>
               </div>
             </div>
 
@@ -83,13 +95,13 @@ $("[class^=mb-control-]").on("click",function(){
     if(sound === 'fail')
       playAudio('fail');
 
-  }        
+  }
   return false;
 });
 $(".mb-control-close").on("click",function(){
  $(this).parents(".message-box").removeClass("open");
  return false;
-});    
+});
 /* END MESSAGE BOX */
 
-</script>	
+</script>

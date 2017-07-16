@@ -1,7 +1,7 @@
 var lumensWall = angular.module('lumensWall');
 
 lumensWall.controller('sendPaymentController', function($scope, $state, $http, $rootScope, Account) {
-  
+
   $scope.paymentData = {};
   $scope.statusMsg = false;
   $scope.userRegex = /^()[a-z0-9][^<,|>]+$/i;
@@ -19,19 +19,17 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
 
     Account.getContacts($rootScope.currentUser.token, $rootScope.currentUser.id)
     .success(function(data) {
-      // console.log("data", data);
-      // $scope.contacts = data.content.data;
-      // console.log($scope.contacts);
+
       $scope.contacts = data.content.data;
     })
     .error(function(data) {
        console.log("Error", data);
-       // $scope.contacts = [{name: "amos", account_id: "1234"}, {name: "ssdsmos", account_id: "sdsds82"}];
+
 
     });
   };
 
-  
+
   $scope.closeAlert = function() {
     $scope.statusMsg = {};
   };
@@ -41,38 +39,45 @@ lumensWall.controller('sendPaymentController', function($scope, $state, $http, $
     $scope.paymentData.email = $rootScope.currentUser.email;
     $scope.paymentData.token = $rootScope.currentUser.token;
     $scope.paymentData.account_id = $rootScope.currentUser.currentAccount;
-    
+
     if ($scope.paymentData.assetType > 0) {
-      // check asset details 
+      // check asset details
       if (!$scope.paymentData.assetCode || !$scope.paymentData.assetIssuer) {
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
         $scope.statusMsg.content = ['Asset details required'];
         window.scrollTo(0, 0);
         return null;
-      } 
-    } 
+      }
+    }
 
     Account.sendPayment($scope.paymentData)
-      .success(function(data) {
+      .then(function(resp) {
 
-        // console.log("success",data);
+        console.log("success",resp);
         // show success message
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-success';
-        $scope.statusMsg.content = data.content.message;
+        $scope.statusMsg.content = resp.data.content.message;
         $scope.paymentData = {};
         window.scrollTo(0, 0);
       })
-      .error(function(data) {
-        
+      .catch(function(resp) {
+
+        console.log("error",resp);
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
-        $scope.statusMsg.content = data.content.message;
-        $scope.paymentData = {};
+        if (resp.content) {
+        $scope.statusMsg.content = resp.content.message;
+        $scope.$apply();
+        } else{
+          $scope.statusMsg.content = resp.data.content.message;
+        }
+
+        // $scope.paymentData = {};
         window.scrollTo(0, 0);
 
-				
+
       });
   };
 

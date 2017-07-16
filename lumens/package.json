@@ -1,0 +1,38 @@
+{
+  "name": "saza.com.ng",
+  "version": "1.0.0",
+  "description": "web wallet for stellar lumens",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poliha/saza.com.ng.git"
+  },
+  "keywords": [
+    "stellar",
+    "lumens",
+    "xlm",
+    "angularjs",
+    "javascript"
+  ],
+  "author": "@peteroliha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/poliha/saza.com.ng/issues"
+  },
+  "homepage": "https://github.com/poliha/saza.com.ng#readme",
+  "dependencies": {
+    "@uirouter/angularjs": "^1.0.3",
+    "angular": "^1.6.4",
+    "angular-datatables": "^4.1.0",
+    "angular-loading-bar": "^0.9.0",
+    "angular-password": "^1.0.3",
+    "bcryptjs": "^2.4.3",
+    "ngclipboard": "^1.1.1",
+    "node-forge": "^0.7.1",
+    "qrcode": "^0.8.2",
+    "random-string": "^0.2.0"
+  }
+}

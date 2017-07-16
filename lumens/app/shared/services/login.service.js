@@ -1,8 +1,8 @@
 // Login Service
-
+var Config = Config;
 var login = angular.module('loginService', []);
 // var baseUrl = 'https://saza.com.ng:8888/';
-var baseUrl = 'http://localhost:8888/';
+var baseUrl = Config.General.baseUrl;
 login.factory('Login', function($http) {
 
     return {
@@ -15,6 +15,17 @@ login.factory('Login', function($http) {
                 url: baseUrl+'login',
                 headers: { 'Content-Type' : 'application/x-www-form-urlencoded' },
                 // headers: {'X-CSRF-TOKEN': CSRF_TOKEN},
+                data: $.param(userData)
+            });
+        },
+
+        tfaLogin : function(userData) {
+            //console.log(userData);
+            return $http({
+                method: 'POST',
+                url: baseUrl+'tfalogin',
+                headers: { 'Content-Type' : 'application/x-www-form-urlencoded',
+                              'Authorization': 'JWT '+userData.token},
                 data: $.param(userData)
             });
         },

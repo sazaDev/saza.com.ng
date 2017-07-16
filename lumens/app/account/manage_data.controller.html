@@ -1,5 +1,5 @@
 <div>
- <div class="page-title">                    
+ <div class="page-title">
         <h2><span class="fa fa-shield"></span> Manage Data</h2>
 
 </div>
@@ -15,14 +15,14 @@
       <form class="form-horizontal" name="manageForm" method="POST" ng-submit="manageData()">
         <div class="panel panel-colorful">
           <div class="panel-heading">
-            
+
             <ul class="panel-controls">
             </ul>
           </div>
           <div class="panel-body">
             <p class="text-info"><i class="fa fa-info-circle"></i> Allows you to set,modify or delete a Data Entry (name/value pair) that is attached to a particular account. </p>
           </div>
-          <div class="panel-body">                                                                        
+          <div class="panel-body">
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Entry Name</label>
               <div class="col-md-6 col-xs-12">
@@ -43,7 +43,29 @@
                 </div>
                 <span class="help-block">The value of the data entry. If not present then the exiting Name will be deleted. If present then this value will be set in the DataEntry</span>
               </div>
-            </div>           
+            </div>
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Transaction Passphrase</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input type="password" class="form-control" name="tx_passphrase" ng-model="manageData.tx_passphrase" required/>
+                </div>
+                <span class="help-block">Transaction passphrase</span>
+
+              </div>
+            </div>
+            <div class="form-group" ng-if="currentUser.tfa_enabled">
+              <label class="col-md-3 col-xs-12 control-label">OTP Token</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="otpToken" ng-model="manageData.otpToken"/>
+
+                </div>
+                <span class="help-block">Token needed for 2FA</span>
+              </div>
+            </div>
 
 
 

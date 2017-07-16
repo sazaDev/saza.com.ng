@@ -3,7 +3,7 @@ var lumensWall = angular.module('lumensWall');
 lumensWall.controller('savePassphraseController', function($scope, $state, $http, $rootScope, Account, User) {
 
 console.log($rootScope.currentUser);
- if ($rootScope.currentUser.need_password == 0) {
+ if ($rootScope.currentUser.need_password === 0) {
           // event.preventDefault();
               $state.go('dashboard');
    }
@@ -22,54 +22,41 @@ console.log($rootScope.currentUser);
 
   $scope.changePassword = function() {
     Account.savePassphrase($scope.userData)
-    .success(function(data) {
+    .then(function(resp) {
 
-      //console.log(da
-      data.content.data.authenticated = true;
-      
-      // store seed to display in browser
-      // $scope.userSeed = data.content.data.seed;
-      // $scope.userAcct = data.content.data.account_id;
-      
+      console.log(resp);
+      resp.data.content.data.authenticated = true;
+
       // set the currently active account
-      if (data.content.data.accounts.length > 0) {
-        data.content.data.currentAccount = data.content.data.accounts[0].account_id;
-        data.content.data.currentUsername = data.content.data.accounts[0].fed_name;
+      if (resp.data.content.data.accounts.length > 0) {
+        resp.data.content.data.currentAccount = resp.data.content.data.accounts[0].account_id;
+        resp.data.content.data.currentUsername = resp.data.content.data.accounts[0].fed_name;
       }
 
+      var user = resp.data.content.data;
 
-      var user = data.content.data;
-      user.seed = "";
-      user.account_id = "";
-      // localUser = JSON.stringify(user);
-      
+      User.set(user);
 
       // Set the stringified user data into local storage
-      // localStorage.setItem('user', localUser);
-
-      // $rootScope.authenticated = true;
-
-      // $rootScope.currentUser = user;
-      // console.log("currentUser", $rootScope.currentUser);
-        User.set(user);
-
-        
-        // Set the stringified user data into local storage
-        localStorage.setItem('user', JSON.stringify(user));
-        console.log("currentUser", User.get());
-        $scope.statusMsg = {};
-        $scope.statusMsg.type = 'alert-success';
-        $scope.statusMsg.content = data.content.message;
-      // angular.element('.mb-control-success').triggerHandler('click');
-                
+      localStorage.setItem('user', JSON.stringify(user));
+      console.log("currentUser", User.get());
+      $scope.statusMsg = {};
+      $scope.statusMsg.type = 'alert-success';
+      $scope.statusMsg.content = resp.data.content.message;
+      $state.go('savepassphrase', {}, {reload: true});
 
     })
-    .error(function(data) {
+    .catch(function(data) {
       console.log(data);
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert-danger';
-      $scope.statusMsg.content = data.content.message;
-        
+      if (data.content) {
+        $scope.statusMsg.content = data.content.message;
+      } else{
+        $scope.statusMsg.content = data.data.content.message;
+      }
+      $scope.$apply();
+
     });
   };
 

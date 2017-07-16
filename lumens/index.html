@@ -59,8 +59,8 @@
         </p>
         <div ng-if="currentUser.need_password">
           <div class="alert alert-warning" role="alert">
-            Password is not set. You will be unable to complete some actions. Please set password now
-            <a ui-sref="savepassphrase" class="btn btn-success">Set Password</a>
+            Passphrase is not set. You will be unable to complete some actions. Please set a passhprase for your transactions now.
+            <a ui-sref="savepassphrase" class="btn btn-success">Set Passphrase</a>
           </div>
         </div>
         <div ng-if="currentUser.accounts.length == 0">
@@ -93,7 +93,13 @@
   <!-- START SCRIPTS -->
   <!-- START PLUGINS -->
   <script type="text/javascript" src="js/plugins/jquery/jquery.min.js"></script>
-  <!-- // <script type="text/javascript" src="js/plugins/jquery/jquery2.js"></script> -->
+  <script type="text/javascript" src="js/plugins/stellar-sdk.min.js"></script>
+  <script type="text/javascript" src="node_modules/node-forge/dist/forge.min.js"></script>
+  <script type="text/javascript" src="node_modules/bcryptjs/dist/bcrypt.min.js"></script>
+  <script type="text/javascript" src="node_modules/qrcode/build/qrcode.min.js"></script>
+
+  <script type="text/javascript" src="app/shared/services/utility.js"></script>
+  <script type="text/javascript" src="app/shared/services/config.js"></script>
 
   <script type="text/javascript" src="js/plugins/jquery/jquery-ui.min.js"></script>
   <script type="text/javascript" src="js/plugins/bootstrap/bootstrap.min.js"></script>
@@ -120,12 +126,13 @@
   <script type="text/javascript" src="app/shared/directives.js"></script>
   <script type="text/javascript" src="app/register/register.controller.js"></script>
   <script type="text/javascript" src="app/login/login.controller.js"></script>
-
+  <script type="text/javascript" src="app/login/tfa.controller.js"></script>
   <script type="text/javascript" src="app/login/activate.controller.js"></script>
   <script type="text/javascript" src="app/login/logout.controller.js"></script>
   <script type="text/javascript" src="app/login/password.controller.js"></script>
   <script type="text/javascript" src="app/dashboard/dashboard.controller.js"></script>
   <script type="text/javascript" src="app/account/create_account.controller.js"></script>
+  <script type="text/javascript" src="app/account/create_asset.controller.js"></script>
   <script type="text/javascript" src="app/account/send_payment.controller.js"></script>
   <script type="text/javascript" src="app/account/change_trust.controller.js"></script>
   <script type="text/javascript" src="app/account/allow_trust.controller.js"></script>

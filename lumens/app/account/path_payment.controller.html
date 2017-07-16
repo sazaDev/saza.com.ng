@@ -1,5 +1,5 @@
 <div>
- <div class="page-title">                    
+ <div class="page-title">
         <h2><span class="fa fa-arrows"></span> Path Payment</h2>
 
 </div>
@@ -21,15 +21,15 @@
           <div class="panel-body">
             <p class="text-info"><i class="fa fa-info-circle"></i> Sends an amount in a specific asset to a destination account through a path of offers.</p>
           </div>
-          <div class="panel-body">                                                                        
+          <div class="panel-body">
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Destination Account</label>
-              <div class="col-md-6 col-xs-12">                                            
+              <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
                   <input type="text" class="form-control" name="destAcct" ng-model="paymentData.destAcct" required ng-pattern="userRegex"/>
-                </div>                                            
+                </div>
                 <span class="help-block">Account ID  or Stellar Address of the recepient</span>
                 <span class="text-danger" ng-show="paymentForm.destAcct.$dirty && paymentForm.destAcct.$invalid">
                   <small ng-show="paymentForm.destAcct.$error.required">Destination Account is required. </small>
@@ -43,22 +43,22 @@
               <label class="col-md-3 col-xs-12 control-label">Sending Asset Type</label>
                 <div class="col-md-6 col-xs-12">
                   <label class="switch switch-small">
-                      Lumens(XLM) <br>    
+                      Lumens(XLM) <br>
                       <input type="radio" ng-model="paymentData.sendAssetType" ng-value="0">
                       <span></span>
                   </label>
-                  
+
                   <label class="switch switch-small">
-                      Alphanumeric 4 <br>    
+                      Alphanumeric 4 <br>
                       <input type="radio" ng-model="paymentData.sendAssetType" ng-value="4">
                       <span></span>
-                  </label>                                        
+                  </label>
                   <label class="switch switch-small">
                       Alphanumeric 12 <br>
                       <input type="radio" ng-model="paymentData.sendAssetType" ng-value="12">
                       <span></span>
-                  </label>                                        
-                                                              
+                  </label>
+
                   <span class="help-block">The asset to pay with.</span>
                 </div>
             </div>
@@ -69,7 +69,7 @@
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-key"></span></span>
                   <input class="form-control" type="text" name="sendAssetCode" ng-model="paymentData.sendAssetCode" maxlength="{{paymentData.sendAssetType}}"/>
-                  
+
                 </div>
                 <span class="help-block">Asset Alphanumeric Code; Eg: USD, EUR, XLM</span>
               </div>
@@ -80,19 +80,19 @@
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-user"></span></span>
                   <input class="form-control" type="text" name="sendAssetIssuer" ng-model="paymentData.sendAssetIssuer"/>
-                  
+
                 </div>
                 <span class="help-block">Stellar Account ID of the Asset Issuer</span>
               </div>
-            </div>            
+            </div>
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Maximum Send Amount</label>
-              <div class="col-md-6 col-xs-12">                                            
+              <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-money"></span></span>
-                  <input type="number" min="0" class="form-control" name="sendMax" ng-model="paymentData.sendMax" required/>
-                </div>                                            
+                  <input type="number" min="0" step="0.000001" class="form-control" name="sendMax" ng-model="paymentData.sendMax" required/>
+                </div>
                 <span class="help-block">The maximum amount of sendAsset to send.</span>
               </div>
             </div>
@@ -101,22 +101,22 @@
               <label class="col-md-3 col-xs-12 control-label">Destination Asset Type</label>
                 <div class="col-md-6 col-xs-12">
                   <label class="switch switch-small">
-                      Lumens(XLM) <br>    
+                      Lumens(XLM) <br>
                       <input type="radio" ng-model="paymentData.destAssetType" ng-value="0">
                       <span></span>
                   </label>
-                  
+
                   <label class="switch switch-small">
-                      Alphanumeric 4 <br>    
+                      Alphanumeric 4 <br>
                       <input type="radio" ng-model="paymentData.destAssetType" ng-value="4">
                       <span></span>
-                  </label>                                        
+                  </label>
                   <label class="switch switch-small">
                       Alphanumeric 12 <br>
                       <input type="radio" ng-model="paymentData.destAssetType" ng-value="12">
                       <span></span>
-                  </label>                                        
-                                                              
+                  </label>
+
                   <span class="help-block">The asset the destination will receive.</span>
                 </div>
             </div>
@@ -127,7 +127,7 @@
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-key"></span></span>
                   <input class="form-control" type="text" name="destAssetCode" ng-model="paymentData.destAssetCode" maxlength="{{paymentData.destAssetType}}"/>
-                  
+
                 </div>
                 <span class="help-block">Asset Alphanumeric Code; Eg: USD, EUR, XLM</span>
               </div>
@@ -138,42 +138,65 @@
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-user"></span></span>
                   <input class="form-control" type="text" name="destAssetIssuer" ng-model="paymentData.destAssetIssuer"/>
-                  
+
                 </div>
                 <span class="help-block">Stellar Account ID of the Asset Issuer</span>
               </div>
-            </div>            
+            </div>
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Destination Amount</label>
-              <div class="col-md-6 col-xs-12">                                            
+              <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-money"></span></span>
-                  <input type="number" min="0" class="form-control" name="destAmount" ng-model="paymentData.destAmount" required/>
-                </div>                                            
+                  <input type="number" min="0" step="0.000001" class="form-control" name="destAmount" ng-model="paymentData.destAmount" required/>
+                </div>
                 <span class="help-block">The amount the destination will receive.</span>
               </div>
-            </div>            
+            </div>
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Memo</label>
-              <div class="col-md-6 col-xs-12">                                            
+              <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-edit"></span></span>
                   <input type="text" class="form-control" name="memoText" ng-model="paymentData.memoText" ng-maxlength="28"/>
-                </div>                                            
+                </div>
                 <span class="help-block">Short description: Max 28 characters</span>
               </div>
-            </div>                       
+            </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Password</label>
               <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-unlock-alt"></span></span>
                   <input type="password" class="form-control" name="password" ng-model="paymentData.password" required/>
-                </div>            
+                </div>
                 <span class="help-block">Please enter your Saza account password to verify operation</span>
+              </div>
+            </div> -->
+
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Transaction Passphrase</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input type="password" class="form-control" name="tx_passphrase" ng-model="paymentData.tx_passphrase" required/>
+                </div>
+                <span class="help-block">Transaction passphrase</span>
+
+              </div>
+            </div>
+            <div class="form-group" ng-if="currentUser.tfa_enabled">
+              <label class="col-md-3 col-xs-12 control-label">OTP Token</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="otpToken" ng-model="paymentData.otpToken"/>
+
+                </div>
+                <span class="help-block">Token needed for 2FA</span>
               </div>
             </div>
 

@@ -1,11 +1,11 @@
 var lumensWall = angular.module('lumensWall');
 
 lumensWall.controller('allowTrustController', function($scope, $state, $http, $rootScope, Account, User) {
-  
+
   $scope.trustData = {};
   $scope.statusMsg = false;
-  
-  
+
+
 
   $scope.init = function() {
     $scope.trustData.id = $rootScope.currentUser.id;
@@ -13,7 +13,7 @@ lumensWall.controller('allowTrustController', function($scope, $state, $http, $r
     $scope.trustData.token = $rootScope.currentUser.token;
     $scope.trustData.authorize = true;
   };
-  
+
   $scope.closeAlert = function() {
     $scope.statusMsg = {};
   };
@@ -23,29 +23,35 @@ lumensWall.controller('allowTrustController', function($scope, $state, $http, $r
     $scope.trustData.email = $rootScope.currentUser.email;
     $scope.trustData.token = $rootScope.currentUser.token;
     $scope.trustData.account_id = $rootScope.currentUser.currentAccount;
-    
-    
-    Account.allowTrust($scope.trustData)
-      .success(function(data) {
 
-        // console.log("success",data);
+
+    Account.allowTrust($scope.trustData)
+      .then(function(resp) {
+
+        console.log("success",data);
         // show success message
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-success';
-        $scope.statusMsg.content = data.content.message;
+        $scope.statusMsg.content = resp.data.content.message;
         $scope.trustData = {};
         window.scrollTo(0, 0);
 
       })
-      .error(function(data) {
-        
+      .catch(function(resp) {
+        console.log("error",resp);
         $scope.statusMsg = {};
         $scope.statusMsg.type = 'alert-danger';
-        $scope.statusMsg.content = data.content.message;
-        $scope.trustData = {};
+
+        if (resp.content) {
+          $scope.statusMsg.content = resp.content.message;
+          $scope.$apply();
+        } else{
+          $scope.statusMsg.content = resp.data.content.message;
+        }
+
         window.scrollTo(0, 0);
 
-        
+
       });
   };
 

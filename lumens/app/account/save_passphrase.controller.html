@@ -15,27 +15,28 @@
 
 			<div class="panel panel-colorful">
 				<div class="panel-body">
-					<h2>Passphrase</h2>
+					<h2>Transaction Passphrase</h2>
 					<p class="text-info"> <i class="fa fa-info"></i> Why do I need to do this?</p>
-          <p>You signed up via social media and we do not store your social media password. You need a password to authenticate your transactions when sending payments and changing account options.</p>
+          <p>You need a password to authenticate your transactions when sending payments and changing account options. This is also used in the encrypting process of your private key. <a href="https://galactictalk.org/d/358-saza-wallet-updates" target="_blank">Read more here</a></p>
+          <p><h3 class="text-danger">This passphrase CAN NOT be reset or recovered. Ensure you write it down safely.</h3></p>
 
           <form method="post" ng-submit="changePassword()" name="changePasswordForm">
              <div class="form-group">
-                <label>New Password</label>
-                <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="password" ng-model="userData.password" placeholder="Enter New Password" required>
+                <label>New Passphrase</label>
+                <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="password" ng-model="userData.password" placeholder="Enter New Passphrase" required>
               </div>
               <div class="form-group">
-                <label>Confirm New Password</label>
-                <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="password_confirmation" ng-model="userData.password_confirmation" placeholder="Confirm New Password" required data-password-verify="userData.password">
+                <label>Confirm New Passphrase</label>
+                <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="password_confirmation" ng-model="userData.password_confirmation" placeholder="Confirm New Passphrase" required data-password-verify="userData.password">
               </div>
               <small style="color:red" ng-show="changePasswordForm.password.$dirty && changePasswordForm.password_confirmation.$error.required">
-                Confirm Password!
+                Confirm Passphrase!
               </small>
               <small style="color:red" ng-show="changePasswordForm.password_confirmation.$error.passwordVerify">
-                Passwords do not match!
+                Passphrase Mismatch!
               </small>
 
-              <button class="btn btn-success pull-right" ng-disabled="changePasswordForm.$error.required || changePasswordForm.$error.$invalid || changePasswordForm.password_confirmation.$error.passwordVerify">Change Password</button>
+              <button class="btn btn-success pull-right" ng-disabled="changePasswordForm.$error.required || changePasswordForm.$error.$invalid || changePasswordForm.password_confirmation.$error.passwordVerify">Change Passphrase</button>
           </form>
 
 

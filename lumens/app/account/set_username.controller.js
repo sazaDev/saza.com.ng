@@ -1,16 +1,16 @@
 var lumensWall = angular.module('lumensWall');
 
 lumensWall.controller('setUsernameController', function($scope, $state, $http, $rootScope, Account) {
-  
+
   $scope.userData = {};
   $scope.statusMsg = {};
   // $scope.userRegex = "/[a-z0-9][^<*,>]+/i";
   $scope.userRegex = /^()[a-z0-9][^<*,|>]+$/i;
-  
+
   $scope.init = function() {
 
   };
-  
+
   $scope.closeAlert = function() {
     $scope.statusMsg = {};
   };
@@ -23,9 +23,11 @@ lumensWall.controller('setUsernameController', function($scope, $state, $http, $
     $scope.userData.account_id = $rootScope.currentUser.currentAccount;
 
     Account.setUsername($scope.userData)
-    .success(function(data) {
-  
-      
+    .then(function(resp) {
+
+      console.log("success",resp);
+      var respContent = resp.data.content;
+
       $rootScope.currentUser.currentUsername = $scope.userData.username+"*"+$rootScope.siteURL;
       // save in accounts array as well
 
@@ -40,18 +42,25 @@ lumensWall.controller('setUsernameController', function($scope, $state, $http, $
 
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert-success';
-      $scope.statusMsg.content = data.content.message;
+      $scope.statusMsg.content = respContent.message;
 
-      // angular.element('.mb-control-success').triggerHandler('click');
-                
+
+
 
     })
-    .error(function(data) {
-      // console.log(data);
+    .catch(function(resp) {
+      console.log("error",resp);
       $scope.statusMsg = {};
       $scope.statusMsg.type = 'alert-danger';
-      $scope.statusMsg.content = data.content.message;
-      // angular.element('.mb-control-error').triggerHandler('click');
+       if (resp.content) {
+        $scope.statusMsg.content = resp.content.message;
+      } else{
+        $scope.statusMsg.content = resp.data.content.message;
+      }
+
+      $scope.$apply();
+
+
     });
   };
 

@@ -1,5 +1,5 @@
 <div>
- <div class="page-title">                    
+ <div class="page-title">
         <h2><span class="fa fa-th-list"></span> Manage Offer</h2>
 
 </div>
@@ -10,7 +10,7 @@
         <li ng-repeat="x in statusMsg.content track by $index">
         {{x}}
         </li>
-      </div>      
+      </div>
       <div>
         <p class="text-info"><i class="fa fa-info-circle"></i> Creates, updates, or deletes an offer.</p>
       </div>
@@ -22,8 +22,8 @@
           <div class="panel-title-box">
             <h3>Offers</h3>
             <span>Offers made by this account</span>
-          </div>                                    
-          
+          </div>
+
         </div>
         <div class="panel-body panel-body-table">
 
@@ -36,7 +36,7 @@
                   <th width="35%">Buying</th>
                   <th width="10%">Amount</th>
                   <th width="10%">Price</th>
-                  
+
                 </tr>
               </thead>
               <tbody>
@@ -58,8 +58,8 @@
           <div class="panel-title-box">
             <h3>Trustlines</h3>
             <span>Trustlines for assets in account with limits</span>
-          </div>                                    
-          
+          </div>
+
         </div>
         <div class="panel-body panel-body-table">
 
@@ -71,7 +71,7 @@
                   <th width="60%">Asset Issuer</th>
                   <th width="15%">Balance</th>
                   <th width="15%">Limit</th>
-                  
+
                 </tr>
               </thead>
               <tbody>
@@ -86,41 +86,41 @@
           </div>
 
         </div>
-      </div>            
+      </div>
     </div>
     <div class="col-md-6">
 
       <form class="form-horizontal" name="offerForm" method="POST" ng-submit="manageOffer()">
         <div class="panel panel-colorful">
           <div class="panel-heading">
-            
+
             <ul class="panel-controls">
-            
+
             </ul>
           </div>
           <div class="panel-body">
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Selling</label>
-                
+
                 <label class="switch switch-small">
-                    Lumens(XLM) <br>    
+                    Lumens(XLM) <br>
                     <input type="radio" ng-model="offerData.sellingAssetType" ng-change="clearAsset(1)" ng-value="0">
                     <span></span>
                 </label>
-                
+
                 <label class="switch switch-small">
-                    Alphanumeric 4 <br>    
+                    Alphanumeric 4 <br>
                     <input type="radio" ng-model="offerData.sellingAssetType" ng-change="clearAsset(1)" ng-value="4">
                     <span></span>
-                </label>                                        
+                </label>
                 <label class="switch switch-small">
                     Alphanumeric 12 <br>
                     <input type="radio" ng-model="offerData.sellingAssetType" ng-change="clearAsset(1)" ng-value="12">
                     <span></span>
-                </label>                                        
-                                                            
-              
+                </label>
+
+
             </div>
 
             <div class="form-group" ng-show="isCustomAsset(offerData.sellingAssetType)">
@@ -129,7 +129,7 @@
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-key"></span></span>
                   <input class="form-control" type="text" name="sellingAssetCode" ng-model="offerData.sellingAssetCode" maxlength="{{offerData.sellingAssetType}}"/>
-                  
+
                 </div>
                 <span class="help-block">Asset Alphanumeric Code; Eg: USD, EUR, XLM</span>
               </div>
@@ -140,7 +140,7 @@
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-user"></span></span>
                   <input class="form-control" type="text" name="sellingAssetIssuer" ng-model="offerData.sellingAssetIssuer"/>
-                  
+
                 </div>
                 <span class="help-block">Stellar Account ID of the Asset Issuer</span>
               </div>
@@ -148,25 +148,25 @@
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Buying</label>
-                
+
                 <label class="switch switch-small">
-                    Lumens(XLM) <br>    
+                    Lumens(XLM) <br>
                     <input type="radio" ng-model="offerData.buyingAssetType" ng-change="clearAsset(2)" ng-value="0">
                     <span></span>
                 </label>
-                
+
                 <label class="switch switch-small">
-                    Alphanumeric 4 <br>    
+                    Alphanumeric 4 <br>
                     <input type="radio" ng-model="offerData.buyingAssetType" ng-change="clearAsset(2)"  ng-value="4">
                     <span></span>
-                </label>                                        
+                </label>
                 <label class="switch switch-small">
                     Alphanumeric 12 <br>
                     <input type="radio" ng-model="offerData.buyingAssetType" ng-change="clearAsset(2)" ng-value="12">
                     <span></span>
-                </label>                                        
-                                                            
-              
+                </label>
+
+
             </div>
 
             <div class="form-group" ng-show="isCustomAsset(offerData.buyingAssetType)">
@@ -175,7 +175,7 @@
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-key"></span></span>
                   <input class="form-control" type="text" name="buyingAssetCode" ng-model="offerData.buyingAssetCode" maxlength="{{offerData.buyingAssetType}}"/>
-                  
+
                 </div>
                 <span class="help-block">Asset Alphanumeric Code; Eg: USD, EUR, XLM</span>
               </div>
@@ -186,45 +186,67 @@
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-user"></span></span>
                   <input class="form-control" type="text" name="buyingAssetIssuer" ng-model="offerData.buyingAssetIssuer"/>
-                  
+
                 </div>
                 <span class="help-block">Stellar Account ID of the Asset Issuer</span>
               </div>
-            </div>            
+            </div>
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Amount</label>
-              <div class="col-md-6 col-xs-12">                                            
+              <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-money"></span></span>
-                  <input type="number" min="0" class="form-control" name="amount" ng-model="offerData.amount" required/>
-                </div>                                            
+                  <input type="number" min="0" step="0.000001" class="form-control" name="amount" ng-model="offerData.amount" required/>
+                </div>
                 <span class="help-block">The total amount you're selling. If 0, deletes the offer.</span>
               </div>
             </div>
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Price</label>
-              <div class="col-md-6 col-xs-12">                                            
+              <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-money"></span></span>
-                  <input type="number" min="0" class="form-control" name="price" ng-model="offerData.price" required/>
-                </div>                                            
+                  <input type="number" min="0" step="0.000001" class="form-control" name="price" ng-model="offerData.price" required/>
+                </div>
                 <span class="help-block">The exchange rate ratio (selling / buying)</span>
               </div>
-            </div> 
+            </div>
 
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Offer ID</label>
-              <div class="col-md-6 col-xs-12">                                            
+              <div class="col-md-6 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon"><span class="fa fa-money"></span></span>
                   <input type="number" min="0" class="form-control" name="offerId" ng-model="offerData.offerId"/>
-                </div>                                            
+                </div>
                 <span class="help-block">If 0, will create a new offer. Otherwise, edits an exisiting offer.</span>
               </div>
             </div>
-            
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Transaction Passphrase</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input type="password" class="form-control" name="tx_passphrase" ng-model="offerData.tx_passphrase" required/>
+                </div>
+                <span class="help-block">Transaction passphrase</span>
+
+              </div>
+            </div>
+            <div class="form-group" ng-if="currentUser.tfa_enabled">
+              <label class="col-md-3 col-xs-12 control-label">OTP Token</label>
+              <div class="col-md-6 col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                  <input class="form-control" type="text" name="otpToken" ng-model="offerData.otpToken"/>
+
+                </div>
+                <span class="help-block">Token needed for 2FA</span>
+              </div>
+            </div>
+
           </div>
           <div class="panel-footer">
             <button class="btn btn-success pull-right" ng-disabled="offerForm.$error.required || offerForm.$invalid">Submit</button>

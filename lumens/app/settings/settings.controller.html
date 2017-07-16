@@ -1,4 +1,4 @@
-<div class="page-title">                    
+<div class="page-title">
   <h2><span class="fa fa-cogs"></span> Settings</h2>
 </div>
 <div class="row" ng-controller="settingsController" ng-init="init()">
@@ -10,16 +10,17 @@
       </li>
 
     </div>
-    <div class="panel panel-colorful nav-tabs-vertical">                   
+    <div class="panel panel-colorful nav-tabs-vertical">
       <div class="panel-heading ui-draggable-handle">
         <h3 class="panel-title">Modify your settings</h3>
       </div>
       <div class="tabs">
         <ul class="nav nav-tabs">
           <li class="active"><a href="#tab1" data-toggle="tab" aria-expanded="false"><i class="fa fa-list"></i> Account Details</a></li>
-          <!-- <li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false"><i class="fa fa-bullhorn"></i> Notifications</a></li> -->
-          <li class=""><a href="#tab3" data-toggle="tab" aria-expanded="true"><i class="fa fa-lock"></i> Security</a></li>
-        </ul>                    
+          <!-- <li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false"><i class="fa fa-key"></i> Change Passphrase</a></li> -->
+          <li class=""><a href="#tab3" data-toggle="tab" aria-expanded="true"><i class="fa fa-lock"></i> Change Password</a></li>
+          <li class=""><a href="#tab4" data-toggle="tab" aria-expanded="true"><i class="fa fa-lock"></i> 2FA for Transactions</a></li>
+        </ul>
         <div class="panel-body tab-content">
           <div class="tab-pane  active" id="tab1">
             <h2 class="header-side">Account ID</h2>
@@ -30,13 +31,25 @@
                 </button>
               </span>
               <br>
-            <h2 class="header-side">Seed</h2>
-              <span>{{seed}}</span>  
+            <h2 class="header-side">Secret Key</h2>
+              <span>{{seed}}</span>
               <span>
-                <button ng-click="toggleSeedView()" class="btn btn-default">
+                <!-- <button class="btn btn-default">
                   <i  class="fa fa-eye"></i>
-                </button>
+                </button> -->
               </span>
+              <div class="form-group">
+                <div class="">
+                  <div class="input-group">
+                    <span class="input-group-addon"><span class="fa fa-key"></span></span>
+                    <input type="password" class="form-control" name="tx_passphrase" ng-model="userData.tx_passphrase" placeholder="Enter Transaction passphrase" required/>
+                  </div>
+                </div>
+              </div>
+              <button ng-click="toggleSeedView()" class="btn btn-primary">
+                   Show Secret
+              </button>
+
               <br>
             <h2 class="header-side">Set Username</h2>
 
@@ -60,24 +73,46 @@
                     <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="password" ng-model="deleteData.password" placeholder="Enter Password" required>
                   </div>
                   <button class="btn btn-success pull-right" ng-disabled="deleteAccountForm.$error.required || deleteAccountForm.$error.$invalid">Yes, Delete Account</button>
-              </form>            
+              </form>
 
           </div>
-          <div class="tab-pane" id="tab2">
-            <h2 class="header-side">Emails</h2>
-            <p>
-              Receive notifications when sending payments
-            </p>
-            <p>
-              <span>No</span>
-              <label class="switch">
-                <input type="checkbox" checked="" value="0">
-                <span></span>
-              </label>
-              <span>Yes</span>
-            </p>
+          <!-- Tab 2 -->
+          <!-- <div class="tab-pane" id="tab2">
+            <div class="row">
+              <h2 class="header-side">Change Passphrase</h2>
+              <p>To change your passphrase, please fill the new passphrase below and click save</p>
+              <p class="text-info"><i class="fa fa-info"></i> You need to enter your old passphrase for the change to be successful. If yor require a passphrase reset, kindly contact admin</p>
+              <form method="post" ng-submit="changePassphrase()" name="changePassphraseForm">
+                  <div class="form-group">
+                    <label>New Passphrase</label>
+                    <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="password" ng-model="userData.passphrase" placeholder="Enter New Passphrase" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Confirm New Passphrase</label>
+                    <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="passphrase_confirmation" ng-model="userData.passphrase_confirmation" placeholder="Confirm New Passphrase" required data-password-verify="userData.passphrase">
+                  </div>
+                  <small style="color:red" ng-show="changePasswordForm.passphrase.$dirty && changePassphraseForm.passphrase_confirmation.$error.required">
+                    Confirm Passphrase!
+                  </small>
+                  <small style="color:red" ng-show="changePassphraseForm.passphrase_confirmation.$error.passwordVerify">
+                    Passphrase Mismatch!
+                  </small>
+                  <div class="form-group">
+                    <label>Enter Old Passphrase</label>
+                    <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="old_passphrase" ng-model="userData.old_passphrase" placeholder="Enter Old Passphrase" required="">
+                  </div>
+                  <div class="form-group" ng-if="currentUser.tfa_enabled">
+                    <label>OTP Token</label>
+                    <input class="form-control" type="text" name="otpToken" ng-model="userData.otpToken" placeholder="Enter Token"/>
 
-          </div>
+                  </div>
+                  <button class="btn btn-success pull-right" ng-disabled="changePassphraseForm.$error.required || changePassphraseForm.$error.$invalid || changePassphraseForm.password_confirmation.$error.passwordVerify">Change Password</button>
+              </form>
+
+            </div>
+          </div> -->
+
+          <!-- Tab 3 -->
           <div class="tab-pane" id="tab3">
             <div class="row">
               <h2 class="header-side">Change Password</h2>
@@ -102,12 +137,81 @@
                     <label>Enter Old Password</label>
                     <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="old_password" ng-model="passwordData.old_password" placeholder="Enter Old Password" required="">
                   </div>
+                  <div class="form-group" ng-if="currentUser.tfa_enabled">
+                    <label>OTP Token</label>
+                    <input class="form-control" type="text" name="otpToken" ng-model="userData.otpToken" placeholder="Enter Token"/>
+
+                  </div>
                   <button class="btn btn-success pull-right" ng-disabled="changePasswordForm.$error.required || changePasswordForm.$error.$invalid || changePasswordForm.password_confirmation.$error.passwordVerify">Change Password</button>
               </form>
-              
+
             </div>
 
-          </div>                        
+          </div>
+
+          <!-- Tab 4 -->
+          <div class="tab-pane" id="tab4">
+            <div class="row">
+              <div ng-if="!currentUser.tfa_enabled">
+                <h2 class="header-side">Enable 2FA</h2>
+
+
+                <div ng-if="show_qr">
+                  <h5>Enter the OTP Secret below or scan the QR code in your TOTP app, e.g. Google Authenticator. Enter the code shown in the app and click on "Activate"</h5>
+
+                  <p>OTP Secret: {{otpSecretKey}}</p>
+
+                  <img src="{{otpUrl}}">
+
+                  <div class="form-group">
+
+                    <input type="text" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="otpToken" ng-model="userData.otpToken" placeholder="Enter Token" required>
+                  </div>
+
+                  <button class="btn btn-success pull-right" ng-click="enable2fa(otpSecretKey)">Activate</button>
+                </div>
+
+                <div ng-if="!show_qr">
+                  <button class="btn btn-success btn-lg" ng-click="get2faSecret()">Enable</button>
+                </div>
+              </div>
+              <div ng-if="currentUser.tfa_enabled">
+                <h2 class="header-side">Disable 2FA</h2>
+                <form method="post" ng-submit="disable2fa()" name="disable2faForm">
+                   <div class="form-group">
+                      <label>Password</label>
+                      <input type="password" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="password" ng-model="tfaData.password" placeholder="Enter Your Password" required>
+                    </div>
+                    <div class="form-group">
+                      <label>2FA token</label>
+                      <input type="text" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="otpToken" ng-model="tfaData.otpToken" placeholder="Enter Token" required="">
+                    </div>
+                    <button class="btn btn-danger pull-right" ng-disabled="disable2faForm.$error.required || disable2faForm.$error.$invalid">Disable</button>
+                </form>
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+          <div class="tab-pane" id="tab44">
+            <h2 class="header-side">Emails</h2>
+            <p>
+              Receive notifications when sending payments
+            </p>
+            <p>
+              <span>No</span>
+              <label class="switch">
+                <input type="checkbox" checked="" value="0">
+                <span></span>
+              </label>
+              <span>Yes</span>
+            </p>
+
+          </div>
         </div>
       </div>
     </div>

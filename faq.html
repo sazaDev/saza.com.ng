@@ -1,0 +1,1750 @@
+<!doctype html>
+<!--[if IE 8 ]>
+<html class="ie ie8" lang="en">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]>
+<html lang="en" class="no-js">
+<![endif]-->
+<html lang="en">
+  <head>
+    <!-- Basic -->
+    <title>
+      SAZA | Your Complete Lumens Wallet
+    </title>
+    <!-- Define Charset -->
+    <meta charset="utf-8">
+    <!-- Responsive Metatag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- Page Description and Author -->
+    <meta name="description" content="Saza - Lumens wallet for the stellar network">
+    <meta name="author" content="@peter.oliha">
+
+    <!-- Bootstrap CSS  -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css" media="screen">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css" type="text/css" media="screen">
+    <!-- Icon -->
+    <link rel="stylesheet" href="assets/fonts/simple-line-icons.css" type="text/css" media="screen">
+    <!-- rs style -->
+    <link rel="stylesheet" type="text/css" href="assets/css/settings.css" media="screen">
+    <!-- Slicknav -->
+    <link rel="stylesheet" type="text/css" href="assets/css/slicknav.css" media="screen">
+    <!-- Span CSS Styles  -->
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css" media="screen">
+    <!-- Responsive CSS Styles  -->
+    <link rel="stylesheet" type="text/css" href="assets/css/responsive.css" media="screen">
+    <!-- Css3 Transitions Styles  -->
+    <link rel="stylesheet" type="text/css" href="assets/css/animate.css" media="screen">
+    <!-- Selected Preset -->
+
+    <!-- Color CSS Styles  -->
+    <link rel="stylesheet" type="text/css" href="assets/css/colors/red.css" title="red" media="screen" />
+    <!--[if IE 8]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <style type="text/css">
+      p {
+        color: #000;
+        font-size: 15px;
+      /*  font-family: 'Raleway', sans-serif;
+        line-height: 22px;*/
+        margin: 5px;
+      }
+      .sidebar {
+        display: none;
+      }
+      @media (min-width: 768px) {
+        .sidebar {
+          position: fixed;
+          top: 51px;
+          bottom: 0;
+          left: 0;
+          z-index: 1000;
+          display: block;
+          padding: 20px;
+          overflow-x: hidden;
+          overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+          background-color: #f5f5f5;
+          border-right: 1px solid #eee;
+        }
+      }
+
+      /* Sidebar navigation */
+      .nav-sidebar {
+        margin-right: -21px; /* 20px padding + 1px border */
+        margin-bottom: 20px;
+        margin-left: -20px;
+      }
+      .nav-sidebar > li > a {
+        padding-right: 20px;
+        padding-left: 20px;
+      }
+      .nav-sidebar > .active > a,
+      .nav-sidebar > .active > a:hover,
+      .nav-sidebar > .active > a:focus {
+        color: #fff;
+        background-color: #428bca;
+      }
+
+      .main {
+        padding: 20px;
+      }
+      @media (min-width: 768px) {
+        .main {
+          padding-right: 40px;
+          padding-left: 40px;
+        }
+      }
+      .main .page-header {
+        margin-top: 0;
+      }
+
+      .panel{
+        padding-top: 85px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <!-- Full Body Container -->
+    <div id="container">
+      <!-- Start Header Section -->
+      <div class="hidden-header">
+      </div>
+      <header class="clearfix">
+
+        <!-- Start  Logo & Naviagtion  -->
+        <div class="navbar navbar-default navbar-top">
+          <div class="container">
+            <div class="navbar-header">
+              <!-- Stat Toggle Nav Link For Mobiles -->
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <i class="fa fa-bars">
+              </i>
+              </button>
+              <!-- End Toggle Nav Link For Mobiles -->
+              <a class="navbar-brand" href="https://saza.io">
+              <img alt="" src="assets/img/logo1.png">
+              </a>
+            </div>
+            <div class="navbar-collapse collapse">
+
+              <!-- Start Navigation List -->
+              <ul class="nav navbar-nav navbar-right">
+                <li>
+                  <a class="active" href="https://saza.io">
+                  Home
+                  </a>
+
+                </li>
+                <li>
+                  <a href="#features">
+                  Features
+                  </a>
+
+                </li>
+               <!--  <li>
+                  <a href="#">
+                  How it Works
+                  </a>
+
+                </li> -->
+                <li>
+                  <a href="faq.html">
+                  FAQ
+                  </a>
+
+                </li>
+                <li>
+                  <a href="lumens">
+                  Get Started
+                  </a>
+
+                </li>
+                <!-- <li>
+                  <a href="#">
+                  Contact
+                  </a>
+                </li> -->
+              </ul>
+              <!-- End Navigation List -->
+            </div>
+          </div>
+
+          <!-- Mobile Menu Start -->
+          <ul class="wpb-mobile-menu">
+                <li>
+                  <a class="active" href="https://saza.io">
+                  Home
+                  </a>
+
+                </li>
+                <li>
+                  <a href="#features">
+                  Features
+                  </a>
+
+                </li>
+                <!-- <li>
+                  <a href="#">
+                  How it Works
+                  </a>
+
+                </li> -->
+                <li>
+                  <a href="faq.html">
+                  FAQ
+                  </a>
+
+                </li>
+                <li>
+                  <a href="lumens">
+                  Get Started
+                  </a>
+
+                </li>
+               <!--  <li>
+                  <a href="#">
+                  Contact
+                  </a>
+                </li> -->
+          </ul>
+          <!-- Mobile Menu End -->
+
+        </div>
+        <!-- End Header Logo & Naviagtion -->
+      </header>
+      <!-- End Header Section -->
+
+
+
+
+
+      <!-- Start Services Section -->
+      <!-- <div class="section service" id=""> -->
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-2 sidebar">
+              <ul class="nav nav-sidebar">
+                <li><a href="#get_started">GET STARTED</a></li>
+                <li><a href="#create_account">HOW TO CREATE OR LINK STELLAR ACCOUNT</a></li>
+                <li><a href="#enable_2fa">HOW TO ENABLE 2-FACTOR AUTHENTICATION</a></li>
+                <li><a href="#disable_2fa">HOW TO DISABLE 2-FACTOR AUTHENTICATION</a></li>
+                <li><a href="#create_asset">HOW TO CREATE AN ASSET</a></li>
+                <li><a href="#make_payment">HOW TO MAKE A PAYMENT</a></li>
+                <li><a href="#email_payment">HOW TO SEND PAYMENT TO EMAIL ADDRESSES</a></li>
+                <li><a href="#claim_lumens">HOW TO CLAIM LUMENS</a></li>
+                <li><a href="#revoke_lumens">HOW TO REVOKE LUMENS</a></li>
+                <li><a href="#receive_payment">HOW TO RECEIVE PAYMENTS</a></li>
+                <li><a href="#tx_history">VIEW TRANSACTION HISTORY</a></li>
+                <li><a href="#create_contacts">VIEW AND CREATE NEW CONTACTS</a></li>
+                <li><a href="#add_anchor">HOW TO ADD AN ANCHOR</a></li>
+                <!-- <li><a href="#account_ops"></a></li> -->
+                <li role="presentation" class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    ACCOUNT OPERATIONS<span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#change_trust">HOW TO CHANGE TRUST</a></li>
+                    <li><a href="#allow_trust">HOW TO ALLOW TRUST</a></li>
+                    <li><a href="#manage_offer">HOW TO MANAGE AN OFFER</a></li>
+                    <li><a href="#passive_offer">HOW TO CREATE A PASSIVE OFFER</a></li>
+                    <li><a href="#path_payment">PATH PAYMENT</a></li>
+                    <li><a href="#set_options">SET OPTIONS</a></li>
+                    <li><a href="#merge_account">HOW TO MERGE ACCOUNTS</a></li>
+                    <li><a href="#manage_data">MANAGE DATA OPERATION</a></li>
+                  </ul>
+                </li>
+                <li><a href="#settings">SETTINGS</a></li>
+                <li><a href="#change_password">HOW TO CHANGE PASSWORD</a></li>
+              </ul>
+            </div>
+
+            <div class="col-md-10 col-md-offset-2 main">
+              <!-- Panel Start -->
+              <div class="text-center">
+                <h1>FAQ</h1>
+              </div>
+              <div class="panel panel-default" id="get_started">
+                <div class="panel-heading">
+                  <h2>Get Started</h2>
+                </div>
+                <div class="panel-body">
+                  <p>SAZA can be accessed on the official website, www.saza.com.ng. The homepage gives an introduction to SAZA and highlights its features. However, an account will have to be created with SAZA in order to use the features.
+                  </p>
+                  <p dir="ltr">
+                    <img class="img-responsive center-block" src="assets/img/faq/image38.png" alt=""/>
+                  </p>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Navigate to the ‘GET STARTED’ button on the top right corner of the
+                              screen.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image44.png" alt=""/>
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you are new to SAZA, fill in your details on the pop-up form and
+                              then click on ‘create account’.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image32.png" alt=""/>
+                  </p>
+                  <br/>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you are a returning user to SAZA, click on the ‘Login now’
+                              button and enter your username and password.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                    <img class="img-responsive center-block" src="assets/img/faq/image37.png" alt=""/>
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      After creating an account and logging in, you will be taken to the account
+                      overview page.
+                  </p>
+
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="create_account">
+                <div class="panel-heading">
+                  <h2>HOW TO CREATE OR LINK STELLAR ACCOUNT</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      The account overview page shows a summary of your Stellar account. However,
+                      you will need to either create a new Stellar account or link an existing
+                      one.
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image6.png" alt=""/>
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      The following steps will guide you in creating and linking a Stellar
+                      account.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              A passphrase will need to be created in order to complete some actions. This is a string chosen by the user to verify all its transactions. Note that this is different from the user password. Set a passphrase by clicking on the ‘Set Passphrase’ button.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image25.png" alt=""/>
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter a new passphrase.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Confirm the new passphrase.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on the ‘Change Passphrase button’.
+                          </p>
+                      </li>
+                  </ul>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image16.png" alt=""/>
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              To create a new Stellar account, enter your transaction passphrase
+                              in the ‘Create a New Account’ section.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on the ‘create account’ button.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image43.png" alt=""/>
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      The response will be like the image below.
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image5.png" alt=""/>
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you already have an existing Stellar account, enter the Secret
+                              Key, Transaction Passphrase, and click on the ‘Link Account’
+                              button.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image12.png" alt=""/>
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      After all these are done, your account overview page should look like so.
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image24.png" alt=""/>
+                  </p>
+
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="enable_2fa">
+                <div class="panel-heading">
+                  <h2>HOW TO ENABLE 2-FACTOR AUTHENTICATION</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      You can now enable 2FA from the settings menu. It uses time based one-time
+                      passwords as tokens and these can be generated by syncing your device with
+                      the secret key provided using apps like Google Authenticator, Duo Security,
+                      Authy, etc. Follow the steps below to enable 2FA.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Navigate to the ‘Settings’ tab on the menu.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Scroll down and select the ‘2FA for Transactions’ option.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on ‘Enable’ to enable 2FA.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image2.png" alt=""/>
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the OTP Secret or scan the QR code in your TOTP app.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the OTP Token generated from the TOTP app into the ‘Enter
+                              Token’ text box.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on the ‘Activate’ button.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image20.png" alt=""/>
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      Once activated, all transactions will require the token before it is
+                      approved.
+                  </p>
+
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="disable_2fa">
+                <div class="panel-heading">
+                  <h2>HOW TO DISABLE 2FA</h2>
+                </div>
+                <div class="panel-body">
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Select ‘2FA for Transactions’ from the options in settings.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your password.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on the ‘Disable’ button.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image15.png" alt=""/>
+                  </p>
+
+                </div>
+              </div>
+
+              <!-- Panel End -->
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="create_asset">
+                <div class="panel-heading">
+                  <h2>HOW TO CREATE AN ASSET</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      One of Stellar’s most powerful features is the ability to trade any kind of
+                      asset, like US dollars, Nigerian naira, bitcoins, special coupons, or just
+                      about anything you like. Any account can issue assets on the Stellar
+                      network. Entities that issue assets are called anchors.
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      To create an asset:
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Navigate to the ‘Create Asset’ tab on the menu.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image4.png" alt=""/>
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the Issuing Account.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the Distributing Account.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the amount of assets to be created.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Select the Asset type to be created and enter the Asset code.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your transaction passphrase.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on the ‘Submit’ button to complete the operation.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image33.png" alt=""/>
+                  </p>
+
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="make_payment">
+                <div class="panel-heading">
+                  <h2>HOW TO MAKE A PAYMENT</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      The make payment operation allows you to send an amount in a specific asset
+                      to a destination account.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              The first step in making a payment is to navigate to the ‘Make a
+                              Payment’ tab on the menu.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image23.png" alt=""/>
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      A payment can be done by either selecting a contact in the address book or
+                      by manually entering a destination account (Account ID or Stellar address)
+                      of the recipient. Ensure that:
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              A contact is selected or destination account is entered.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              An amount is entered.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              An Asset Type is selected.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              A memo is entered. The memo can have your email address or any
+                              description you see fit.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your transaction passphrase to verify the operation.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              When all the above are done, click on the ‘Submit’ button at the
+                              bottom left of the screen to make payment.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image18.png" alt=""/>
+                  </p>
+
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="email_payment">
+                <div class="panel-heading">
+                  <h2>HOW TO SEND PAYMENT TO EMAIL ADDRESSES</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      Sending to email is another means of making payments with SAZA. It can work
+                      for both recipients with Stellar accounts and those without. However,
+                      payments can only be sent out in Lumens.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              To send payment to an email, navigate to the ‘Send Lumens to email’
+                              tab.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image34.png" alt=""/>
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the recipient's email address.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the amount to send in Lumens.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter a brief memo.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your transaction passphrase to verify the operation.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on the ‘Submit’ button on the bottom right of the screen to
+                              send payment.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image9.png" alt=""/>
+                  </p>
+                </div>
+
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="claim_lumens">
+                <div class="panel-heading">
+                  <h2>HOW TO CLAIM LUMENS</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      You can claim Lumens that was sent to you via email by following these easy
+                      steps.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Navigate to the ‘Claim lumens’ tab in the menu.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your email in the ‘recipient email’ section.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the claim code in the ‘Claim Code’ section.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your passphrase in the ‘Transaction Passphrase’ section.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on the ‘submit’ button.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image7.png" alt=""/>
+                  </p>
+                </div>
+
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="revoke_lumens">
+                <div class="panel-heading">
+                  <h2>HOW TO REVOKE LUMENS</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      You can reclaim Lumens that you sent out via email that have not been
+                      claimed by the recipient yet.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Navigate to the ‘Revoke Lumens’ tab in the menu.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      It shows a list of Lumens that have been sent out. This list highlights the
+                      recipient’s email, amount that was sent, and its status (claimed or not
+                      claimed). You can only revoke payments that are yet to be claimed.
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image17.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="receive_payment">
+                <div class="panel-heading">
+                  <h2>HOW TO RECEIVE PAYMENTS</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      You can receive payments made into your account by following these steps.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Navigate to the ‘Receive Payment’ tab on the menu
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image36.png" alt=""/>
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      There are three options for receiving payments. However, each one of them
+                      allows you to performs the required operation. The next steps show how you
+                      can make use of the various options for receive payment.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Your Account ID. Other account can easily make payments to you by
+                              addressing it to your Account ID.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              SAZA plugin. Follow the instructions on the image below.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image8.png" alt=""/>
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Your Stellar Address. You can set a username for your Stellar
+                              account instead of using the long Account ID. This can be done by
+                              clicking on ‘click here’.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image3.png" alt=""/>
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter a username.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your transaction passphrase.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on the ‘Set Stellar Address’ button.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image40.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="tx_history">
+                <div class="panel-heading">
+                  <h2>VIEW TRANSACTION HISTORY</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      Transaction history keeps a record of all the transactions that have been
+                      made on your Stellar account. Your transaction history can be viewed by:
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Navigating to the ‘Transactions’ tab on the menu. This page shows
+                              all the transactions made on your Stellar account.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image21.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="create_contacts">
+                <div class="panel-heading">
+                  <h2>VIEW AND CREATE NEW CONTACTS</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      SAZA gives its users the chance to create a contact list and view this list
+                      at any given time. To add a new contact, execute the following steps.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Navigate to the ‘Address book’ tab in the menu.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Your contact list is shown on the page. Click on the ‘’Add Contact’
+                              button to add a new contact.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image1.png" alt=""/>
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the contact name in the ‘name’ section.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the Stellar Account ID of the contact in the ‘Account ID’
+                              section.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on the ‘Submit’ button.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image28.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="add_anchor">
+                <div class="panel-heading">
+                  <h2>HOW TO ADD AN ANCHOR</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      Adding an anchor is very simple. All you have to do is to:
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Navigate to the ‘Anchors’ tab on the menu.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the URL of your anchor.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your transaction passphrase.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on the ‘Add Anchor’ button.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image39.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="account_ops">
+                <div class="panel-heading">
+                  <h2>ACCOUNT OPERATIONS</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      There are various account operations that can be carried out on SAZA. These
+                      operations can be accessed on the ‘Account Operations’ tab in the menu.
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image10.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="change_trust">
+                <div class="panel-heading">
+                  <h2>HOW TO CHANGE TRUST</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      The change trust operation allows you to create, update, or delete a
+                      trustline.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on change trust.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      The first section of the page displays the list of trustlines that have
+                      while the second section is to create a new trustline.
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image30.png" alt=""/>
+                  </p>
+                  <p dir="ltr">
+                      To create a new trustline:
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Select an Asset Type.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter a trust limit. Leave empty to default to the max int64. Set
+                              to 0 to remove the trustline.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your transaction passphrase.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on Submit.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image13.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="allow_trust">
+                <div class="panel-heading">
+                  <h2>HOW TO ALLOW TRUST</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      In order to allow a trust, complete the following steps.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on allow trust.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter a trusting account (the one being authorised) in the trustor
+                              section.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the asset code being authorised.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Select True or False. True to authorise the line, false to
+                              deauthorise.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your transaction passphrase.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on Submit.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image42.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="manage_offer">
+                <div class="panel-heading">
+                  <h2>HOW TO MANAGE AN OFFER</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      The manage offer operation allows you to create, update, or delete an
+                      offer. The manage offer page contains a list of offers made by the account
+                      and a list of trustlines for assets in account with limits. To create a new
+                      offer:
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on manage an offer.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Select a selling asset type.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Select a buying asset type.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the total amount you are selling.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the price (exchange rate ratio - selling/buying)
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter Offer ID.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your transaction passphrase.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on Submit.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image19.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="passive_offer">
+                <div class="panel-heading">
+                  <h2>HOW TO CREATE A PASSIVE OFFER</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      A passive offer is an offer that does not act on and take a reverse offer
+                      of equal price. Instead, they only take offers of lesser price.
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      To create a new passive offer:
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on create passive offer.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Select a selling asset type.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Select a buying asset type.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the total amount you are selling.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the price (exchange rate ratio - selling/buying)
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter Offer ID.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your transaction passphrase.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on Submit.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image41.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="path_payment">
+                <div class="panel-heading">
+                  <h2>PATH PAYMENT</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      Path payment sends an amount in a specific asset to a destination account
+                      through a path of offers.
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      The following steps will guide you in making a path payment.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on Path payment.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter Account ID or Stellar address of the recipient.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Select a selling asset type.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the maximum amount of sendAsset to send.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Select a destination asset type.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the amount the destination will receive.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter a memo.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your transaction passphrase.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on Submit.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image26.png" alt=""/>
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image14.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="set_options">
+                <div class="panel-heading">
+                  <h2>SET OPTIONS</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      Set various options related to your stellar account.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on Set Options.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Set various options related to your stellar account.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your transaction passphrase.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on Submit.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image22.png" alt=""/>
+                  </p>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image46.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="merge_account">
+                <div class="panel-heading">
+                  <h2>HOW TO MERGE ACCOUNTS</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      In order to merge accounts, complete the following steps.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on merge account.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter a destination account where all your XLM balance will be
+                              sent.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your transaction passphrase.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image45.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="manage_data">
+                <div class="panel-heading">
+                  <h2>MANAGE DATA OPERATION</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      Manage data allows you set, modify, or delete a data entry that is attached
+                      to a particular account.
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on manage data.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter an entry name.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter the value of the data entry
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Enter your transaction passphrase.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              If you have 2FA enabled, enter the OTP Token.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Click on submit.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image35.png" alt=""/>
+                  </p>
+                </div>
+              </div>
+              <!-- Panel End -->
+
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="settings">
+                <div class="panel-heading">
+                  <h2>SETTINGS</h2>
+                </div>
+                <div class="panel-body">
+                  <p dir="ltr">
+                      Account settings can be modified from the ‘Settings’ tab on the menu.
+                  </p>
+                  <h2 dir="ltr">
+                      HOW TO MODIFY ACCOUNT DETAILS
+                  </h2>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Select ‘Account details’ from the options in settings.
+                          </p>
+                      </li>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              To view your secret key, enter your transaction passphrase and
+                              click on the ‘Show Secret’ button.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image29.png" alt=""/>
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              To delete account, enter your SAZA password and click on the ‘Yes,
+                              Delete Account’ button. Note that this action is irreversible.
+                          </p>
+                      </li>
+                  </ul>
+                  <br/>
+                  <p dir="ltr">
+                      <img class="img-responsive center-block" src="assets/img/faq/image27.png" alt=""/>
+                  </p>
+                  <br/>
+                  <ul>
+                      <li dir="ltr">
+                          <p dir="ltr">
+                              Set username has already been covered in the <a href="#receive_payment">receive payment</a> section.
+                          </p>
+                      </li>
+                  </ul>
+
+                </div>
+              </div>
+              <!-- Panel End -->
+              <!-- Panel Start -->
+              <div class="panel panel-default" id="change_password">
+                <div class="panel-heading">
+                  <h2>HOW TO CHANGE PASSWORD</h2>
+                </div>
+                <div class="panel-body">
+                <ul>
+                    <li dir="ltr">
+                        <p dir="ltr">
+                            Select ‘Change Password’ from the options in settings.
+                        </p>
+                    </li>
+                    <li dir="ltr">
+                        <p dir="ltr">
+                            Enter new password.
+                        </p>
+                    </li>
+                    <li dir="ltr">
+                        <p dir="ltr">
+                            Confirm new password.
+                        </p>
+                    </li>
+                    <li dir="ltr">
+                        <p dir="ltr">
+                            Enter old password.
+                        </p>
+                    </li>
+                    <li dir="ltr">
+                        <p dir="ltr">
+                            If you have 2FA enabled, enter the OTP Token.
+                        </p>
+                    </li>
+                    <li dir="ltr">
+                        <p dir="ltr">
+                            Click on the ‘Change Password’ button.
+                        </p>
+                    </li>
+                </ul>
+                <br/>
+                <p dir="ltr">
+                    <img class="img-responsive center-block" src="assets/img/faq/image11.png" alt=""/>
+                </p>
+
+                </div>
+              </div>
+              <!-- Panel End -->
+
+
+
+
+            </div>
+          </div>
+          <!-- .row -->
+        </div>
+        <!-- .container -->
+      <!-- </div> -->
+      <!-- End Services Section -->
+
+
+
+
+      <!-- Start Copyright -->
+      <div class="copyright-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-6">
+              <p>
+                Made in Nigeria
+                </a>
+              </p>
+            </div>
+            <!-- .col-md-6 -->
+            <div class="col-sm-6">
+              <ul class="footer-nav">
+                <li>
+                  <a href="https://saza.io">
+                  Home /
+                  </a>
+                </li>
+                <li>
+                  <a href="https://saza.io/terms.html">
+                  Terms & Conditions /
+                  </a>
+                </li>
+
+                <li>
+                  <a href="mailto: hello@saza.io">
+                  Contact
+                  </a>
+                </li>
+
+
+              </ul>
+            </div>
+            <!-- .col-md-6 -->
+          </div>
+          <!-- .row -->
+        </div>
+      </div>
+      <!-- End Copyright -->
+    </div>
+    <!-- End Full Body Container -->
+    <!-- Go To Top Link -->
+    <a href="#" class="back-to-top">
+    <i class="fa fa-angle-up">
+    </i>
+    </a>
+    <div id="loader">
+      <div class="ball-scale-multiple">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    <!-- Style Switcher -->
+
+    <!-- Span JS  -->
+    <script type="text/javascript" src="assets/js/jquery-min.js"></script>
+    <script type="text/javascript" src="assets/js/modernizrr.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/js/owl.carousel.min.js"></script>
+    <script type="text/javascript" src="assets/js/nivo-lightbox.min.js"></script>
+    <script type="text/javascript" src="assets/js/jquery.mixitup.min.js"></script>
+    <script type="text/javascript" src="assets/js/jquery.appear.js"></script>
+    <!-- <script type="text/javascript" src="assets/js/count-to.js"></script> -->
+    <script type="text/javascript" src="assets/js/jquery.parallax.js"></script>
+    <script type="text/javascript" src="assets/js/smooth-scroll.js"></script>
+    <script type="text/javascript" src="assets/js/jquery.slicknav.js"></script>
+    <script type="text/javascript" src="assets/js/main.js"></script>
+    <script type="text/javascript" src="assets/js/donate.js"></script>
+    <!-- Revelosition slider js -->
+    <script src="assets/js/jquery.themepunch.revolution.min.js"></script>
+    <script src="assets/js/jquery.themepunch.tools.min.js"></script>
+  </body>
+</html>

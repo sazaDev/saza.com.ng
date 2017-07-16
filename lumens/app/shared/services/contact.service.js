@@ -1,8 +1,8 @@
 // Contact Service
-
+var Config = Config;
 var contact = angular.module('contactService', []);
 // var baseUrl = 'https://saza.com.ng:8888/';
-var baseUrl = 'http://localhost:8888/';
+var baseUrl = Config.General.baseUrl;
 contact.factory('Contact', function($http) {
 
     return {

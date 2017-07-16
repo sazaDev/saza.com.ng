@@ -1,9 +1,9 @@
-<div class="page-title">                    
+<div class="page-title">
   <h2><span class="fa fa-dashboard"></span> Account Overview</h2>
 </div>
 
 <div ng-controller="dashboardController" ng-init="init()">
-  <!-- START WIDGETS -->                    
+  <!-- START WIDGETS -->
   <div class="row">
     <div class="col-md-3">
 
@@ -63,15 +63,15 @@
         </div> -->
       </div>
 
-    </div>    
+    </div>
     <!-- <div class="col-md-3">
 
       <div class="widget widget-danger widget-padding-sm">
-        <div class="widget-big-int plugin-clock">20<span>:</span>48</div>                            
+        <div class="widget-big-int plugin-clock">20<span>:</span>48</div>
         <div class="widget-subtitle plugin-date">Thursday, August 18, 2016</div>
-        <div class="widget-controls">                                
+        <div class="widget-controls">
           <a href="#" class="widget-control-right"><span class="fa fa-times"></span></a>
-        </div>                            
+        </div>
         <div class="widget-buttons widget-c3">
           <div class="col">
             <a href="#"><span class="fa fa-clock-o"></span></a>
@@ -82,14 +82,14 @@
           <div class="col">
             <a href="#"><span class="fa fa-calendar"></span></a>
           </div>
-        </div>                            
-      </div>                        
+        </div>
+      </div>
 
     </div> -->
 
 
   </div>
-  <!-- END WIDGETS -->                    
+  <!-- END WIDGETS -->
 
   <div class="row">
     <div class="col-md-8">
@@ -108,9 +108,9 @@
                 <a ui-sref="changetrust" class="btn btn-default pull-right">
                       Change Trust <span class="fa fa-chevron-right"></span>
                 </a>
-                
-              </div>                                    
-              
+
+              </div>
+
             </div>
             <div class="panel-body panel-body-table">
 
@@ -121,7 +121,7 @@
                       <th width="10%">Asset Type</th>
                       <th width="70%">Asset Issuer</th>
                       <th width="20%">Limit</th>
-                      
+
                     </tr>
                   </thead>
                   <tbody>
@@ -137,11 +137,11 @@
             </div>
           </div>
         </div>
-      <!-- END trustlines BLOCK -->      
-      
+      <!-- END trustlines BLOCK -->
+
     </div>
     <div class="col-md-4">
-      <div class="page-title">                    
+      <div class="page-title">
         <h2><span class="text-warning  fa fa-star"></span> New Features</h2>
       </div>
       <!-- START NEW FEATURES BLOCK -->
@@ -150,50 +150,50 @@
           <div class="panel-title-box">
             <h3>Now you can</h3>
             <span></span>
-          </div>                                    
-          
+          </div>
+
         </div>
         <div class="panel-body">
-          <a ui-sref="addaccount" class="list-group-item">                                 
+          <a ui-sref="addaccount" class="list-group-item">
               <div class="list-group-status status-online"></div>
               <span class="contacts-title">Manage multiple stellar accounts</span>
-              <p></p>                                                                        
+              <p></p>
           </a>
-          <a ui-sref="sendpayment" class="list-group-item">                                 
+          <a ui-sref="sendpayment" class="list-group-item">
               <div class="list-group-status status-online"></div>
               <span class="contacts-title">Send payments in different assets</span>
-              <p></p>                                                                        
+              <p></p>
           </a>
-          <a ui-sref="changetrust" class="list-group-item">                                 
+          <a ui-sref="changetrust" class="list-group-item">
               <div class="list-group-status status-online"></div>
               <span class="contacts-title">Create/Manage Trustlines</span>
-              <p></p>                                                                        
-          </a>          
-          <a ui-sref="manageoffer" class="list-group-item">                                 
+              <p></p>
+          </a>
+          <a ui-sref="manageoffer" class="list-group-item">
               <div class="list-group-status status-online"></div>
               <span class="contacts-title">Create/Manage Offers</span>
-              <p></p>                                                                        
-          </a>  
-          <a ui-sref="transactions" class="list-group-item">                                 
+              <p></p>
+          </a>
+          <a ui-sref="transactions" class="list-group-item">
               <div class="list-group-status status-online"></div>
               <span class="contacts-title">View all operations on account</span>
-              <p></p>                                                                        
-          </a>       
-          <a ui-sref="setoptions" class="list-group-item">                                 
+              <p></p>
+          </a>
+          <a ui-sref="setoptions" class="list-group-item">
               <div class="list-group-status status-online"></div>
               <span class="contacts-title">Set all account options</span>
-              <p></p>                                                                        
+              <p></p>
           </a>
-          <a href="#" class="list-group-item">                                 
+          <a href="#" class="list-group-item">
               <div class="list-group-status status-online"></div>
               <span class="contacts-title">...and much more.. </span>
-              <p></p>                                                                        
+              <p></p>
           </a>
 
         </div>
       </div>
       <!--END NEW FEATURES BLOCK -->
-      <div class="page-title">                    
+      <div class="page-title">
         <h2><span class="fa fa-list"></span> Assets</h2>
       </div>
       <!-- START ASSETS BLOCK -->
@@ -202,8 +202,8 @@
           <div class="panel-title-box">
             <h3>Assets</h3>
             <span>Balance of assets in account</span>
-          </div>                                    
-          
+          </div>
+
         </div>
         <div class="panel-body panel-body-table">
 
@@ -213,14 +213,14 @@
                 <tr>
                   <th width="50%">Asset Type</th>
                   <th width="50%">Balance</th>
-                  
+
                 </tr>
               </thead>
               <tbody>
                 <tr ng-repeat="x in assets">
                   <td><strong>{{x.asset_type === 'native' ? 'XLM' : x.asset_code }}</strong></td>
                   <td>{{x.balance}}</td>
-                  
+
                 </tr>
 
               </tbody>
