@@ -30,6 +30,8 @@ lumensWall.controller('settingsController', function($scope, $state, $http, $roo
 	$scope.changePassword = function() {
 
     $scope.passwordData.token = $rootScope.currentUser.token;
+    $scope.passwordData.id = $rootScope.currentUser.id;
+    $scope.passwordData.email = $rootScope.currentUser.email;
 
     Account.changePassword($scope.passwordData)
       .success(function(data) {
