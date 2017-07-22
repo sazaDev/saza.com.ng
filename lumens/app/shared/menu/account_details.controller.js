@@ -1,5 +1,6 @@
 var lumensWall = angular.module('lumensWall');
 
+
 lumensWall.controller('accountDetailsController', function($scope, $state, $http, $rootScope, User) {
 	
 	$scope.init = function() {

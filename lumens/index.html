@@ -48,7 +48,7 @@
 
       <!-- START BREADCRUMB -->
       <div class="breadcrumb row ng-cloak" ng-controller="accountDetailsController" ng-init="init()" ng-cloak>
-        <p class="col-md-12 ng-cloak" ng-cloak>Hi {{currentUser.currentUsername}}
+        <p class="col-md-12 ng-cloak" ng-cloak>Hi {{currentUser.currentUsername}}*{{siteURL}}
           <span ng-if="!currentUser.currentUsername">
           Stellar address not set. <a ui-sref="setusername">Set Address?</a>
           </span>
