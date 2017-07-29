@@ -244,7 +244,7 @@ account.factory('Account', function($http, $rootScope) {
 
             var destValid = true; //boolean for checking if destAcct is Valid
             var sourceValid = true; //boolean for checking if srcAcct is Valid
-            var rcvrAcct = "";
+            var rcvrAcct = {};
             if(!paymentData.memoText){
               paymentData.memoText = "";
             }
@@ -278,11 +278,12 @@ account.factory('Account', function($http, $rootScope) {
               .then(function(acctDetails) {
                 console.log("acctDetails", acctDetails);
                 rcvrAcct = acctDetails;
+                console.log(asset);
                 // load dest account
-                return server.loadAccount(acctDetails.account_id);
+                return server.loadAccount(rcvrAcct.account_id);
               })
-              .catch(StellarSDK.NotFoundError, function(error) {
-
+              .catch(function(error) {
+                console.log(asset);
                 messages.push('Destination Account not active');
                 messages.push('Attempt to create destination account');
                 // destAcct not found
@@ -322,9 +323,7 @@ account.factory('Account', function($http, $rootScope) {
                                       destination: rcvrAcct.account_id,
                                       asset: asset,
                                       amount: paymentData.amount.toString()
-                                    }))
-                                    .addMemo(StellarSDK.Memo.text(paymentData.memoText))
-                                    .build();
+                                    }));
 
                 } else{
                   // fund new account
@@ -333,12 +332,30 @@ account.factory('Account', function($http, $rootScope) {
                                     .addOperation(StellarSDK.Operation.createAccount({
                                       destination: rcvrAcct.account_id,
                                       startingBalance: paymentData.amount.toString()
-                                    }))
-                                    .addMemo(StellarSDK.Memo.text(paymentData.memoText))
-                                    .build();
+                                    }));
 
                 }
+                // add memo
+                if (rcvrAcct.memo_type && rcvrAcct.memo) {
+                  switch (rcvrAcct.memo_type) {
+                    case 'id':
+                     transaction = transaction.addMemo(StellarSDK.Memo.id(rcvrAcct.memo));
+                      break;
+                    case 'text':
+                      transaction = transaction.addMemo(StellarSDK.Memo.text(rcvrAcct.memo));
+                      break;
+                    case 'hash':
+                      transaction = transaction.addMemo(StellarSDK.Memo.hash(rcvrAcct.memo));
+                      break;
+                    default:
+                      transaction = transaction.addMemo(StellarSDK.Memo.text(paymentData.memoText));
+                  }
+                } else{
+                    transaction = transaction.addMemo(StellarSDK.Memo.text(paymentData.memoText));
+                }
 
+                // build tx
+                transaction = transaction.build();
 
                 // get seed
                 var seedObj = Utility.getSeedObj(paymentData.account_id, $rootScope.currentUser.accounts);
@@ -481,19 +498,36 @@ account.factory('Account', function($http, $rootScope) {
                                       destination: rcvrAcct.account_id,
                                       asset: asset,
                                       amount: paymentData.amount.toString()
-                                    }))
-                                    .addMemo(StellarSDK.Memo.text(paymentData.memoText))
-                                    .build();
+                                    }));
                   }
                   if (destAcctActive === 0) {
                     transaction = new StellarSDK.TransactionBuilder(sender)
                                       .addOperation(StellarSDK.Operation.createAccount({
                                         destination: rcvrAcct.account_id,
                                         startingBalance: paymentData.amount.toString()
-                                      }))
-                                      .addMemo(StellarSDK.Memo.text(paymentData.memoText))
-                                      .build();
+                                      }));
                   }
+                                  // add memo
+                  if (rcvrAcct.memo_type && rcvrAcct.memo) {
+                    switch (rcvrAcct.memo_type) {
+                      case 'id':
+                        transaction = transaction.addMemo(StellarSDK.Memo.id(rcvrAcct.memo));
+                        break;
+                      case 'text':
+                        transaction = transaction.addMemo(StellarSDK.Memo.text(rcvrAcct.memo));
+                        break;
+                      case 'hash':
+                        transaction = transaction.addMemo(StellarSDK.Memo.hash(rcvrAcct.memo));
+                        break;
+                      default:
+                        transaction = transaction.addMemo(StellarSDK.Memo.text(paymentData.memoText));
+                    }
+                  } else{
+                      transaction = transaction.addMemo(StellarSDK.Memo.text(paymentData.memoText));
+                  }
+
+                  // build tx
+                  transaction = transaction.build();
 
                   // sign transaction
                   transaction.sign(StellarSDK.Keypair.fromSecret(Utility.decrypt(seedObj, paymentData.tx_passphrase)));

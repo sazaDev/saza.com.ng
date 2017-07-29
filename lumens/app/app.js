@@ -540,7 +540,7 @@ app.run(function ($rootScope, $state, User) {
   User.set($rootScope.currentUser);
   // $rootScope.currentUser = User.get();
   $rootScope.ngnRate = 400;
-  $rootScope.siteURL = 'saza.com.ng';
+  $rootScope.siteURL = 'saza.io';
   var requireLogin = toState.data.requireLogin;
   window.scrollTo(0, 0);
   // console.log("currentUser: ", $rootScope.currentUser);
